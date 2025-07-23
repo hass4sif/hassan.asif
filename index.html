@@ -4,163 +4,244 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hassan Asif | Digital Remix Culture Scholar</title>
+
+  <!-- Retro “terminal” font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --accent: #39ff14;
-      --bg: #000000;
-      --text: #d8fdd1;
-      --muted: #666666;
+      --accent: #39ff14;      /* lime grid + link colour   */
+      --bg:     #000000;      /* site background           */
+      --text:   #d8fdd1;      /* body text                 */
+      --muted:  #6c6c6c;
     }
     html { scroll-behavior: smooth; }
     body {
-  margin: 0;
-  font-family: 'Share Tech Mono', monospace;   /* NEW */
-  line-height: 1.6;
-  color: var(--text);
-  background: var(--bg);
+      margin: 0;
+      font-family: 'Share Tech Mono', monospace;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
     }
+
+    /* ---------- NAV ---------- */
     nav {
-      background: rgba(0,0,0,0.85);
-      border-bottom: 1px solid var(--accent);
       position: sticky; top: 0;
       display: flex; justify-content: space-around; align-items: center;
-      background: var(--bg); border-bottom: 1px solid #e5e5e5;
-      z-index: 999; padding: 0.5rem 1rem;
+      padding: .6rem 1rem;
+      background: rgba(0,0,0,.9);
+      border-bottom: 1px solid var(--accent);
+      z-index: 1000;
     }
-    nav a { text-decoration: none; color: var(--text); font-weight: 600; padding: 0.4rem 0; }
-    nav a.active { color: var(--accent); }
-    .hero h1 {
-  margin: 0 0 0.3rem 0;
-  font-size: 2.6rem;
+    nav a { text-decoration: none; color: var(--text); font-weight: 600; }
+    nav a:hover, nav a.active { color: var(--accent); }
 
-  /* brighter cyan-green & glowing pulse */
-  color: #00ffb3;
-  text-shadow:
-    0 0 6px  #00ffb3,
-    0 0 12px #00ffb3,
-    0 0 24px #00ffb3;
-  animation: neonPulse 1.5s ease-in-out infinite alternate;
-  letter-spacing: 0.5px;
-}
+    /* ---------- HERO ---------- */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: 2rem 1rem; overflow: hidden;
+      background: radial-gradient(circle at center, #002200 10%, #000 80%);
+    }
+    /* animated grid overlay */
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(0deg,  rgba(0,255,0,.12) 0 2px, transparent 2px 40px),
+        repeating-linear-gradient(90deg, rgba(0,255,0,.12) 0 2px, transparent 2px 40px);
+      animation: gridScroll 8s linear infinite;
+      mix-blend-mode: color-dodge;
+    }
+    @keyframes gridScroll { 0%{transform:translate(0,0);} 100%{transform:translate(40px,40px);} }
 
-@keyframes neonPulse {
-  from { text-shadow: 0 0 4px  #00ffb3, 0 0 8px  #00ffb3; }
-  to   { text-shadow: 0 0 12px #00ffb3, 0 0 24px #00ffb3; }
-}
+    .hero h1{
+      margin:0 0 .3rem 0; font-size:2.6rem; letter-spacing:.5px;
+      color:#00ffb3;
+      text-shadow:0 0 6px #00ffb3, 0 0 12px #00ffb3, 0 0 24px #00ffb3;
+      animation: neonPulse 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes neonPulse{
+      from{ text-shadow:0 0 4px #00ffb3,0 0 8px #00ffb3;}
+      to  { text-shadow:0 0 12px #00ffb3,0 0 24px #00ffb3;}
+    }
+    .hero h2{ margin:0 0 1rem 0; font-size:1.2rem; color:var(--text); }
+    .avatar{
+      width:200px; height:200px; border-radius:50%; object-fit:cover;
+      filter:drop-shadow(0 0 10px var(--accent));
+    }
+    .dl-cv{
+      display:inline-block; margin-top:1.5rem; padding:.5rem 1rem;
+      border:1px solid var(--accent); border-radius:4px; color:var(--accent); text-decoration:none;
+      transition:background .2s;
+    }
+    .dl-cv:hover{ background:var(--accent); color:#000; }
+
+    /* ---------- SECTIONS ---------- */
+    section{ max-width:960px; margin:0 auto; padding:2.5rem 1rem; }
+    section h3{ margin-top:0; font-size:1.5rem; color:var(--accent); border-bottom:1px solid var(--accent); }
+    ul{ padding-left:1.2rem; } li{ margin-bottom:.6rem; }
+    a.inline{ color:var(--accent); text-decoration:none; }
+    a.inline:hover{ text-decoration:underline; }
+
+    /* columns on wide screens */
+    @media(min-width:700px){ .columns{ display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; } }
   </style>
 </head>
+
 <body>
+  <!-- NAV -->
   <nav id="navbar">
-    <a href="#about">About</a><a href="#education">Education</a><a href="#publications">Publications</a>
-    <a href="#grants">Grants & Awards</a><a href="#experience">Experience</a><a href="#teaching">Teaching</a>
-    <a href="#talks">Talks</a><a href="#service">Service</a><a href="#contact">Contact</a>
+    <a href="#about">About</a>
+    <a href="#education">Education</a>
+    <a href="#publications">Publications</a>
+    <a href="#grants">Grants & Awards</a>
+    <a href="#conferences">Conferences</a>
+    <a href="#experience">Experience</a>
+    <a href="#teaching">Teaching</a>
+    <a href="#service">Service</a>
+    <a href="#contact">Contact</a>
   </nav>
 
+  <!-- HERO -->
   <header class="hero" id="home">
-    <h1>Hassan Asif</h1><h2>PhD Candidate · Digital Remix Culture Scholar</h2>
-    <img src="hassan_glitch_effects.gif" alt="Hassan Asif portrait with glitch effect" class="avatar" />
-    <p class="scroll-cue">▼ Scroll down</p>
+    <h1>Hassan Asif</h1>
+    <h2>PhD Candidate &nbsp;·&nbsp; Digital Remix Culture Scholar</h2>
+    <img src="hassan_glitch_effects.gif" alt="Portrait of Hassan Asif" class="avatar" />
+    <a href="Hassan_Asif_CV.pdf" class="dl-cv" download>⇩ Download CV (PDF)</a>
   </header>
 
-  <section id="about"><h3>About</h3>
-    <p>I am a PhD candidate at the University of Toronto’s Faculty of Information (iSchool). My research interrogates <strong>digital media practices, remix culture, and Islamic devotional communities</strong> with a focus on South Asia and its diasporas. My dissertation, <em>“Remixing Devotion: Digital Media Practices in Pakistan,”</em> explores how practitioners navigate piracy, AI, and platform logics to circulate sacred audio-visuals.</p>
+  <!-- ABOUT -->
+  <section id="about">
+    <h3>About</h3>
+    <p>I research <strong>digital media practices, remix culture, and Islamic devotional communities</strong> in South Asia and its diasporas. My dissertation, <em>“Remixing Devotion: Digital Media Practices in Pakistan”</em>, explores how creators navigate piracy, AI, and platform logics to circulate sacred audio-visuals.</p>
   </section>
 
-  <section id="education"><h3>Education</h3><ul>
-    <li><strong>PhD, Information</strong>, University of Toronto, 2019 – present. Collaborative Specialization in South-Asian Studies.</li>
-    <li><strong>MA, Museums & Gallery Practice</strong>, University College London (Distinction), 2015.</li>
-    <li><strong>BS, Communication Studies</strong>, Northwestern University (cum laude), 2014.</li>
-  </ul></section>
-
-  <section id="publications"><h3>Publications (Selected)</h3><div class="columns"><div>
-    <h4>Peer-Reviewed Articles</h4><ul>
-      <li><a class="inline"
-     href="https://doi.org/10.1177/01634437251353093"
-     target="_blank" rel="noopener">
-     Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives
-  </a>. <em>Media, Culture &amp; Society</em> (2025)</li>
-      <li><a class="inline"
-     href="https://doi.org/10.1163/21659214-bja10110"
-     target="_blank" rel="noopener">
-     “Blur&nbsp;the&nbsp;preacher”: Media remix and digital technocultural practice in Pakistan
-  </a>. <em>Journal of Religion, Media and Digital Culture</em> 13(3), 363–386 (2024)</li>
-      <li>Asif, H. (in press). Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan. <em>Digital Humanities Quarterly</em>.</li>
-      <li>Asif, H. (under review). IslaMixing: Hauntology as an experimental framework for exploring online #Islamogram memes. <em>Journal of Media and Religion</em>.</li>
-    </ul></div><div>
-    <h4>Chapters & Other Writing</h4><ul>
-      <li>Asif, H. (forthcoming). Translating truth: AI in digital Islamic sermons. In <em>Social Media, Religion, and Culture</em> (Routledge).</li>
-      <li><a class="inline"
-     href="https://doi.org/10.1007/978-981-10-4071-9_7"
-     target="_blank" rel="noopener">
-     The Buddha Remains: Heritage transactions in Taxila, Pakistan
-  </a>. In <em>The Making of Islamic Heritage</em>, pp. 109–123 (2017)</li>
-      <li>“Really risky ‘interpretation’.” <em>Association for Heritage Interpretation</em>, 24(1), 36–37 (2019).</li>
-    </ul></div></div></section>
-
-  <section id="grants"><h3>Selected Grants & Awards</h3><ul class="columns">
-    <li>Margaret Higgins Memorial Fellowship (2025)</li>
-    <li>Professor Amilcare Iannucci Graduate Fellowship (2025)</li>
-    <li>Chancellor Jackman Graduate Fellowship (2024-25)</li>
-    <li>SSHRC Doctoral Scholarship (2023-24)</li>
-    <li>Ontario Graduate Scholarship (2021-23)</li>
-    <li>iSchools Inc. Research Award (2021-22)</li>
-  </ul></section>
-
-  <section id="experience"><h3>Professional Experience</h3><ul>
-    <li><strong>Senior Digital Fellow</strong>, Muslims in Canada Archive & Data Initiative, University of Toronto (2021-2023).</li>
-    <li><strong>Program Manager</strong>, Amal Academy (2017-2018).</li>
-    <li><strong>Project Assistant / Consultant</strong>, UNESCO Pakistan (2016-2017).</li>
-    <li><strong>Account Manager</strong>, TBWA\Worldwide (2015).</li>
-  </ul></section>
-
-  <section id="teaching"><h3>Teaching</h3><ul>
-    <li><em>Reimagining Global Copyright</em> (Graduate, 2024–25)</li>
-    <li><em>Religion, Media & Popular Culture</em> (Undergraduate, 2023)</li>
-    <li><em>Engaging with Texts</em> (LUMS, 2019)</li>
-    <li><em>History & Sociology</em> (A-level, 2018-19)</li>
-  </ul></section>
-
-  <section id="talks"><h3>Recent Talks & Conferences</h3><ul>
-    <li>ICA Pre-Conference “Debating Creator Culture,” Boulder (2025)</li>
-    <li>Canadian Communication Association, Toronto (2025)</li>
-    <li>South Asia Graduate Student Workshop, Toronto (2025)</li>
-    <li>Global Digital Intimacies Conference, Amsterdam (2024)</li>
-  </ul></section>
-
-  <section id="service"><h3>Service & Community</h3><ul>
-    <li>Mentor, Palestinian Students & Scholars at Risk (PSSAR) (2025–)</li>
-    <li>Graduate Student Mentor, University of Toronto (Ongoing)</li>
-    <li>Manuscript Reviewer, <em>Journal of Religion, Media and Digital Culture</em></li>
-    <li>Mental Health Committee, Doctoral Students Association (2020-21)</li>
-  </ul></section>
-
-  <section id="contact"><h3>Contact</h3>
-    <p>Email: <a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a><br />Location: Toronto, Canada</p>
+  <!-- EDUCATION -->
+  <section id="education">
+    <h3>Education</h3>
+    <ul>
+      <li><strong>PhD, Information</strong>, University of Toronto, 2019 – present (expected 2026). Collaborative Specialization in South-Asian Studies.</li>
+      <li><strong>MA, Museums & Gallery Practice</strong>, University College London, 2015 (Distinction).</li>
+      <li><strong>BS, Communication Studies</strong>, Northwestern University, 2014 (cum laude).</li>
+    </ul>
   </section>
 
-  <footer style="text-align:center; padding:2rem 1rem; font-size:0.9rem; color:var(--muted);">
-    © 2025 Hassan Asif · Built with vanilla HTML, CSS, JS
+  <!-- PUBLICATIONS -->
+  <section id="publications">
+    <h3>Publications</h3>
+    <div class="columns">
+      <div>
+        <h4>Peer-Reviewed Articles</h4>
+        <ul>
+          <li><a class="inline" href="https://doi.org/10.1177/01634437251353093" target="_blank">Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives</a>. <em>Media, Culture & Society</em> (2025)</li>
+          <li><a class="inline" href="https://doi.org/10.1163/21659214-bja10110" target="_blank">“Blur the preacher”: Media remix and digital technocultural practice in Pakistan</a>. <em>Journal of Religion, Media & Digital Culture</em> 13(3), 363–386 (2024)</li>
+          <li>Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan. <em>Digital Humanities Quarterly</em> (in press)</li>
+          <li>IslaMixing: Hauntology as an experimental framework for exploring online #Islamogram memes. <em>Journal of Media and Religion</em> (under review)</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Chapters & Other Writing</h4>
+        <ul>
+          <li>Translating truth: AI in digital Islamic sermons and the case of Engineer Muhammad Ali Mirza. In <em>Social Media, Religion, and Culture</em> (Routledge, forthcoming)</li>
+          <li>Technical imagination against deepfakes: Reading, bending, and exposing the image game. In <em>Anthropology of Digital Harms, Addiction and Disconnection</em> (forthcoming)</li>
+          <li><a class="inline" href="https://doi.org/10.1007/978-981-10-4071-9_7" target="_blank">The Buddha Remains: Heritage transactions in Taxila, Pakistan</a>. In <em>The Making of Islamic Heritage</em> (Palgrave Macmillan, 2017)</li>
+          <li>Really risky “interpretation”. <em>Association for Heritage Interpretation</em> 24(1), 36–37 (2019)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRANTS & AWARDS -->
+  <section id="grants">
+    <h3>Selected Grants & Awards</h3>
+    <ul class="columns">
+      <li>Margaret Higgins Memorial Fellowship (2025)</li>
+      <li>Professor Amilcare Iannucci Graduate Fellowship (2025)</li>
+      <li>Chancellor Jackman Graduate Fellowship (2024-25)</li>
+      <li>SSHRC Doctoral Scholarship (2023-24)</li>
+      <li>Ontario Graduate Scholarship (2021-23)</li>
+      <li>iSchools Inc. Research Award (2021-22)</li>
+    </ul>
+  </section>
+
+  <!-- CONFERENCES -->
+  <section id="conferences">
+    <h3>Conference Papers & Presentations (Selected)</h3>
+    <ul>
+      <li>Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan. ICA Pre-Conference “Debating Creator Culture,” Boulder, CO, USA (2025)</li>
+      <li>Between confusion and deception: Ethical dilemmas in AI-enabled audiovisual remixing of Engineer Muhammad Ali Mirza’s sermons. Canadian Communication Association, Toronto, Canada (2025)</li>
+      <li>Cracked devotion: Piracy, pedagogy, and Islamic media remixing in Pakistan. South Asia Graduate Student Workshop, University of Toronto (2025)</li>
+      <li>Mediating truth: Tensions in AI-driven remixing of Engineer Muhammad Ali Mirza’s sermons. Communication Graduate Caucus, Carleton University, Ottawa (2025)</li>
+      <li>Digital desires and distortions: The impact of deepfake pornography in Pakistani cyberspace. Global Digital Intimacies Conference, University of Amsterdam (2024)</li>
+      <li>Technological transcendence: Transformation of Naʿat in Pakistan’s digital Islamic landscape. CASIM Biennial Conference, Halifax (2024)</li>
+      <li>Bytes of blessings: Examining digital technology’s influence on Pakistan’s Naʿat culture. 51st Annual Conference on South Asia, Madison, USA (2023)</li>
+      <li>Prayers, pixels, and piracy: Online presentation of religious self in Pakistan’s Naʿat community. Graduate Student Conference, University of Calgary (2023)</li>
+    </ul>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <h3>Professional Experience (Highlights)</h3>
+    <ul>
+      <li><strong>Senior Digital Fellow</strong>, Muslims in Canada Archive & Data Initiative, University of Toronto (2021-23)</li>
+      <li><strong>Program Manager</strong>, Amal Academy (2017-18)</li>
+      <li><strong>Consultant / Project Assistant</strong>, UNESCO Pakistan (2016-17)</li>
+      <li><strong>Account Manager</strong>, TBWA\Worldwide (2015)</li>
+    </ul>
+  </section>
+
+  <!-- TEACHING -->
+  <section id="teaching">
+    <h3>Teaching</h3>
+    <ul>
+      <li><em>Reimagining Global Copyright</em> (Graduate, UofT, 2024–25)</li>
+      <li><em>Religion, Media & Popular Culture</em> (Undergraduate, 2023)</li>
+      <li><em>Engaging with Texts</em> (LUMS, 2019)</li>
+      <li><em>History & Sociology</em> (A-level, 2018-19)</li>
+    </ul>
+  </section>
+
+  <!-- SERVICE -->
+  <section id="service">
+    <h3>Service & Community</h3>
+    <ul>
+      <li>Volunteer Mentor, Palestinian Students & Scholars at Risk (2025–present)</li>
+      <li>Graduate Student Mentor, University of Toronto</li>
+      <li>Manuscript Reviewer, <em>Journal of Religion, Media & Digital Culture</em> (2022)</li>
+      <li>Mental Health Committee, Doctoral Students Association (2020-21)</li>
+    </ul>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h3>Contact</h3>
+    <p>Email: <a class="inline" href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a><br />
+       Location: Toronto, Canada
+    </p>
+  </section>
+
+  <footer style="text-align:center; padding:2rem 1rem; font-size:.8rem; color:var(--muted);">
+    © 2025 Hassan Asif · Built with vanilla HTML | CSS | JS
   </footer>
 
+  <!-- active-link script -->
   <script>
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('nav a');
 
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          const id = entry.target.getAttribute('id');
-          if (entry.isIntersecting) {
-            navLinks.forEach(link => {
-              link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-            });
-          }
-        });
-      },
-      { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
-    );
+    const observer = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        const id = e.target.getAttribute('id');
+        if(e.isIntersecting){
+          navLinks.forEach(l=>l.classList.toggle('active', l.getAttribute('href')==='#'+id));
+        }
+      });
+    },{rootMargin:'-50% 0px -50% 0px',threshold:0});
 
-    sections.forEach(section => observer.observe(section));
+    sections.forEach(s=>observer.observe(s));
   </script>
 </body>
 </html>
