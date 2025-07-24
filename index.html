@@ -54,6 +54,7 @@
         repeating-linear-gradient(90deg, rgba(0,255,0,.12) 0 2px, transparent 2px 40px);
       animation: gridScroll 8s linear infinite;
       mix-blend-mode: color-dodge;
+      pointer-events: none;  
     }
     @keyframes gridScroll { 0%{transform:translate(0,0);} 100%{transform:translate(40px,40px);} }
 
@@ -76,6 +77,7 @@
       display:inline-block; margin-top:1.5rem; padding:.5rem 1rem;
       border:1px solid var(--accent); border-radius:4px; color:var(--accent); text-decoration:none;
       transition:background .2s;
+      position: relative; z-index: 1;
     }
     .dl-cv:hover{ background:var(--accent); color:#000; }
 
@@ -185,11 +187,23 @@
   <section id="conferences">
     <h3>Conference Papers & Presentations (Selected)</h3>
     <ul>
-      <li>Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan. ICA Pre-Conference “Debating Creator Culture,” Boulder, CO, USA (2025)</li>
+      <li>
+  <a class="inline"
+     href="https://drive.google.com/file/d/1t2-g1xs4WJOOy6Y92PZG0cwbH04ug_ok/view"
+     target="_blank" rel="noopener">
+     Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan
+  </a>. ICA Pre-Conference “Debating Creator Culture,” Boulder, CO, USA (2025)
+</li>
       <li>Between confusion and deception: Ethical dilemmas in AI-enabled audiovisual remixing of Engineer Muhammad Ali Mirza’s sermons. Canadian Communication Association, Toronto, Canada (2025)</li>
       <li>Cracked devotion: Piracy, pedagogy, and Islamic media remixing in Pakistan. South Asia Graduate Student Workshop, University of Toronto (2025)</li>
       <li>Mediating truth: Tensions in AI-driven remixing of Engineer Muhammad Ali Mirza’s sermons. Communication Graduate Caucus, Carleton University, Ottawa (2025)</li>
-      <li>Digital desires and distortions: The impact of deepfake pornography in Pakistani cyberspace. Global Digital Intimacies Conference, University of Amsterdam (2024)</li>
+      <li>
+  <a class="inline"
+     href="https://globaldigitalcultures.org/conference2024/"
+     target="_blank" rel="noopener">
+     Digital desires and distortions: The impact of deepfake pornography in Pakistani cyberspace
+  </a>. Global Digital Intimacies Conference, University of Amsterdam (2024)
+</li>
       <li>Technological transcendence: Transformation of Naʿat in Pakistan’s digital Islamic landscape. CASIM Biennial Conference, Halifax (2024)</li>
       <li>Bytes of blessings: Examining digital technology’s influence on Pakistan’s Naʿat culture. 51st Annual Conference on South Asia, Madison, USA (2023)</li>
       <li>Prayers, pixels, and piracy: Online presentation of religious self in Pakistan’s Naʿat community. Graduate Student Conference, University of Calgary (2023)</li>
