@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Remix Lab — hassan.asif</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/remix.css" />
+</head>
+<body>
+  <header>
+    <a href="index.html">← Back</a>
+    <h1>Remix Lab</h1>
+    <p>All audio is generated in your browser. Nothing is uploaded.</p>
+  </header>
+
+  <section id="controls">
+    <button id="start">Start</button>
+    <button id="stop" disabled>Stop</button>
+
+    <label> BPM
+      <input id="bpm" type="range" min="60" max="180" value="120" />
+      <span id="bpmVal">120</span>
+    </label>
+
+    <button id="record" disabled>Record 8 bars</button>
+    <a id="download" style="display:none">Download</a>
+  </section>
+
+  <section id="grid" aria-label="16-step grid"></section>
+
+  <section id="impact" aria-live="polite">
+    <h2>Impact (simulated)</h2>
+    <div id="impactText">Toggle steps to see changes.</div>
+  </section>
+
+  <canvas id="viz" width="800" height="120" aria-label="Audio visualization"></canvas>
+
+  <!-- Tone.js (Web Audio framework) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+  <script defer src="js/remix.js"></script>
+</body>
+</html>
