@@ -8,6 +8,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/remix.css" />
+  <style>
+/* Fallback styles if the external CSS fails to load (kept minimal) */
+#grid { display:grid; grid-template-columns:repeat(17, minmax(20px,1fr)); gap:4px; padding:1rem }
+.step { width:100%; aspect-ratio:1; border:1px solid #1a1a1a; background:#0a0a0a }
+.step.active { background:#39ff14 }
+button { background:#050505; color:#39ff14; border:1px solid #1a1a1a; padding:.5rem .8rem }
+</style>
 </head>
 <body>
   <header>
