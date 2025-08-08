@@ -1,0 +1,21 @@
+:root { --neon:#39ff14; --bg:#000; --grid:#1a1a1a; }
+html,body{margin:0;background:var(--bg);color:#d8fdd1;
+  font-family:'Share Tech Mono', monospace; line-height:1.6}
+a{color:var(--neon);text-decoration:none}
+a:hover{text-decoration:underline}
+
+header{padding:1rem;border-bottom:1px solid var(--neon)}
+header h1{margin:.2rem 0 0 0}
+
+#controls{padding:1rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
+button{background:#050505;color:var(--neon);border:1px solid var(--grid);
+  padding:.5rem .8rem;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+#grid{display:grid;grid-template-columns:repeat(17, minmax(20px,1fr));
+  gap:4px;padding:1rem}
+#grid .rowlabel{opacity:.8;display:flex;align-items:center;justify-content:center}
+.step{width:100%;aspect-ratio:1;border:1px solid var(--grid);background:#0a0a0a}
+.step.active{background:var(--neon);box-shadow:0 0 12px var(--neon)}
+
+canvas{display:block;margin:1rem;border:1px solid var(--grid)}
