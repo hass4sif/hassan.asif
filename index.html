@@ -2,666 +2,708 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="light" />
-  <title>Hassan Asif | Digital Religion & Media</title>
-  <meta name="description" content="Hassan Asif — scholar of digital religion and media. Research on AI-assisted devotional edits, captions, and audio across platforms." />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hassan Asif. Digital religion, remix, infrastructure.</title>
+  <meta name="description" content="Hassan Asif is a scholar of digital religion and media. He studies how AI assisted edits, captions, and audio travel across platforms and reshape doctrine, authority, and aesthetic form in Pakistan and its diasporas." />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg: #ffffff;
-      --surface: #f6f7fb;
-      --surface2: #fbfbfe;
-      --text: #121316;
-      --muted: rgba(18,19,22,.72);
-      --border: rgba(18,19,22,.12);
-      --shadow: 0 10px 30px rgba(18,19,22,.08);
-
-      --accent: #2b5cff;   /* calm blue */
-      --accent2:#6a2bff;   /* purple hover */
-      --max: 980px;
-
-      --radius: 16px;
+    :root {
+      --bg: #0a0a0a;
+      --bg-soft: #131313;
+      --ink: #e8e2d4;       /* cassette label cream */
+      --ink-dim: #8a857a;
+      --led: #39ff14;       /* hall road LED strip */
+      --solder: #ff8c42;    /* hot solder amber */
+      --crt: #6dffd2;       /* signal mint */
+      --rule: #1f1f1f;
+      --rule-strong: #3a3a3a;
+      --maxw: 1180px;
     }
-
-    *{ box-sizing: border-box; }
-
-    html{ scroll-behavior: smooth; }
-
-    body{
-      margin: 0;
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
-      color: var(--text);
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
       background: var(--bg);
-      line-height: 1.6;
+      color: var(--ink);
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 15px;
+      line-height: 1.65;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        radial-gradient(rgba(255,255,255,0.012) 1px, transparent 1px);
+      background-size: 3px 3px, 7px 7px;
+      background-position: 0 0, 1px 1px;
     }
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.012) 0,
+        rgba(255,255,255,0.012) 1px,
+        transparent 1px,
+        transparent 3px);
+      z-index: 100;
+    }
+    a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--rule-strong);
+      transition: color .15s ease, border-color .15s ease;
+    }
+    a:hover, a:focus { color: var(--led); border-bottom-color: var(--led); outline: none; }
+    ::selection { background: var(--led); color: var(--bg); }
 
-    a{ color: var(--accent); text-decoration: none; }
-    a:hover{ color: var(--accent2); text-decoration: underline; }
-    a:focus-visible,
-    button:focus-visible,
-    summary:focus-visible{
-      outline: 3px solid rgba(43,92,255,.25);
-      outline-offset: 2px;
-      border-radius: 10px;
-    }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
 
-    .wrap{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    .skip{
-      position:absolute;
-      left:-9999px; top:auto;
-      width:1px; height:1px;
-      overflow:hidden;
-    }
-    .skip:focus{
-      left:20px; top:16px;
-      width:auto; height:auto;
-      padding:10px 12px;
-      background: var(--surface);
-      border:1px solid var(--border);
-      border-radius: 12px;
-      z-index: 9999;
-    }
-
-    /* ---------- header / nav ---------- */
-    .site-header{
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(255,255,255,.92);
-      border-bottom: 1px solid var(--border);
+    /* TOP NAV */
+    nav.top {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(10,10,10,0.85);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
     }
-    .header-inner{
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 14px 0;
-      flex-wrap: wrap;
+    nav.top .inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; gap: 16px;
     }
-    .brand{
-      font-weight: 800;
-      letter-spacing: .2px;
-      color: var(--text);
-      text-decoration:none;
-      white-space: nowrap;
+    nav.top .brand {
+      color: var(--led);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      border: none;
+      font-size: 14px;
     }
-    .nav{
-      display:flex;
-      align-items:center;
-      gap: 14px;
-      flex-wrap: wrap;
-      font-size: .95rem;
-    }
-    .nav a{
-      color: rgba(18,19,22,.84);
-      text-decoration:none;
-      padding: 6px 8px;
-      border-radius: 10px;
-    }
-    .nav a:hover{
-      background: var(--surface);
-      text-decoration:none;
-      color: var(--text);
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--text);
-      text-decoration:none;
-      font-weight: 700;
-      font-size: .92rem;
-      white-space: nowrap;
-    }
-    .pill.primary{
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .pill.primary:hover{ color:#fff; text-decoration:none; background: var(--accent2); border-color: var(--accent2); }
-    .pill:hover{ text-decoration:none; }
-
-    /* ---------- hero ---------- */
-    .hero{
-      padding: 46px 0 24px 0;
-    }
-    .eyebrow{
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: var(--muted);
-      font-weight: 800;
-      font-size: .82rem;
-      margin: 0 0 10px 0;
-    }
-    h1{
-      font-size: clamp(2.15rem, 4vw, 3.05rem);
-      line-height: 1.15;
-      margin: 0 0 10px 0;
-      letter-spacing: .2px;
-    }
-    .roles{
-      display:flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 0 0 14px 0;
-      padding: 0;
+    nav.top .brand::before { content: "[ "; color: var(--ink-dim); }
+    nav.top .brand::after  { content: " ]"; color: var(--ink-dim); }
+    nav.top ul {
       list-style: none;
+      display: flex; gap: 22px; flex-wrap: wrap;
     }
-    .roles li{
-      padding: 6px 10px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: var(--surface);
-      font-weight: 700;
-      font-size: .95rem;
-      color: rgba(18,19,22,.88);
+    nav.top a {
+      font-size: 13px;
+      color: var(--ink-dim);
+      border: none;
     }
-    .lede{
-      margin: 0;
-      max-width: 72ch;
-      font-size: 1.08rem;
-      color: rgba(18,19,22,.88);
-    }
-    .meta{
-      margin: 12px 0 0 0;
-      color: var(--muted);
-      max-width: 72ch;
-    }
-    .actions{
-      display:flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
+    nav.top a:hover { color: var(--led); }
+    @media (max-width: 640px) {
+      nav.top ul { gap: 14px; }
+      nav.top a { font-size: 12px; }
     }
 
-    /* ---------- sections ---------- */
-    section{
-      padding: 34px 0;
-      border-top: 1px solid var(--border);
-    }
-    h2{
-      font-size: 1.55rem;
-      margin: 0 0 12px 0;
-      letter-spacing: .2px;
-    }
-    .section-note{
-      color: var(--muted);
-      margin: 0 0 18px 0;
-      max-width: 75ch;
-    }
+    section { scroll-margin-top: 72px; }
 
-    /* cards */
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 14px;
-      margin-top: 14px;
-    }
-    .card{
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-    .card h3{
-      font-size: 1.05rem;
-      margin: 0 0 8px 0;
-    }
-    .card p{
-      margin: 0;
-      color: var(--muted);
-    }
-    .card .small{
-      margin-top: 10px;
-      font-size: .95rem;
-    }
-
-    /* timeline list */
-    .timeline{
-      list-style: none;
-      padding: 0;
-      margin: 10px 0 0 0;
+    /* HERO */
+    header.hero { padding: 80px 0 60px; border-bottom: 1px solid var(--rule); }
+    .hero-grid {
       display: grid;
-      gap: 10px;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 60px;
+      align-items: center;
     }
-    .timeline li{
-      display:grid;
-      grid-template-columns: 140px 1fr;
-      gap: 14px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
+    @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; gap: 44px; } }
+
+    .marker {
+      color: var(--ink-dim);
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
     }
-    .timeline li:last-child{ border-bottom: 0; }
-    .when{
-      color: var(--muted);
-      font-variant-numeric: tabular-nums;
+    .marker .ix { color: var(--led); }
+    h1.name {
+      font-size: clamp(40px, 6.4vw, 68px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+    h1.name .dot { color: var(--led); }
+    h1.name .nastaliq {
+      display: block;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      font-size: 0.5em;
+      color: var(--ink-dim);
+      margin-top: 18px;
+      line-height: 1;
+      font-weight: 400;
+      direction: rtl;
+    }
+    .tagline {
+      color: var(--crt);
+      font-size: 18px;
+      margin: 16px 0 22px;
+      font-style: italic;
+    }
+    .bio { color: var(--ink); max-width: 60ch; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .chip {
+      border: 1px solid var(--rule-strong);
+      padding: 5px 10px;
+      font-size: 12px;
+      color: var(--ink-dim);
+      letter-spacing: 0.02em;
+    }
+    .chip::before { content: "// "; color: var(--led); }
+    .signal-chain {
+      margin-top: 30px;
+      font-size: 11px;
+      color: var(--ink-dim);
+      letter-spacing: 0.1em;
+      overflow-x: auto;
+      padding-bottom: 4px;
       white-space: nowrap;
     }
-    .what{
-      color: rgba(18,19,22,.92);
+    .signal-chain .node {
+      border: 1px solid var(--rule-strong);
+      padding: 3px 8px;
+      margin: 0 2px;
+      text-transform: uppercase;
     }
-    .what strong{ color: var(--text); }
+    .signal-chain .arrow { color: var(--led); margin: 0 4px; }
 
-    @media (max-width: 680px){
-      .timeline li{ grid-template-columns: 1fr; gap: 6px; }
-      .when{ white-space: normal; }
+    /* PORTRAIT FRAME (glitch ready) */
+    .portrait-frame {
+      position: relative;
+      aspect-ratio: 4/5;
+      width: 100%;
+      max-width: 360px;
+      margin-left: auto;
+      background: var(--bg-soft);
+      border: 1px solid var(--rule-strong);
+      overflow: hidden;
+    }
+    @media (max-width: 860px) { .portrait-frame { margin: 0 auto; } }
+    .portrait-frame .ui-top, .portrait-frame .ui-rec {
+      position: absolute;
+      top: 8px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      z-index: 5;
+      background: rgba(10,10,10,0.72);
+      padding: 3px 7px;
+      pointer-events: none;
+    }
+    .portrait-frame .ui-top { left: 10px; color: var(--ink-dim); }
+    .portrait-frame .ui-rec { right: 10px; color: var(--solder); }
+    .portrait-frame .ui-rec::before {
+      content: "● ";
+      animation: blink 1.6s infinite;
+      display: inline-block;
+    }
+    @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.15; } }
+    .portrait-frame .ui-bot {
+      position: absolute;
+      bottom: 8px; left: 10px; right: 10px;
+      display: flex; justify-content: space-between;
+      font-size: 10px; letter-spacing: 0.18em;
+      z-index: 5; color: var(--ink-dim);
+      pointer-events: none;
+    }
+    .portrait-frame .ui-bot span {
+      background: rgba(10,10,10,0.72);
+      padding: 3px 7px;
     }
 
-    /* details / accordion */
-    details{
-      margin-top: 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--surface);
-      box-shadow: var(--shadow);
+    /* The image layers. CSS variable --src is set inline so swapping the image is one place. */
+    .portrait-frame .stack {
+      position: absolute; inset: 0; z-index: 2;
     }
-    summary{
-      cursor: pointer;
-      padding: 14px 16px;
-      font-weight: 800;
-      list-style: none;
+    .portrait-frame .layer {
+      position: absolute; inset: 0;
+      background-image: var(--src, none);
+      background-size: cover;
+      background-position: center;
     }
-    summary::-webkit-details-marker{ display:none; }
-    details .details-body{
-      padding: 0 16px 16px 16px;
-      color: rgba(18,19,22,.9);
+    .portrait-frame .layer.base { z-index: 1; filter: contrast(1.05) saturate(0.95); }
+    .portrait-frame .layer.r {
+      z-index: 2;
+      mix-blend-mode: screen;
+      filter: url(#chan-r);
+      animation: splitR 7s infinite ease-in-out;
     }
-    .list-tight{
-      margin: 10px 0 0 0;
-      padding-left: 18px;
+    .portrait-frame .layer.b {
+      z-index: 2;
+      mix-blend-mode: screen;
+      filter: url(#chan-b);
+      animation: splitB 7s infinite ease-in-out 0.12s;
     }
-    .list-tight li{ margin: 8px 0; }
+    @keyframes splitR {
+      0%, 88%, 100% { transform: translate(0,0); opacity: 0.65; }
+      89% { transform: translate(-3px, 0); opacity: 0.9; }
+      91% { transform: translate(2px, -1px); opacity: 0.9; }
+      93% { transform: translate(-2px, 1px); opacity: 0.9; }
+      95% { transform: translate(0,0); opacity: 0.65; }
+    }
+    @keyframes splitB {
+      0%, 88%, 100% { transform: translate(0,0); opacity: 0.65; }
+      89% { transform: translate(3px, 0); opacity: 0.9; }
+      91% { transform: translate(-2px, 1px); opacity: 0.9; }
+      93% { transform: translate(2px, -1px); opacity: 0.9; }
+      95% { transform: translate(0,0); opacity: 0.65; }
+    }
+    .portrait-frame .scan {
+      position: absolute; inset: 0; z-index: 4;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0,
+        rgba(0,0,0,0) 2px,
+        rgba(0,0,0,0.28) 2px,
+        rgba(0,0,0,0.28) 3px);
+      pointer-events: none;
+    }
+    /* placeholder when no image is set */
+    .portrait-frame .placeholder {
+      position: absolute; inset: 0; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink-dim);
+      font-size: 12px; letter-spacing: 0.2em;
+      background:
+        linear-gradient(135deg, rgba(57,255,20,0.08) 0%, transparent 50%, rgba(255,140,66,0.08) 100%),
+        repeating-linear-gradient(45deg, var(--bg) 0, var(--bg) 12px, var(--bg-soft) 12px, var(--bg-soft) 24px);
+    }
 
-    /* footer */
-    footer{
-      padding: 38px 0 50px 0;
-      background: var(--surface2);
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      text-align: center;
+    /* SECTIONS */
+    section.block { padding: 64px 0; border-bottom: 1px solid var(--rule); }
+    section.block h2 {
+      font-size: 12px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin-bottom: 32px;
+      font-weight: 500;
     }
-    .foot-links{
-      display:flex;
-      justify-content:center;
-      flex-wrap:wrap;
-      gap: 12px;
-      margin-top: 10px;
+    section.block h2 .ix { color: var(--led); margin-right: 14px; }
+
+    /* NOW */
+    .now {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 28px;
+      align-items: start;
     }
+    @media (max-width: 640px) { .now { grid-template-columns: 1fr; gap: 12px; } }
+    .now .when {
+      color: var(--solder);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      padding-top: 5px;
+    }
+    .now p { max-width: 72ch; margin-bottom: 14px; }
+    .now p:last-child { margin-bottom: 0; }
+    .now .note { color: var(--ink-dim); font-size: 14px; }
+
+    /* PUBS */
+    ul.pubs { list-style: none; display: grid; gap: 30px; }
+    ul.pubs li {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 24px;
+      align-items: start;
+      padding-bottom: 26px;
+      border-bottom: 1px dotted var(--rule);
+    }
+    ul.pubs li:last-child { border-bottom: none; padding-bottom: 0; }
+    @media (max-width: 640px) {
+      ul.pubs li { grid-template-columns: 1fr; gap: 8px; }
+    }
+    ul.pubs .year {
+      color: var(--solder);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      padding-top: 3px;
+    }
+    ul.pubs .title {
+      font-size: 17px;
+      line-height: 1.4;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    ul.pubs .title a { border-bottom: 1px dashed var(--rule-strong); }
+    ul.pubs .venue {
+      font-size: 13px;
+      color: var(--ink-dim);
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    ul.pubs .blurb {
+      font-size: 14px;
+      color: var(--ink-dim);
+      max-width: 68ch;
+    }
+
+    /* TEACHING */
+    .teach { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .teach-card {
+      border: 1px solid var(--rule);
+      padding: 20px;
+      background: var(--bg-soft);
+      transition: border-color .2s ease, transform .2s ease;
+    }
+    .teach-card:hover { border-color: var(--rule-strong); transform: translateY(-2px); }
+    .teach-card .lvl {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--led);
+      margin-bottom: 10px;
+    }
+    .teach-card .nm { font-size: 15px; color: var(--ink); margin-bottom: 6px; line-height: 1.35; }
+    .teach-card .when { font-size: 12px; color: var(--ink-dim); }
+
+    /* TALKS */
+    ul.talks { list-style: none; display: grid; gap: 16px; }
+    ul.talks li {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px dotted var(--rule);
+    }
+    ul.talks li:last-child { border-bottom: none; }
+    @media (max-width: 640px) {
+      ul.talks li { grid-template-columns: 1fr; gap: 4px; }
+    }
+    ul.talks .date {
+      color: var(--solder);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      padding-top: 3px;
+    }
+    ul.talks .what { font-size: 14px; color: var(--ink); display: block; }
+    ul.talks .where { color: var(--ink-dim); font-size: 12px; display: block; margin-top: 4px; }
+
+    /* LINK GRID */
+    .linkgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .linkgrid a {
+      display: block;
+      border: 1px solid var(--rule);
+      padding: 16px 18px;
+      font-size: 14px;
+      color: var(--ink);
+      background: var(--bg-soft);
+      transition: all .15s ease;
+    }
+    .linkgrid a:hover {
+      border-color: var(--led);
+      color: var(--led);
+      background: rgba(57,255,20,0.04);
+    }
+    .linkgrid a .k {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--ink-dim);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .linkgrid a:hover .k { color: var(--solder); }
+
+    /* FOOTER */
+    footer { padding: 36px 0 80px; font-size: 12px; color: var(--ink-dim); }
+    footer .row {
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+    }
+    footer .dot { color: var(--led); }
+    footer a { font-size: 12px; }
 
     /* reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      html{ scroll-behavior: auto; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
+<body>
 
-<body id="top">
-  <a class="skip" href="#content">Skip to content</a>
+  <!-- SVG color-channel filters for the chromatic glitch -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="chan-r">
+        <feColorMatrix type="matrix" values="
+          1 0 0 0 0
+          0 0 0 0 0
+          0 0 0 0 0
+          0 0 0 1 0" />
+      </filter>
+      <filter id="chan-b">
+        <feColorMatrix type="matrix" values="
+          0 0 0 0 0
+          0 0 0 0 0
+          0 0 1 0 0
+          0 0 0 1 0" />
+      </filter>
+    </defs>
+  </svg>
 
-  <header class="site-header" role="banner">
-    <div class="wrap header-inner">
-      <a class="brand" href="#top">Hassan Asif</a>
+  <nav class="top">
+    <div class="wrap inner">
+      <a href="#top" class="brand">h.asif</a>
+      <ul>
+        <li><a href="#writing">writing</a></li>
+        <li><a href="#teaching">teaching</a></li>
+        <li><a href="#speaking">speaking</a></li>
+        <li><a href="lab.html">lab</a></li>
+        <li><a href="game.html">game</a></li>
+        <li><a href="cv.html">cv</a></li>
+        <li><a href="#elsewhere">elsewhere</a></li>
+      </ul>
+    </div>
+  </nav>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="#highlights">Highlights</a>
-        <a href="#research">Research</a>
-        <a href="#writing">Writing</a>
-        <a href="#teaching">Teaching</a>
-        <a href="#contact">Contact</a>
-        <a href="remix.html" title="Try the in-browser sequencer">Remix Lab</a>
-      </nav>
+  <header class="hero wrap" id="top">
+    <div class="hero-grid">
+      <div>
+        <div class="marker"><span class="ix">// 01</span> &nbsp; identity</div>
+        <h1 class="name">
+          Hassan Asif<span class="dot">.</span>
+          <span class="nastaliq">حسن آصف</span>
+        </h1>
+        <p class="tagline">Scholar of digital religion, remix, and infrastructure.</p>
+        <p class="bio">
+          I study how AI assisted edits, captions, and audio travel across platforms and reshape doctrine, authority, and aesthetic form. My work combines ethnography, close reading of audiovisual remixes, and media genealogy, with sustained attention to platforms, archives, and informal media economies. Fieldwork to date has centred on Pakistan and its global diasporas.
+        </p>
+        <div class="chips">
+          <span class="chip">digital religion</span>
+          <span class="chip">remix culture</span>
+          <span class="chip">platform studies</span>
+          <span class="chip">naat / نعت</span>
+          <span class="chip">AI &amp; deepfake</span>
+          <span class="chip">South Asia</span>
+        </div>
+        <div class="signal-chain" aria-hidden="true">
+          <span class="node">mic</span><span class="arrow">▶</span><span class="node">preamp</span><span class="arrow">▶</span><span class="node">DAW</span><span class="arrow">▶</span><span class="node">plugin</span><span class="arrow">▶</span><span class="node">platform</span><span class="arrow">▶</span><span class="node">phone</span><span class="arrow">▶</span><span class="node">ear</span>
+        </div>
+      </div>
 
-      <div class="nav" aria-label="Quick actions">
-        <a class="pill primary" href="Asif_Hassan_CV_January2026.pdf" download>Download CV</a>
+      <div class="portrait-frame" id="portrait" style="--src:url('images/portrait.jpg');">
+        <div class="ui-top">PORTRAIT.JPG · loop_glitch</div>
+        <div class="ui-rec">REC</div>
+        <div class="stack">
+          <div class="placeholder">DROP IMAGE AT images/portrait.jpg</div>
+          <div class="layer base"></div>
+          <div class="layer r"></div>
+          <div class="layer b"></div>
+        </div>
+        <div class="scan"></div>
+        <div class="ui-bot">
+          <span>Toronto · 43.6532° N</span>
+          <span>2026.05</span>
+        </div>
       </div>
     </div>
   </header>
 
-  <main id="content" class="wrap" role="main">
-    <!-- HERO -->
-    <div class="hero" aria-label="Intro">
-      <p class="eyebrow">Digital Religion &amp; Media</p>
-      <h1>Hassan Asif</h1>
-
-      <ul class="roles" aria-label="Roles">
-        <li>Researcher</li>
-        <li>Teacher</li>
-        <li>Ethnography</li>
-        <li>Platforms &amp; Remix</li>
-      </ul>
-
-      <p class="lede">
-        Scholar of digital religion and media who traces how <strong>AI‑assisted devotional edits, captions, and audio</strong>
-        travel across platforms and remake doctrine and authority, using <strong>close reading, ethnography, and media genealogy</strong>.
-      </p>
-
-      <p class="meta">
-        PhD Candidate, Faculty of Information, University of Toronto (2019–present; expected Winter 2026).<br />
-        Toronto, Canada · <a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a> · @hassan.4sif
-      </p>
-
-      <div class="actions" aria-label="Key links">
-        <a class="pill primary" href="Asif_Hassan_CV_January2026.pdf" download>CV (PDF)</a>
-        <a class="pill" href="https://scholar.google.com/citations?hl=en&user=mFY-A4YAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
-        <a class="pill" href="https://www.ischools.org/post/featured-member-hassan-asif" target="_blank" rel="noopener">iSchools Feature</a>
-        <a class="pill" href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif" target="_blank" rel="noopener">Jackman Fellowship</a>
+  <section class="block wrap" id="now">
+    <h2><span class="ix">// 02</span> now</h2>
+    <div class="now">
+      <div class="when">MAY 2026</div>
+      <div>
+        <p>
+          I defended my PhD in Information at the <a href="https://ischool.utoronto.ca/profile/hassan-asif/">University of Toronto</a> in May 2026, with a collaborative specialization in <a href="https://munkschool.utoronto.ca/southasia">South Asian Studies</a>. Conferral is in October. The dissertation, <em>Remixing Devotion: Digital Media Practices in Pakistan</em>, follows na'at and Islamic sermon media through home studios, repair markets, broadcast control rooms, and WhatsApp chains.
+        </p>
+        <p>
+          I am now turning chapters into articles and a book proposal, co-editing a volume on <em>Digital Religion</em> with Hassan Bashir (submission Winter 2026), and teaching at <a href="https://www.utm.utoronto.ca/communication-culture-information-technology/">UTM ICCIT</a>.
+        </p>
+        <p class="note">
+          Recent recognition: <a href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif">Chancellor Jackman Graduate Fellow</a>, Margaret Higgins Memorial Fellow, Amilcare Iannucci Graduate Fellow in the Humanities, SSHRC Doctoral Scholar.
+        </p>
       </div>
-
-      <!-- Optional headshot (keep it small + optimized for speed). Put a file at assets/hassan.webp and uncomment:
-      <p style="margin-top:18px">
-        <img src="assets/hassan.webp" alt="Portrait of Hassan Asif" width="160" height="160" loading="lazy" decoding="async" style="border-radius:999px;border:1px solid rgba(18,19,22,.12)" />
-      </p>
-      -->
     </div>
+  </section>
 
-    <!-- HIGHLIGHTS -->
-    <section id="highlights">
-      <h2>Highlights</h2>
-      <p class="section-note">
-        A few fast entry points (so the site reads like a person, not a CV).
-      </p>
-
-      <div class="cards" role="list">
-        <article class="card" role="listitem">
-          <h3>Featured Member — iSchools (2025)</h3>
-          <p>Interview profile on research, teaching, and digital cultures.</p>
-          <p class="small"><a href="https://www.ischools.org/post/featured-member-hassan-asif" target="_blank" rel="noopener">Read the feature →</a></p>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>Chancellor Jackman Graduate Fellow (2024–25)</h3>
-          <p>Jackman Humanities Institute fellowship project: <em>Remixing Devotion</em>.</p>
-          <p class="small"><a href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif" target="_blank" rel="noopener">Fellowship page →</a></p>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>Recent article (2025)</h3>
-          <p><em>Media, Culture &amp; Society</em>: “Discostan and Hamnawa: Between erasure and preservation…”</p>
-          <p class="small"><a href="https://doi.org/10.1177/01634437251353093" target="_blank" rel="noopener">DOI →</a></p>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>Recent public writing (HELIOTROPE, 2025)</h3>
-          <p>“Hall Road, Lahore: Devotion’s signal chain.”</p>
-          <p class="small"><a href="https://www.heliotropejournal.net/helio/hall-road" target="_blank" rel="noopener">Read →</a></p>
-        </article>
-      </div>
-
-      <details>
-        <summary>More (awards, fieldwork, and roles)</summary>
-        <div class="details-body">
-          <h3 style="margin:12px 0 6px 0; font-size:1.05rem;">Selected awards</h3>
-          <ul class="list-tight">
-            <li>SSHRC Doctoral Scholarship (2023–24)</li>
-            <li>Ontario Graduate Scholarship (2021–23)</li>
-            <li>Margaret Higgins Memorial Fellowship (2025)</li>
-            <li>Professor Amilcare Iannucci Graduate Fellowship in the Humanities (2025)</li>
-            <li>School of Graduate Studies Research Travel Grant (2022)</li>
-            <li>Ethel W. Auster Scholarship for Doctoral Research (2022)</li>
-          </ul>
-
-          <h3 style="margin:18px 0 6px 0; font-size:1.05rem;">Fieldwork</h3>
-          <ul class="list-tight">
-            <li>Devotional media &amp; remix culture — Karachi, Lahore, and adjacent cities (Pakistan), Jul–Dec 2022</li>
-            <li>Buddhist sculpture &amp; heritage values — Taxila &amp; Islamabad (Pakistan), Apr–Jul 2015</li>
-          </ul>
-
-          <p style="margin:14px 0 0 0; color: rgba(18,19,22,.78);">
-            (Full details remain in the CV PDF.)
-          </p>
+  <section class="block wrap" id="writing">
+    <h2><span class="ix">// 03</span> recent writing</h2>
+    <ul class="pubs">
+      <li>
+        <div class="year">2025</div>
+        <div>
+          <div class="title"><a href="https://doi.org/10.1177/01634437251353093">Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives</a></div>
+          <div class="venue"><a href="https://journals.sagepub.com/home/mcs">Media, Culture and Society</a>, 47(8), 1599 to 1618.</div>
+          <div class="blurb">Two diasporic archives, two strategies. How do unofficial collections of South Asian music survive platforms that prefer to forget?</div>
         </div>
-      </details>
-    </section>
-
-    <!-- RESEARCH -->
-    <section id="research">
-      <h2>Research</h2>
-      <p class="section-note">
-        I study how people use phones, laptops, studios, and platforms to record, edit, and circulate devotional media—and how those technical choices become ethical and theological questions.
-      </p>
-
-      <div class="cards" role="list">
-        <article class="card" role="listitem">
-          <h3>Dissertation</h3>
-          <p><strong>“Remixing Devotion: Digital Media Practices in Pakistan.”</strong></p>
-          <p class="small">Focus: devotional remixing, platform circulation, and the politics of visibility.</p>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>Methods</h3>
-          <p>Close reading · Ethnography · Media genealogy</p>
-          <p class="small">Attention to infrastructures, everyday workflows, and “small” technical decisions.</p>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>Core interests</h3>
-          <p>Digital religion · Remix aesthetics · AI media · Platforms &amp; policy · South Asian media worlds</p>
-        </article>
-      </div>
-
-      <details>
-        <summary>Professional experience (expand)</summary>
-        <div class="details-body">
-          <ul class="list-tight">
-            <li><strong>Chief Presiding Officer</strong>, University of Toronto Mississauga (May–Jun 2025)</li>
-            <li><strong>Senior Digital Fellow</strong>, Muslims in Canada Archive (MiCA), University of Toronto (Sep 2021–Jun 2023)</li>
-            <li><strong>Senior Digital Fellow</strong>, Muslims in Canada Data Initiative (MiCDI), University of Toronto (Dec 2021–Jun 2023)</li>
-            <li><strong>Program Manager</strong>, Amal Academy (Sep 2017–Feb 2018)</li>
-            <li><strong>Project Assistant / Consultant</strong>, UNESCO Pakistan (Mar 2016–Jul 2017)</li>
-          </ul>
+      </li>
+      <li>
+        <div class="year">2025</div>
+        <div>
+          <div class="title"><a href="https://www.heliotropejournal.net/helio/hall-road">Hall Road, Lahore: Devotion's signal chain</a></div>
+          <div class="venue"><a href="https://www.heliotropejournal.net/">HELIOTROPE</a>. Field essay with photographs.</div>
+          <div class="blurb">A walking essay on the Lahore electronics bazaar that keeps Pakistan's na'at industry running. Capacitors as theology; repair as pedagogy; piracy as policy by other means.</div>
         </div>
-      </details>
-    </section>
-
-    <!-- WRITING -->
-    <section id="writing">
-      <h2>Writing</h2>
-      <p class="section-note">
-        Selected items with direct links. (The full list stays available—just not forced on the reader.)
-      </p>
-
-      <ul class="timeline" aria-label="Selected writing timeline">
-        <li>
-          <div class="when">2025</div>
-          <div class="what">
-            <strong>Peer‑reviewed:</strong>
-            <a href="https://doi.org/10.1177/01634437251353093" target="_blank" rel="noopener">
-              Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives
-            </a>
-            <span style="color:rgba(18,19,22,.70)">— <em>Media, Culture &amp; Society</em></span>
-          </div>
-        </li>
-        <li>
-          <div class="when">2025</div>
-          <div class="what">
-            <strong>Public writing:</strong>
-            <a href="https://www.heliotropejournal.net/helio/hall-road" target="_blank" rel="noopener">
-              Hall Road, Lahore: Devotion’s signal chain
-            </a>
-            <span style="color:rgba(18,19,22,.70)">— <em>HELIOTROPE</em></span>
-          </div>
-        </li>
-        <li>
-          <div class="when">2024</div>
-          <div class="what">
-            <strong>Peer‑reviewed:</strong>
-            <a href="https://doi.org/10.1163/21659214-bja10110" target="_blank" rel="noopener">
-              “Blur the preacher”: Media remix and digital technocultural practice in Pakistan
-            </a>
-            <span style="color:rgba(18,19,22,.70)">— <em>Journal of Religion, Media and Digital Culture</em></span>
-          </div>
-        </li>
-        <li>
-          <div class="when">In press</div>
-          <div class="what">
-            <strong>Peer‑reviewed:</strong> Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan
-            <span style="color:rgba(18,19,22,.70)">— <em>Digital Humanities Quarterly</em></span>
-          </div>
-        </li>
-        <li>
-          <div class="when">Forthcoming</div>
-          <div class="what">
-            <strong>Peer‑reviewed:</strong> Moral traffic: How WhatsApp moves media, rules, and resources in Pakistan’s devotional media ecologies
-            <span style="color:rgba(18,19,22,.70)">— <em>Mobile Media &amp; Communication</em> (expected 2026)</span>
-          </div>
-        </li>
-      </ul>
-
-      <details>
-        <summary>Full publications (expand)</summary>
-        <div class="details-body">
-          <h3 style="margin:12px 0 6px 0; font-size:1.05rem;">Peer‑reviewed journal articles</h3>
-          <ul class="list-tight">
-            <li>
-              <a href="https://doi.org/10.1177/01634437251353093" target="_blank" rel="noopener">
-                Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives
-              </a>. <em>Media, Culture &amp; Society</em> (2025)
-            </li>
-            <li>
-              <a href="https://doi.org/10.1163/21659214-bja10110" target="_blank" rel="noopener">
-                “Blur the preacher”: Media remix and digital technocultural practice in Pakistan
-              </a>. <em>Journal of Religion, Media and Digital Culture</em> (2024)
-            </li>
-            <li>Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan. <em>Digital Humanities Quarterly</em> (in press)</li>
-            <li>Moral traffic: How WhatsApp moves media, rules, and resources in Pakistan’s devotional media ecologies. <em>Mobile Media &amp; Communication</em> (forthcoming 2026)</li>
-            <li>IslaMixing: Hauntology as an experimental framework for exploring online #Islamogram memes. <em>Journal of Media and Religion</em> (under review)</li>
-          </ul>
-
-          <h3 style="margin:18px 0 6px 0; font-size:1.05rem;">Peer‑reviewed book chapters</h3>
-          <ul class="list-tight">
-            <li>Translating truth: AI in digital Islamic sermons and the case of Engineer Muhammad Ali Mirza. In <em>Social Media, Religion, and Culture</em> (Routledge) (in press)</li>
-            <li>Technical imagination against deepfakes: Reading, bending, and exposing the image game. In <em>Ethnographies of Digital Addiction, Harm, and Repair</em> (Bloomsbury Academic) (in press)</li>
-            <li>
-              <a href="https://doi.org/10.1007/978-981-10-4071-9_7" target="_blank" rel="noopener">
-                The Buddha Remains: Heritage transactions in Taxila, Pakistan
-              </a>. In <em>The Making of Islamic Heritage</em> (Palgrave Macmillan, 2017) (with Trinidad Rico)
-            </li>
-          </ul>
-
-          <h3 style="margin:18px 0 6px 0; font-size:1.05rem;">Other writing</h3>
-          <ul class="list-tight">
-            <li><a href="https://www.heliotropejournal.net/helio/hall-road" target="_blank" rel="noopener">Hall Road, Lahore: Devotion’s signal chain</a>. <em>HELIOTROPE</em> (2025)</li>
-            <li>Really risky “interpretation”. <em>Association for Heritage Interpretation</em> (2019)</li>
-            <li>Reports. <em>Anthropology of the Middle East</em> (2015) (with Trinidad Rico)</li>
-            <li>Rolling out a new broadband era in Qatar. <em>The Edge</em> (2013)</li>
-          </ul>
+      </li>
+      <li>
+        <div class="year">2024</div>
+        <div>
+          <div class="title"><a href="https://doi.org/10.1163/21659214-bja10110">"Blur the preacher": Media remix and digital technocultural practice in Pakistan</a></div>
+          <div class="venue"><a href="https://brill.com/view/journals/rmdc/rmdc-overview.xml">Journal of Religion, Media and Digital Culture</a>, 13(3), 363 to 386.</div>
+          <div class="blurb">When remixers blur, mute, and recompose preachers, what changes about religious authority?</div>
         </div>
-      </details>
-    </section>
-
-    <!-- TEACHING -->
-    <section id="teaching">
-      <h2>Teaching</h2>
-      <p class="section-note">
-        I teach digital media, platforms, and culture with a focus on remix, policy, and everyday practice.
-      </p>
-
-      <div class="cards" role="list">
-        <article class="card" role="listitem">
-          <h3>Courses taught</h3>
-          <ul class="list-tight">
-            <li><em>Reimagining Global Copyright</em> (Graduate, U of T, 2024 &amp; 2025)</li>
-            <li><em>Religion, Media &amp; Popular Culture</em> (Undergraduate, UTM, 2023)</li>
-            <li><em>Engaging with Texts</em> (LUMS, 2019)</li>
-            <li><em>History &amp; Sociology</em> (A‑level, 2018–19)</li>
-          </ul>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>Instructor of record</h3>
-          <p><em>Human‑Machine Communication</em> (UTM, Fall 2025) — appointed; deferred during parental leave.</p>
-          <p class="small"><em>Digital Platforms: A Global Perspective</em> (UTM, Fall 2025) — appointed; deferred during parental leave.</p>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>Student support</h3>
-          <p>Mentoring (U of T) and volunteer mentoring for Palestinian Students &amp; Scholars at Risk (PSSAR).</p>
-        </article>
-      </div>
-
-      <details>
-        <summary>Teaching assistant roles (expand)</summary>
-        <div class="details-body">
-          <ul class="list-tight">
-            <li>Contemporary Communication Technologies (2020 Fall – 2024 Summer)</li>
-            <li>Rhetoric and Media (2020 Winter – present)</li>
-            <li>Interpersonal Communication (2025 Winter; 2025 Summer)</li>
-            <li>Communication, Technology, and Social Change (2024 Fall)</li>
-            <li>Media Audiences (2021 Winter; 2023 Fall; 2026 Winter)</li>
-            <li>Mind, Media and Representation (2022 Fall)</li>
-            <li>Signs, Referents, and Meaning (2023 Summer)</li>
-            <li>Visual Rhetoric and Digital Environments (2020 Fall)</li>
-            <li>Communicating In and Between Organizations (2020 Fall)</li>
-            <li>Communication and Advertising (2023 Winter; 2024 Winter)</li>
-            <li>Introduction to Visual Culture (2023 Winter)</li>
-            <li>Popular Culture and Society (2026 Winter)</li>
-            <li>INF2320H Remix Culture (Faculty of Information, 2021 Winter)</li>
-            <li>INF2040H Project Management (Faculty of Information, 2020 Winter)</li>
-            <li>MSL2360H Museums and Indigenous Communities (Faculty of Information, 2020 Winter)</li>
-            <li>CAS350H1 Asian Youth Cultures (Asian Institute, 2021 Fall)</li>
-          </ul>
+      </li>
+      <li>
+        <div class="year">in press</div>
+        <div>
+          <div class="title">Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan</div>
+          <div class="venue"><a href="https://digitalhumanities.org/dhq/">Digital Humanities Quarterly</a>, special issue on the Global South.</div>
+          <div class="blurb">Cracked plugins, shared drives, and the politics of "broken" tools in informal Muslim media economies.</div>
         </div>
-      </details>
-    </section>
+      </li>
+      <li>
+        <div class="year">2026</div>
+        <div>
+          <div class="title">Moral traffic: How WhatsApp moves media, rules, and resources in Pakistan's devotional media ecologies</div>
+          <div class="venue"><a href="https://journals.sagepub.com/home/MMC">Mobile Media and Communication</a>, special issue on messaging applications. Forthcoming December 2026.</div>
+          <div class="blurb">Group chats as infrastructure. Audio files, fatwas, and donation links travel the same pipes.</div>
+        </div>
+      </li>
+      <li>
+        <div class="year">2017</div>
+        <div>
+          <div class="title"><a href="https://doi.org/10.1007/978-981-10-4071-9_7">The Buddha Remains: Heritage transactions in Taxila, Pakistan</a></div>
+          <div class="venue">With Trinidad Rico. In <em>The Making of Islamic Heritage</em>, ed. T. Rico. Palgrave Macmillan.</div>
+          <div class="blurb">A pre-PhD chapter on what happens when Buddhist sculpture is cared for inside a Muslim heritage frame.</div>
+        </div>
+      </li>
+    </ul>
+    <p style="margin-top:28px; font-size:13px; color:var(--ink-dim);">Full list with chapters, reviews, and earlier work on the <a href="cv.html">cv page</a>. See also <a href="https://scholar.google.com/citations?hl=en&user=mFY-A4YAAAAJ">Google Scholar</a>.</p>
+  </section>
 
-    <!-- CONTACT -->
-    <section id="contact">
-      <h2>Contact</h2>
-      <p class="section-note">
-        Email is the best way to reach me. I’m open to talks, workshops, and research collaborations.
-      </p>
-
-      <div class="cards" role="list">
-        <article class="card" role="listitem">
-          <h3>Email</h3>
-          <p><a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a></p>
-          <p class="small">Toronto, Canada</p>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>Profiles</h3>
-          <ul class="list-tight">
-            <li><a href="https://scholar.google.com/citations?hl=en&user=mFY-A4YAAAAJ" target="_blank" rel="noopener">Google Scholar</a></li>
-            <li><a href="https://www.ischools.org/post/featured-member-hassan-asif" target="_blank" rel="noopener">iSchools Featured Member</a></li>
-            <li><a href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif" target="_blank" rel="noopener">Jackman Humanities Institute</a></li>
-          </ul>
-        </article>
-
-        <article class="card" role="listitem">
-          <h3>CV</h3>
-          <p><a href="Asif_Hassan_CV_January2026.pdf" download>Download CV (PDF)</a></p>
-          <p class="small">Last updated: Jan 2026</p>
-        </article>
+  <section class="block wrap" id="teaching">
+    <h2><span class="ix">// 04</span> teaching</h2>
+    <div class="teach">
+      <div class="teach-card">
+        <div class="lvl">GRAD · UofT iSchool</div>
+        <div class="nm">Reimagining Global Copyright</div>
+        <div class="when">2024, 2025. Offered four times.</div>
       </div>
-
-      <p style="margin:18px 0 0 0;">
-        <a class="pill" href="#top">Back to top ↑</a>
-      </p>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap">
-      © 2026 Hassan Asif
-      <div class="foot-links" aria-label="Footer links">
-        <a href="Asif_Hassan_CV_January2026.pdf" download>CV</a>
-        <a href="remix.html">Remix Lab</a>
-        <a href="mailto:h.asif@mail.utoronto.ca">Email</a>
+      <div class="teach-card">
+        <div class="lvl">UNDERGRAD · UTM ICCIT</div>
+        <div class="nm">Religion, Media and Popular Culture</div>
+        <div class="when">2023, two sections.</div>
       </div>
+      <div class="teach-card">
+        <div class="lvl">UNDERGRAD · UTM</div>
+        <div class="nm">Human-Machine Communication</div>
+        <div class="when">Instructor of record. Deferred during parental leave.</div>
+      </div>
+      <div class="teach-card">
+        <div class="lvl">UNDERGRAD · UTM</div>
+        <div class="nm">Digital Platforms: A Global Perspective</div>
+        <div class="when">Instructor of record. Deferred during parental leave.</div>
+      </div>
+    </div>
+    <p style="margin-top:22px; font-size:13px; color:var(--ink-dim);">Plus TA work across <a href="cv.html#ta">a dozen ICCIT and Faculty of Information courses</a>, including Remix Culture, Media Audiences, Popular Culture and Society, and Visual Rhetoric and Digital Environments.</p>
+  </section>
+
+  <section class="block wrap" id="speaking">
+    <h2><span class="ix">// 05</span> recent talks</h2>
+    <ul class="talks">
+      <li>
+        <span class="date">NOV 2025</span>
+        <div>
+          <span class="what">Remixing Devotion: The Digital Audio Workstation as Sacred Space</span>
+          <span class="where">Sacred Space: Conflicts and Convergences, Trinity College, University of Toronto.</span>
+        </div>
+      </li>
+      <li>
+        <span class="date">NOV 2025</span>
+        <div>
+          <span class="what">From Breath to Waveform: HCI Lessons from Editing Na'at in Cubase</span>
+          <span class="where">First Annual Conference on Spirituality, Religion, and Interactive Technology Design (SPIRITED '25), online.</span>
+        </div>
+      </li>
+      <li>
+        <span class="date">JUN 2025</span>
+        <div>
+          <span class="what">Obfuscation as revelation: Piracy and Islamic devotional remixing</span>
+          <span class="where"><a href="https://www.icahdq.org/">ICA</a> 2025 Pre-Conference "Debating Creator Culture," Boulder, Colorado.</span>
+        </div>
+      </li>
+      <li>
+        <span class="date">JAN 2025</span>
+        <div>
+          <span class="what">Remixing devotion: Digital media practices in Pakistan</span>
+          <span class="where">Invited talk, <a href="https://www.humanities.utoronto.ca/">Jackman Humanities Institute</a>, Toronto.</span>
+        </div>
+      </li>
+      <li>
+        <span class="date">JUN 2024</span>
+        <div>
+          <span class="what">Digital desires and distortions: The impact of deepfake pornography in Pakistani cyberspace</span>
+          <span class="where">Global Digital Intimacies Conference, University of Amsterdam.</span>
+        </div>
+      </li>
+      <li>
+        <span class="date">OCT 2023</span>
+        <div>
+          <span class="what">Bytes of blessings: Digital technology's influence on Pakistan's Na'at culture</span>
+          <span class="where">51st Annual Conference on South Asia, University of Wisconsin-Madison.</span>
+        </div>
+      </li>
+    </ul>
+    <p style="margin-top:22px; font-size:13px; color:var(--ink-dim);">Full talk record on the <a href="cv.html#talks">cv page</a>.</p>
+  </section>
+
+  <section class="block wrap" id="elsewhere">
+    <h2><span class="ix">// 06</span> elsewhere on the web</h2>
+    <div class="linkgrid">
+      <a href="mailto:h.asif@mail.utoronto.ca"><span class="k">EMAIL</span>h.asif@mail.utoronto.ca</a>
+      <a href="https://scholar.google.com/citations?hl=en&user=mFY-A4YAAAAJ"><span class="k">CITATIONS</span>Google Scholar</a>
+      <a href="https://ischool.utoronto.ca/profile/hassan-asif/"><span class="k">FACULTY</span>UofT iSchool profile</a>
+      <a href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif"><span class="k">FELLOW</span>Jackman Humanities Institute</a>
+      <a href="https://ischool.utoronto.ca/news/phd-candidate-hassan-asif-spotlighted-by-the-ischools-organization/"><span class="k">INTERVIEW</span>iSchools Inc. spotlight</a>
+      <a href="https://utoronto.academia.edu/HassanAsif"><span class="k">PAPERS</span>Academia.edu</a>
+      <a href="https://www.researchgate.net/profile/Hassan-Asif-3"><span class="k">PAPERS</span>ResearchGate</a>
+      <a href="https://www.heliotropejournal.net/helio/hall-road"><span class="k">ESSAY</span>HELIOTROPE: Hall Road</a>
+      <a href="https://instagram.com/hassan.4sif"><span class="k">PUBLIC</span>Instagram @hassan.4sif</a>
+    </div>
+  </section>
+
+  <footer class="wrap">
+    <div class="row">
+      <div>Toronto. Built with <span class="dot">●</span> static HTML, CSS, and a little JavaScript. No analytics, no tracking.</div>
+      <div>Updated May 2026 · <a href="https://github.com/">source on GitHub</a></div>
     </div>
   </footer>
+
+  <script>
+    // Smooth scroll for in-page anchors (browser does this with scroll-behavior, but enforce it explicitly).
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href');
+        if (id.length > 1) {
+          const t = document.querySelector(id);
+          if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        }
+      });
+    });
+
+    // If the portrait image fails to load, hide the layered stack and reveal the placeholder tile.
+    (function () {
+      const frame = document.getElementById('portrait');
+      if (!frame) return;
+      const src = getComputedStyle(frame).getPropertyValue('--src').trim();
+      const m = src.match(/url\((['"]?)(.+?)\1\)/);
+      if (!m) return;
+      const img = new Image();
+      img.onload = () => { /* image present, do nothing */ };
+      img.onerror = () => {
+        frame.querySelectorAll('.layer').forEach(el => el.style.display = 'none');
+      };
+      img.src = m[2];
+    })();
+
+    // Random short glitch every 7 to 12 seconds.
+    function glitchBurst() {
+      const f = document.getElementById('portrait');
+      if (!f) return;
+      f.style.transform = 'translateX(' + (Math.random() * 4 - 2).toFixed(2) + 'px)';
+      setTimeout(() => { f.style.transform = ''; }, 90);
+    }
+    setInterval(glitchBurst, 7000 + Math.random() * 5000);
+  </script>
 </body>
 </html>
