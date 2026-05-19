@@ -5,23 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hassan Asif. CV.</title>
   <meta name="description" content="Curriculum Vitae of Hassan Asif. PhD, Information, University of Toronto. Digital religion, remix, infrastructure." />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#0a4d2e" />
   <meta name="robots" content="noarchive" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0a;
-      --bg-soft: #131313;
-      --ink: #e8e2d4;
-      --ink-dim: #8a857a;
+      --bg: #0d0c0a;
+      --bg-soft: #15130f;
+      --cream: #ede5d3;
+      --cream-warm: #f5ead2;
+      --cream-deep: #d6c9a8;
+      --emerald: #0a4d2e;
+      --emerald-deep: #062919;
+      --emerald-bright: #1b7d4a;
+      --magenta: #d63384;
+      --magenta-deep: #8a1f55;
+      --gold: #d4a040;
+      --gold-light: #e8c466;
+      --gold-deep: #8a6620;
+      --saffron: #ff8c42;
       --led: #39ff14;
-      --solder: #ff8c42;
-      --crt: #6dffd2;
-      --rule: #1f1f1f;
-      --rule-strong: #3a3a3a;
-      --maxw: 1180px;
+      --ink-dark: #1a1814;
+      --ink-cream: #5a5142;
+      --ink: #ede5d3;
+      --ink-dim: #8a857a;
+      --rule-dark: #1f1c16;
+      --rule-strong: #3a352a;
+      --rule-cream: #c9bb98;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -29,14 +41,10 @@
       background: var(--bg);
       color: var(--ink);
       font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 15px;
+      font-size: 14px;
       line-height: 1.65;
       min-height: 100vh;
-      background-image:
-        radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-        radial-gradient(rgba(255,255,255,0.012) 1px, transparent 1px);
-      background-size: 3px 3px, 7px 7px;
-      background-position: 0 0, 1px 1px;
+      overflow-x: hidden;
     }
     body::before {
       content: "";
@@ -47,240 +55,800 @@
         rgba(255,255,255,0.012) 1px,
         transparent 1px,
         transparent 3px);
-      z-index: 100;
+      z-index: 200;
+      mix-blend-mode: overlay;
     }
+
     a {
-      color: var(--ink);
+      color: inherit;
       text-decoration: none;
-      border-bottom: 1px dashed var(--rule-strong);
-      transition: color .15s ease, border-color .15s ease;
+      background-image: linear-gradient(currentColor, currentColor);
+      background-repeat: no-repeat;
+      background-size: 100% 1px;
+      background-position: 0 100%;
+      transition: opacity .15s ease, color .15s ease;
+      padding-bottom: 1px;
+      opacity: 0.95;
     }
-    a:hover, a:focus { color: var(--led); border-bottom-color: var(--led); outline: none; }
+    a:hover, a:focus { opacity: 1; outline: none; }
+    a.ext::after {
+      content: " ↗";
+      font-size: 0.82em;
+      display: inline-block;
+      opacity: 0.6;
+      transition: transform .25s cubic-bezier(.7,0,.3,1);
+    }
+    a.ext:hover::after { transform: translate(3px, -3px); }
+    a.bare { background: none; padding: 0; }
     ::selection { background: var(--led); color: var(--bg); }
 
-    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+    @media (max-width: 700px) { .wrap { padding: 0 22px; } }
 
-    /* TOP NAV */
     nav.top {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(10,10,10,0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--rule);
+      background: rgba(13,12,10,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--rule-dark);
     }
     nav.top .inner {
       display: flex; align-items: center; justify-content: space-between;
-      height: 56px; gap: 16px;
+      height: 60px; gap: 16px;
     }
     nav.top .brand {
-      color: var(--led); font-weight: 500; letter-spacing: 0.02em;
-      border: none; font-size: 14px;
+      color: var(--led);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      font-size: 13px;
+      background: none;
+      opacity: 1;
     }
-    nav.top .brand::before { content: "[ "; color: var(--ink-dim); }
-    nav.top .brand::after  { content: " ]"; color: var(--ink-dim); }
-    nav.top ul { list-style: none; display: flex; gap: 22px; flex-wrap: wrap; }
-    nav.top a { font-size: 13px; color: var(--ink-dim); border: none; }
-    nav.top a:hover { color: var(--led); }
-    nav.top a.active { color: var(--led); }
-    @media (max-width: 640px) {
-      nav.top ul { gap: 14px; }
-      nav.top a { font-size: 12px; }
+    nav.top .brand::before { content: "▶ "; color: var(--cream); }
+    nav.top ul { list-style: none; display: flex; gap: 26px; flex-wrap: wrap; }
+    nav.top ul a {
+      font-size: 12px; color: var(--ink-dim); background: none; letter-spacing: 0.04em;
+      opacity: 1;
+    }
+    nav.top ul a:hover { color: var(--led); }
+    nav.top ul a.active { color: var(--gold); }
+    @media (max-width: 700px) { nav.top ul { gap: 14px; } nav.top ul a { font-size: 11px; } }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(212,160,64,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(214,51,132,0.12) 0%, transparent 50%),
+        var(--emerald);
+      color: var(--cream);
+      overflow: hidden;
+      border-bottom: 2px solid var(--gold);
+    }
+    .hero-pattern {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d4a040' stroke-width='0.6' opacity='0.18'><path d='M40 0 L48 16 L66 16 L52 28 L58 46 L40 36 L22 46 L28 28 L14 16 L32 16 Z'/><circle cx='40' cy='40' r='3'/><path d='M0 40 L80 40 M40 0 L40 80' opacity='0.4'/></g></svg>");
+      background-size: 80px 80px;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .hero-halftone {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.25) 1px, transparent 1.5px);
+      background-size: 4px 4px;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      opacity: 0.4;
+    }
+    .hero-inner {
+      position: relative; z-index: 2;
+      padding: 80px 0 96px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    @media (max-width: 920px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; padding: 60px 0 72px; }
     }
 
-    section { scroll-margin-top: 130px; }
-
-    /* CV HERO */
-    header.cv-hero {
-      padding: 56px 0 28px;
-      border-bottom: 1px solid var(--rule);
+    .doc-tag {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 8px 14px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      margin-bottom: 32px;
     }
-    .doc-stamp {
-      display: flex; justify-content: space-between; flex-wrap: wrap;
-      font-size: 11px; letter-spacing: 0.22em; color: var(--ink-dim);
+    .doc-tag .dot {
+      width: 8px; height: 8px;
+      background: var(--led);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--led);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--led); }
+      50% { opacity: 0.5; box-shadow: 0 0 2px var(--led); }
+    }
+
+    h1.name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 600;
+      font-size: clamp(60px, 10vw, 144px);
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+    h1.name .dot { color: var(--gold-light); }
+    h1.name .accent {
+      font-style: italic;
+      color: var(--gold-light);
+      font-variation-settings: "opsz" 144, "SOFT" 80, "wght" 500;
+    }
+
+    .role {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 30, "SOFT" 30, "wght" 400;
+      font-size: clamp(17px, 1.7vw, 22px);
+      line-height: 1.5;
+      color: var(--cream-warm);
+      max-width: 56ch;
       margin-bottom: 28px;
     }
-    .doc-stamp .left { color: var(--led); }
-    .doc-stamp .right { color: var(--solder); }
-    h1.name {
-      font-size: clamp(34px, 5.4vw, 54px);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    h1.name .dot { color: var(--led); }
-    h1.name .nastaliq {
-      display: inline-block;
-      font-family: 'Noto Nastaliq Urdu', serif;
-      font-size: 0.45em;
-      color: var(--ink-dim);
-      margin-left: 16px;
-      vertical-align: middle;
-      font-weight: 400;
-      direction: rtl;
-    }
-    .role {
-      color: var(--crt);
-      font-size: 15px;
-      margin: 12px 0 4px;
-      font-style: italic;
-    }
-    .contact {
-      font-size: 13px;
-      color: var(--ink-dim);
-      margin-top: 14px;
-    }
-    .contact a { color: var(--ink); }
+    .role em { color: var(--gold-light); font-style: italic; }
 
-    /* JUMP-TO BAR (sticky under main nav) */
-    .jump {
-      position: sticky;
-      top: 56px;
-      z-index: 49;
-      background: rgba(10,10,10,0.92);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--rule);
+    .hero-contact {
+      font-size: 12px;
+      color: var(--cream-warm);
+      line-height: 2;
+      letter-spacing: 0.02em;
+    }
+    .hero-contact a { color: var(--cream); }
+    .hero-contact a:hover { color: var(--gold-light); }
+    .hero-contact .sep { color: var(--gold); margin: 0 10px; }
+
+    .hero-side {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 24px;
+    }
+    @media (max-width: 920px) { .hero-side { align-items: flex-start; } }
+    .cassette {
+      width: 100%;
+      max-width: 360px;
+      aspect-ratio: 5/3;
+      position: relative;
+      background: var(--magenta);
+      border: 2px solid var(--gold);
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       overflow: hidden;
     }
+    .cassette::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.3) 1px, transparent 1.5px);
+      background-size: 3px 3px;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      opacity: 0.5;
+    }
+    .cassette .label {
+      position: relative;
+      background: var(--cream);
+      color: var(--ink-dark);
+      padding: 10px 14px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 13px;
+      line-height: 1.25;
+      border: 1px solid var(--ink-dark);
+    }
+    .cassette .label .top {
+      display: flex; justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.18em;
+      color: var(--ink-cream); text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .cassette .label .title {
+      font-weight: 600;
+      color: var(--magenta-deep);
+      font-size: 14px;
+    }
+    .cassette .label .sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-cream);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+    .cassette .spools {
+      position: relative;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 30px;
+      margin-top: auto;
+    }
+    .cassette .spool {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--ink-dark) 0%, var(--ink-dark) 30%, transparent 30%, transparent 35%, var(--ink-dark) 35%, var(--ink-dark) 50%, transparent 50%);
+      border: 2px solid var(--ink-dark);
+      position: relative;
+      animation: spin 8s linear infinite;
+    }
+    .cassette .spool::before {
+      content: "";
+      position: absolute; inset: 4px;
+      border: 1.5px solid var(--cream-warm);
+      border-radius: 50%;
+    }
+    .cassette .spool::after {
+      content: "";
+      position: absolute; top: 50%; left: 50%;
+      width: 12px; height: 12px;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle, var(--ink-dark) 30%, transparent 30%),
+        conic-gradient(var(--ink-dark) 0% 25%, transparent 25% 50%, var(--ink-dark) 50% 75%, transparent 75%);
+      border-radius: 50%;
+    }
+    @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+    .cassette .tape-window {
+      position: absolute;
+      left: 30px; right: 30px;
+      bottom: 14px;
+      height: 4px;
+      background: linear-gradient(to right, var(--ink-dark), var(--gold-deep), var(--ink-dark));
+    }
+
+    .portrait-frame {
+      position: relative;
+      width: 220px;
+      aspect-ratio: 4/5;
+      background: var(--ink-dark);
+      border: 2px solid var(--gold);
+      overflow: hidden;
+      box-shadow: -8px 8px 0 rgba(0,0,0,0.4);
+    }
+    @media (max-width: 920px) { .portrait-frame { width: 200px; } }
+    .portrait-frame .ui-top, .portrait-frame .ui-rec {
+      position: absolute;
+      top: 8px;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      z-index: 5;
+      background: rgba(0,0,0,0.78);
+      padding: 3px 6px;
+      pointer-events: none;
+      color: var(--cream);
+    }
+    .portrait-frame .ui-top { left: 8px; }
+    .portrait-frame .ui-rec { right: 8px; color: var(--saffron); }
+    .portrait-frame .ui-rec::before {
+      content: "● ";
+      animation: blink 1.6s infinite;
+      display: inline-block;
+    }
+    @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.15; } }
+    .portrait-frame .layer {
+      position: absolute; inset: 0;
+      background-image: var(--src, none);
+      background-size: cover;
+      background-position: center;
+      z-index: 2;
+    }
+    .portrait-frame .scan {
+      position: absolute; inset: 0; z-index: 4;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0,
+        rgba(0,0,0,0) 2px,
+        rgba(0,0,0,0.3) 2px,
+        rgba(0,0,0,0.3) 3px);
+      pointer-events: none;
+    }
+    .portrait-frame .placeholder {
+      position: absolute; inset: 0; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-size: 9px; letter-spacing: 0.2em;
+      text-align: center; padding: 16px;
+      background: repeating-linear-gradient(45deg, var(--emerald-deep) 0, var(--emerald-deep) 8px, var(--ink-dark) 8px, var(--ink-dark) 16px);
+    }
+
+    /* JUMP BAR */
+    .jump {
+      position: sticky; top: 60px; z-index: 49;
+      background: var(--ink-dark);
+      border-bottom: 1px solid var(--gold);
+      overflow: hidden;
+    }
+    .jump::before {
+      content: "";
+      position: absolute; left: 0; right: 0; top: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--magenta), var(--gold), var(--emerald-bright), var(--saffron), var(--magenta));
+    }
     .jump .strip {
-      display: flex;
-      gap: 18px;
+      display: flex; gap: 18px;
       overflow-x: auto;
-      padding: 12px 28px;
+      padding: 14px 40px;
       white-space: nowrap;
-      max-width: var(--maxw);
+      max-width: 1280px;
       margin: 0 auto;
       scrollbar-width: thin;
-      scrollbar-color: var(--rule-strong) transparent;
+      scrollbar-color: var(--gold-deep) transparent;
     }
-    .jump .strip::-webkit-scrollbar { height: 4px; }
-    .jump .strip::-webkit-scrollbar-thumb { background: var(--rule-strong); }
+    .jump .strip::-webkit-scrollbar { height: 3px; }
+    .jump .strip::-webkit-scrollbar-thumb { background: var(--gold-deep); }
     .jump a {
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      color: var(--ink-dim);
-      border: none;
+      font-size: 10px; letter-spacing: 0.22em;
+      color: var(--cream-warm);
+      background: none; padding-bottom: 2px;
       text-transform: uppercase;
+      opacity: 0.7;
     }
-    .jump a:hover { color: var(--led); }
-    .jump a .ix { color: var(--led); margin-right: 6px; }
+    .jump a:hover { opacity: 1; color: var(--gold-light); }
+    .jump a .ix { color: var(--gold); margin-right: 6px; font-weight: 600; }
 
     /* SECTIONS */
-    section.block { padding: 56px 0; border-bottom: 1px solid var(--rule); }
-    section.block h2 {
-      font-size: 12px;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--ink-dim);
-      margin-bottom: 28px;
-      font-weight: 500;
+    section.block { padding: 84px 0; position: relative; overflow: hidden; }
+    section.dark {
+      background: var(--bg);
+      color: var(--ink);
+      border-bottom: 1px solid var(--rule-dark);
     }
-    section.block h2 .ix { color: var(--led); margin-right: 14px; }
+    section.dark.tinted-emerald { background: linear-gradient(180deg, var(--bg) 0%, var(--emerald-deep) 100%); }
+    section.dark.tinted-magenta { background: linear-gradient(180deg, var(--bg) 0%, #1a0810 100%); }
+    section.cream {
+      background: var(--cream);
+      color: var(--ink-dark);
+      border-bottom: 1px solid var(--rule-cream);
+      position: relative;
+    }
+    section.cream::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(26,24,20,0.04) 1px, transparent 1.5px);
+      background-size: 4px 4px;
+      pointer-events: none;
+    }
+    section.cream a { color: var(--ink-dark); }
+    section.cream .sec-tag { color: var(--ink-cream); }
+    section.cream .sec-tag .num { color: var(--magenta); }
+    section.cream .sec-title { color: var(--ink-dark); }
+    section.cream .sec-title em { color: var(--magenta); }
+    section.cream h3.sub { color: var(--magenta-deep); border-color: var(--rule-cream); }
+    section.cream ul.list li { border-color: var(--rule-cream); }
+    section.cream ul.list .date { color: var(--magenta); }
+    section.cream ul.list .ttl { color: var(--ink-dark); }
+    section.cream ul.list .meta { color: var(--ink-cream); }
+    section.cream ul.list .blurb { color: var(--ink-cream); }
 
-    /* Sub-headings within sections */
+    .sec-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 56px;
+      position: relative;
+    }
+    .sec-tag {
+      grid-column: 1 / -1;
+      display: flex; gap: 18px; align-items: center;
+      font-size: 10px; letter-spacing: 0.28em;
+      color: var(--ink-dim); text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .sec-tag .num { color: var(--led); font-weight: 600; }
+    .sec-tag .line { flex: 1; height: 1px; background: currentColor; opacity: 0.2; }
+
+    .sec-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500;
+      font-size: clamp(40px, 6.5vw, 88px);
+      line-height: 0.92;
+      letter-spacing: -0.035em;
+      color: var(--cream);
+      max-width: 18ch;
+    }
+    .sec-title em {
+      font-style: italic;
+      color: var(--gold-light);
+      font-variation-settings: "opsz" 144, "SOFT" 80, "wght" 400;
+    }
+    .sec-side-note {
+      font-size: 11px; letter-spacing: 0.22em;
+      color: var(--ink-dim); text-transform: uppercase;
+      text-align: right; padding-bottom: 14px;
+      max-width: 200px;
+    }
+    .sec-side-note .accent { color: var(--gold); }
+
     h3.sub {
-      font-size: 10px;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: var(--solder);
-      margin: 30px 0 14px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 30, "SOFT" 50;
+      font-size: 20px;
+      color: var(--gold-light);
+      margin: 48px 0 22px;
       font-weight: 500;
+      font-style: italic;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule-strong);
     }
-    h3.sub:first-child { margin-top: 0; }
+    h3.sub:first-of-type { margin-top: 0; }
+    h3.sub::before {
+      content: "// ";
+      color: var(--led);
+      font-style: normal;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7em;
+    }
 
-    /* UNIVERSAL LIST PATTERN: [date 110px] | [content] */
-    ul.list { list-style: none; display: grid; gap: 16px; }
+    ul.list { list-style: none; display: grid; gap: 22px; }
     ul.list li {
       display: grid;
       grid-template-columns: 110px 1fr;
-      gap: 22px;
+      gap: 28px;
       align-items: start;
-      padding-bottom: 14px;
-      border-bottom: 1px dotted var(--rule);
+      padding-bottom: 20px;
+      border-bottom: 1px dotted var(--rule-strong);
     }
     ul.list li:last-child { border-bottom: none; padding-bottom: 0; }
-    @media (max-width: 640px) {
-      ul.list li { grid-template-columns: 1fr; gap: 4px; }
+    @media (max-width: 700px) {
+      ul.list li { grid-template-columns: 1fr; gap: 6px; }
     }
     ul.list .date {
-      color: var(--solder);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      padding-top: 4px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 28, "SOFT" 20;
+      font-size: 17px;
+      color: var(--saffron);
+      padding-top: 2px;
+      font-weight: 400;
     }
-    ul.list .ttl { font-size: 14px; color: var(--ink); line-height: 1.45; }
-    ul.list .ttl a { border-bottom: 1px dashed var(--rule-strong); }
+    ul.list .ttl {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 22, "SOFT" 30;
+      font-size: 17px;
+      color: var(--cream);
+      line-height: 1.35;
+      font-weight: 500;
+    }
     ul.list .meta {
       display: block;
       font-size: 12px;
       color: var(--ink-dim);
-      font-style: italic;
-      margin-top: 4px;
-      line-height: 1.5;
+      margin-top: 6px;
+      line-height: 1.6;
     }
-    ul.list .note {
+    ul.list .meta em { color: var(--cream-warm); font-style: italic; }
+    ul.list .blurb {
       display: block;
-      font-size: 12px;
-      color: var(--ink-dim);
-      margin-top: 4px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 18, "SOFT" 30;
+      font-size: 14px;
+      color: var(--cream-warm);
+      margin-top: 10px;
+      line-height: 1.55;
+      max-width: 60ch;
+      font-style: italic;
     }
 
-    /* EDUCATION cards */
-    .edu { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
-    .edu-card {
-      border: 1px solid var(--rule);
-      padding: 22px;
-      background: var(--bg-soft);
+    /* EDUCATION CARDS */
+    .edu { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 22px; }
+    .ed-card {
+      padding: 30px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s cubic-bezier(.7,0,.3,1);
+      border: 1px solid var(--rule-strong);
     }
-    .edu-card .y {
-      font-size: 11px; letter-spacing: 0.18em; color: var(--solder);
+    .ed-card:hover { transform: translateY(-4px); }
+    .ed-card-1 {
+      background: linear-gradient(135deg, var(--emerald-deep) 0%, var(--emerald) 100%);
+      color: var(--cream);
+      border-color: var(--gold);
+    }
+    .ed-card-2 {
+      background: linear-gradient(135deg, var(--magenta-deep) 0%, var(--magenta) 100%);
+      color: var(--cream-warm);
+      border-color: var(--gold);
+    }
+    .ed-card-3 {
+      background: linear-gradient(135deg, #2a1a08 0%, var(--gold-deep) 100%);
+      color: var(--cream-warm);
+      border-color: var(--gold);
+    }
+    .ed-card .y {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 144, "SOFT" 0;
+      font-size: 56px;
+      line-height: 0.9;
+      color: var(--gold-light);
+      font-weight: 500;
+      margin-bottom: 12px;
+      letter-spacing: -0.03em;
+    }
+    .ed-card .degree {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 28, "SOFT" 30;
+      font-size: 22px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+      color: var(--cream);
+      letter-spacing: -0.01em;
+    }
+    .ed-card .inst {
+      font-size: 12px;
+      color: var(--cream-warm);
+      margin-bottom: 16px;
+      opacity: 0.85;
+    }
+    .ed-card .inst a { color: inherit; }
+    .ed-card .deet {
+      font-size: 12px;
+      color: var(--cream-warm);
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+    .ed-card .deet em { color: var(--gold-light); font-style: italic; }
+    .ed-card .deet a { color: var(--gold-light); }
+    .ed-card::after {
+      content: "";
+      position: absolute;
+      top: -10px; right: -10px;
+      width: 60px; height: 60px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><g fill='none' stroke='%23d4a040' stroke-width='1' opacity='0.5'><path d='M30 5 L36 22 L54 22 L40 32 L46 50 L30 38 L14 50 L20 32 L6 22 L24 22 Z'/></g></svg>");
+      opacity: 0.7;
+    }
+
+    /* PUBLICATION on CREAM */
+    section.cream .pub-feature {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule-cream);
+      align-items: start;
+    }
+    section.cream .pub-feature:last-child { border-bottom: none; }
+    @media (max-width: 700px) {
+      section.cream .pub-feature { grid-template-columns: 1fr; gap: 12px; }
+    }
+    .pub-year-block {
+      background: var(--ink-dark);
+      color: var(--gold-light);
+      padding: 18px 22px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 144, "SOFT" 0;
+      font-size: 36px;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      position: relative;
+      min-height: 88px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .pub-year-block .tag {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      color: var(--cream-warm);
+      text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+    .pub-year-block.green { background: var(--emerald); color: var(--gold-light); }
+    .pub-year-block.magenta { background: var(--magenta-deep); color: var(--gold-light); }
+    .pub-year-block.gold { background: var(--gold-deep); color: var(--cream); }
+    section.cream .pub-body .title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 30, "SOFT" 20;
+      font-size: 22px;
+      color: var(--ink-dark);
+      line-height: 1.3;
+      font-weight: 500;
       margin-bottom: 10px;
+      letter-spacing: -0.01em;
     }
-    .edu-card .degree { font-size: 16px; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
-    .edu-card .inst { font-size: 13px; color: var(--ink-dim); margin-bottom: 12px; }
-    .edu-card .deet { font-size: 12px; color: var(--ink-dim); font-style: italic; line-height: 1.55; }
+    section.cream .pub-body .venue {
+      font-size: 12px;
+      color: var(--ink-cream);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    section.cream .pub-body .blurb {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 18, "SOFT" 30;
+      font-size: 14px;
+      color: var(--ink-cream);
+      line-height: 1.6;
+      max-width: 60ch;
+    }
+    section.cream .pub-body .what {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--magenta);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    /* TEACHING CARDS */
+    .teach { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .teach-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--rule-strong);
+      padding: 26px 24px;
+      transition: all .3s cubic-bezier(.7,0,.3,1);
+      position: relative;
+      min-height: 200px;
+      display: flex; flex-direction: column;
+    }
+    .teach-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+    .teach-card .lvl {
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      color: var(--led);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule-strong);
+    }
+    .teach-card .nm {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 26, "SOFT" 30;
+      font-size: 19px;
+      color: var(--cream);
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+    .teach-card .what {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 18, "SOFT" 30;
+      font-size: 13px;
+      color: var(--cream-warm);
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .teach-card .when {
+      font-size: 11px;
+      color: var(--ink-dim);
+      margin-top: auto;
+      line-height: 1.6;
+    }
+    .teach-card:nth-child(4n+1) .lvl { color: var(--led); }
+    .teach-card:nth-child(4n+2) .lvl { color: var(--gold-light); }
+    .teach-card:nth-child(4n+3) .lvl { color: var(--magenta); }
+    .teach-card:nth-child(4n+4) .lvl { color: var(--saffron); }
 
     /* SKILLS / LANGUAGES */
-    .skill-group { margin-bottom: 24px; }
+    .skill-group { margin-bottom: 28px; }
     .skill-group:last-child { margin-bottom: 0; }
     .skill-group .label {
-      font-size: 10px; letter-spacing: 0.22em; color: var(--solder);
-      margin-bottom: 12px;
+      font-size: 10px; letter-spacing: 0.26em;
+      color: var(--saffron);
+      margin-bottom: 14px;
     }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .chip {
       border: 1px solid var(--rule-strong);
-      padding: 5px 10px;
-      font-size: 12px;
-      color: var(--ink);
-      letter-spacing: 0.02em;
       background: var(--bg-soft);
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--cream);
+      transition: all .15s ease;
+      letter-spacing: 0.01em;
     }
-    .chip .lvl { color: var(--ink-dim); margin-left: 6px; font-size: 11px; }
+    .chip:hover { border-color: var(--gold); }
+    .chip a { background: none; padding: 0; }
+    .chip .lvl { color: var(--ink-dim); margin-left: 8px; font-size: 11px; }
 
-    /* Compact two-column inline groups (memberships) */
-    .inline-list { font-size: 13px; color: var(--ink-dim); line-height: 1.7; }
-    .inline-list a { font-size: 13px; }
+    .inline-list { font-size: 13px; color: var(--cream-warm); line-height: 1.9; }
+    .inline-list a { color: var(--cream); }
+
+    .teach-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-dim);
+      margin-top: 24px;
+      line-height: 1.75;
+    }
+    .teach-note strong { color: var(--gold-light); }
+
+    /* DIVIDERS */
+    .divider {
+      height: 60px;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .divider-tape {
+      background:
+        repeating-linear-gradient(90deg,
+          var(--magenta) 0 40px,
+          var(--gold) 40px 80px,
+          var(--emerald-bright) 80px 120px,
+          var(--saffron) 120px 160px);
+      height: 8px;
+      position: absolute;
+      top: 50%;
+      left: 0; right: 0;
+      transform: translateY(-50%);
+    }
+    .divider-tape::before {
+      content: "";
+      position: absolute;
+      top: -6px; bottom: -6px;
+      left: 50%; transform: translateX(-50%);
+      width: 32px;
+      background: var(--ink-dark);
+      border-left: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+    }
 
     /* FOOTER */
-    footer { padding: 36px 0 80px; font-size: 12px; color: var(--ink-dim); }
-    footer .row {
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+    footer {
+      background: linear-gradient(180deg, var(--emerald-deep) 0%, var(--bg) 100%);
+      padding: 80px 0;
+      color: var(--cream);
+      position: relative;
+      overflow: hidden;
+      border-top: 2px solid var(--gold);
     }
-    footer .dot { color: var(--led); }
-    footer a { font-size: 12px; }
+    footer::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d4a040' stroke-width='0.5' opacity='0.1'><path d='M40 0 L48 16 L66 16 L52 28 L58 46 L40 36 L22 46 L28 28 L14 16 L32 16 Z'/></g></svg>");
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+    .foot-inner { position: relative; z-index: 2; }
+    .foot-big {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: "opsz" 144, "SOFT" 40, "wght" 500;
+      font-size: clamp(36px, 5.5vw, 76px);
+      line-height: 0.95;
+      color: var(--cream);
+      letter-spacing: -0.03em;
+      margin-bottom: 36px;
+      max-width: 16ch;
+    }
+    .foot-big a {
+      background-image: linear-gradient(var(--gold-light), var(--gold-light));
+      background-size: 100% 2px;
+    }
+    .foot-big .accent { color: var(--gold-light); font-style: italic; }
+    .foot-meta {
+      display: flex; justify-content: space-between; flex-wrap: wrap;
+      gap: 14px; padding-top: 24px;
+      border-top: 1px solid rgba(212,160,64,0.3);
+      font-size: 10px; letter-spacing: 0.24em;
+      color: var(--cream-warm); text-transform: uppercase;
+    }
+    .foot-meta a { color: var(--gold-light); }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
-
-    /* Print: legible but not optimized (CV is meant to live online) */
     @media print {
-      body::before, .jump, nav.top { display: none; }
+      body::before, .jump, nav.top, .divider, .hero-pattern, .hero-halftone, footer::before { display: none; }
       body { color: #000; background: #fff; }
-      a { color: #000; border: none; text-decoration: underline; }
-      section.block { border-color: #ccc; page-break-inside: avoid; padding: 24px 0; }
+      a { color: #000; background: none; text-decoration: underline; }
+      a.ext::after { content: ""; }
+      section.block { border-color: #ccc; page-break-inside: avoid; padding: 24px 0; background: #fff !important; color: #000 !important; }
+      .hero, footer { background: #fff !important; color: #000 !important; }
     }
   </style>
 </head>
@@ -296,34 +864,67 @@
         <li><a href="lab.html">lab</a></li>
         <li><a href="game.html">game</a></li>
         <li><a href="cv.html" class="active">cv</a></li>
-        <li><a href="index.html#elsewhere">elsewhere</a></li>
       </ul>
     </div>
   </nav>
 
-  <header class="cv-hero wrap">
-    <div class="doc-stamp">
-      <span class="left">CURRICULUM_VITAE.LIVE</span>
-      <span class="right">UPDATED 2026.05</span>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-pattern" aria-hidden="true"></div>
+    <div class="hero-halftone" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <div>
+        <div class="doc-tag">
+          <span class="dot"></span>
+          <span>CURRICULUM VITAE · LIVE · 2026.05</span>
+        </div>
+        <h1 class="name">Hassan <span class="accent">Asif</span><span class="dot">.</span></h1>
+        <p class="role">
+          PhD, Information, <a href="https://www.utoronto.ca/" class="ext">University of Toronto</a>. Scholar of <em>digital religion</em>, <em>remix</em>, and <em>infrastructure</em>.
+        </p>
+        <p class="hero-contact">
+          <a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a>
+          <span class="sep">·</span>
+          <a href="https://scholar.google.com/citations?hl=en&user=mFY-A4YAAAAJ" class="ext">Scholar</a>
+          <span class="sep">·</span>
+          <a href="https://ischool.utoronto.ca/profile/hassan-asif/" class="ext">iSchool</a>
+          <span class="sep">·</span>
+          <a href="https://utoronto.academia.edu/HassanAsif" class="ext">Academia</a>
+          <span class="sep">·</span>
+          <a href="https://www.researchgate.net/profile/Hassan-Asif-3" class="ext">ResearchGate</a>
+        </p>
+      </div>
+
+      <div class="hero-side">
+        <div class="cassette" aria-hidden="true">
+          <div class="label">
+            <div class="top"><span>Side A</span><span>Hi-Fi 90 min</span></div>
+            <div class="title">Remixing Devotion</div>
+            <div class="sub">Vol. 2026 · UofT</div>
+          </div>
+          <div class="spools">
+            <div class="spool"></div>
+            <div class="spool"></div>
+          </div>
+          <div class="tape-window"></div>
+        </div>
+        <div class="portrait-frame" id="portrait" style="--src:url('images/hassan_glitch_effects.gif');">
+          <div class="ui-top">HASSAN.GIF</div>
+          <div class="ui-rec">REC</div>
+          <div class="placeholder">DROP GIF AT<br/>images/hassan_glitch_effects.gif</div>
+          <div class="layer"></div>
+          <div class="scan"></div>
+        </div>
+      </div>
     </div>
-    <h1 class="name">
-      Hassan Asif<span class="dot">.</span>
-      <span class="nastaliq">حسن آصف</span>
-    </h1>
-    <p class="role">PhD, Information, University of Toronto. Scholar of digital religion, remix, and infrastructure.</p>
-    <p class="contact">
-      Toronto, Canada &nbsp;·&nbsp;
-      <a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a> &nbsp;·&nbsp;
-      <a href="https://scholar.google.com/citations?hl=en&user=mFY-A4YAAAAJ">Google Scholar</a> &nbsp;·&nbsp;
-      <a href="https://ischool.utoronto.ca/profile/hassan-asif/">UofT iSchool</a>
-    </p>
   </header>
 
+  <!-- JUMP BAR -->
   <div class="jump">
     <div class="strip">
       <a href="#education"><span class="ix">01</span>education</a>
       <a href="#publications"><span class="ix">02</span>publications</a>
-      <a href="#awards"><span class="ix">03</span>grants &amp; awards</a>
+      <a href="#awards"><span class="ix">03</span>awards</a>
       <a href="#research"><span class="ix">04</span>research</a>
       <a href="#field"><span class="ix">05</span>field</a>
       <a href="#professional"><span class="ix">06</span>professional</a>
@@ -338,785 +939,479 @@
     </div>
   </div>
 
-  <section class="block wrap" id="education">
-    <h2><span class="ix">// 01</span> education</h2>
-    <div class="edu">
-      <div class="edu-card">
-        <div class="y">2026</div>
-        <div class="degree">PhD, Information</div>
-        <div class="inst"><a href="https://ischool.utoronto.ca/">University of Toronto</a></div>
-        <div class="deet">
-          Collaborative Specialization in <a href="https://munkschool.utoronto.ca/southasia">South Asian Studies</a>. Defended May 2026; conferral October 2026. Dissertation: <em>Remixing Devotion: Digital Media Practices in Pakistan</em>. Parental leave September to December 2025.
-        </div>
+  <!-- 01 EDUCATION -->
+  <section class="block dark" id="education">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 01</span> <span class="line"></span> <span>degrees + dissertations</span></div>
+        <h2 class="sec-title"><em>Education.</em></h2>
+        <div class="sec-side-note">three degrees /<br/><span class="accent">three cities</span></div>
       </div>
-      <div class="edu-card">
-        <div class="y">2015</div>
-        <div class="degree">MA, Museums and Gallery Practice</div>
-        <div class="inst"><a href="https://www.ucl.ac.uk/">University College London</a> (Distinction)</div>
-        <div class="deet">
-          Dissertation: <em>The Muslim Buddha: Sculpture and Heritage Values in Taxila, Pakistan</em>.
+      <div class="edu">
+        <div class="ed-card ed-card-1">
+          <div class="y">2026</div>
+          <div class="degree">PhD, Information</div>
+          <div class="inst"><a href="https://ischool.utoronto.ca/" class="ext">University of Toronto</a></div>
+          <div class="deet">Defended May 2026. Conferral October 2026. Dissertation: <em>Remixing Devotion: Digital Media Practices in Pakistan</em>. Studies how digital tools reshape religious media in Pakistan. Collaborative specialization at the <a href="https://www.utm.utoronto.ca/csac/centre-south-asian-civilizations" class="ext">Centre for South Asian Civilizations</a>.</div>
         </div>
-      </div>
-      <div class="edu-card">
-        <div class="y">2014</div>
-        <div class="degree">BS, Communication Studies</div>
-        <div class="inst"><a href="https://www.northwestern.edu/">Northwestern University</a> (cum laude, GPA 3.75)</div>
-        <div class="deet">
-          Minor: Cultural Anthropology.
+        <div class="ed-card ed-card-2">
+          <div class="y">2015</div>
+          <div class="degree">MA, Museums and Gallery Practice</div>
+          <div class="inst"><a href="https://www.ucl.ac.uk/" class="ext">University College London</a> (Distinction)</div>
+          <div class="deet">Dissertation on Buddhist sculpture and heritage in Pakistan. Supervised by <a href="https://arthistory.rutgers.edu/people/full-time-faculty/faculty-member/492-rico-trinidad" class="ext">Trinidad Rico</a>.</div>
+        </div>
+        <div class="ed-card ed-card-3">
+          <div class="y">2014</div>
+          <div class="degree">BS, Communication Studies</div>
+          <div class="inst"><a href="https://www.northwestern.edu/" class="ext">Northwestern University</a> (cum laude, GPA 3.75)</div>
+          <div class="deet">Minor in Cultural Anthropology.</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="block wrap" id="publications">
-    <h2><span class="ix">// 02</span> publications</h2>
+  <div class="divider"><div class="divider-tape"></div></div>
 
-    <h3 class="sub">Peer-reviewed journal articles</h3>
-    <ul class="list">
-      <li>
-        <span class="date">2025</span>
-        <div>
-          <span class="ttl"><a href="https://doi.org/10.1177/01634437251353093">Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives</a></span>
-          <span class="meta"><a href="https://journals.sagepub.com/home/mcs">Media, Culture and Society</a>, 47(8), 1599 to 1618.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2024</span>
-        <div>
-          <span class="ttl"><a href="https://doi.org/10.1163/21659214-bja10110">"Blur the preacher": Media remix and digital technocultural practice in Pakistan</a></span>
-          <span class="meta"><a href="https://brill.com/view/journals/rmdc/rmdc-overview.xml">Journal of Religion, Media and Digital Culture</a>, 13(3), 363 to 386.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">in press</span>
-        <div>
-          <span class="ttl">Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan</span>
-          <span class="meta"><a href="https://digitalhumanities.org/dhq/">Digital Humanities Quarterly</a>. Special Issue "Digitization and Machine Learning in the Global South: Building Computational Futures and Addressing Challenges," ed. S. T. Shanmugapriya and P. Murrieta-Flores.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">forthcoming<br/>2026</span>
-        <div>
-          <span class="ttl">Moral traffic: How WhatsApp moves media, rules, and resources in Pakistan's devotional media ecologies</span>
-          <span class="meta"><a href="https://journals.sagepub.com/home/MMC">Mobile Media and Communication</a>. Special Issue "Messaging Applications and Global Cultures of Mobility." Manuscript invited after peer-reviewed abstract; full submission March 2026, expected publication December 2026.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">under review</span>
-        <div>
-          <span class="ttl">IslaMixing: Hauntology as an experimental framework for exploring online #Islamogram memes</span>
-          <span class="meta"><a href="https://www.tandfonline.com/journals/hmer20">Journal of Media and Religion</a>.</span>
-        </div>
-      </li>
-    </ul>
+  <!-- 02 PUBLICATIONS -->
+  <section class="block cream" id="publications">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 02</span> <span class="line"></span> <span>peer-reviewed + other</span></div>
+        <h2 class="sec-title"><em>Publications.</em></h2>
+        <div class="sec-side-note">articles · chapters /<br/><span class="accent">essays · reports</span></div>
+      </div>
 
-    <h3 class="sub">Peer-reviewed book chapters</h3>
-    <ul class="list">
-      <li>
-        <span class="date">in press</span>
-        <div>
-          <span class="ttl">Translating truth: AI in digital Islamic sermons and the case of Engineer Muhammad Ali Mirza</span>
-          <span class="meta">In D. Sundaram and C. Tekobbe (Eds.), <em>Social Media, Religion, and Culture</em>. <a href="https://www.routledge.com/">Routledge</a>.</span>
+      <h3 class="sub">Peer-reviewed journal articles</h3>
+      <div>
+        <div class="pub-feature">
+          <div class="pub-year-block green">2025<span class="tag">article</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title"><a href="https://doi.org/10.1177/01634437251353093" class="ext">Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives</a></div>
+            <div class="venue"><em><a href="https://journals.sagepub.com/home/mcs" class="ext">Media, Culture and Society</a></em>, 47(8), 1599 to 1618.</div>
+            <div class="blurb">How two small online archives keep South Asian music alive when the big platforms forget it. One is <a href="https://discostan.bandcamp.com/" class="ext">Discostan</a>, a Los Angeles record label. The other is <a href="https://hamnawa.net/" class="ext">Hamnawa</a>, a publication on Pakistani pop.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">in press</span>
-        <div>
-          <span class="ttl">Technical imagination against deepfakes: Reading, bending, and exposing the image game</span>
-          <span class="meta">In J. Tulasiewicz, S. Jovicic, and X. Zhan (Eds.), <em>Ethnographies of Digital Addiction, Harm, and Repair</em>. <a href="https://www.bloomsbury.com/uk/academic/">Bloomsbury Academic</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2017</span>
-        <div>
-          <span class="ttl"><a href="https://doi.org/10.1007/978-981-10-4071-9_7">The Buddha Remains: Heritage transactions in Taxila, Pakistan</a></span>
-          <span class="meta">With Trinidad Rico. In T. Rico (Ed.), <em>The Making of Islamic Heritage</em>. <a href="https://link.springer.com/book/10.1007/978-981-10-4071-9">Palgrave Macmillan</a>.</span>
-        </div>
-      </li>
-    </ul>
 
-    <h3 class="sub">Other writing</h3>
-    <ul class="list">
-      <li>
-        <span class="date">2025</span>
-        <div>
-          <span class="ttl"><a href="https://www.heliotropejournal.net/helio/hall-road">Hall Road, Lahore: Devotion's signal chain</a></span>
-          <span class="meta"><a href="https://www.heliotropejournal.net/">HELIOTROPE</a>. Field essay with photographs.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block magenta">2024<span class="tag">article</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title"><a href="https://doi.org/10.1163/21659214-bja10110" class="ext">"Blur the preacher": Media remix and digital technocultural practice in Pakistan</a></div>
+            <div class="venue"><em><a href="https://brill.com/view/journals/rmdc/rmdc-overview.xml" class="ext">Journal of Religion, Media and Digital Culture</a></em>, 13(3), 363 to 386.</div>
+            <div class="blurb">YouTube remixers in Pakistan cut, blur, and rebuild religious sermons. The article asks what happens to a preacher's authority when his words get edited and reshared.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2019</span>
-        <div>
-          <span class="ttl">Really risky "interpretation."</span>
-          <span class="meta"><a href="https://ahi.org.uk/">Association for Heritage Interpretation</a>, 24(1), 36 to 37.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2015</span>
-        <div>
-          <span class="ttl">Reports</span>
-          <span class="meta">With Trinidad Rico. <em>Anthropology of the Middle East</em>, 10(1), 61 to 88.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2013</span>
-        <div>
-          <span class="ttl">Rolling out a new broadband era in Qatar</span>
-          <span class="meta"><em>The Edge</em>, 43, 40.</span>
-        </div>
-      </li>
-    </ul>
 
-    <h3 class="sub">In preparation</h3>
-    <ul class="list">
-      <li>
-        <span class="date">2026</span>
-        <div>
-          <span class="ttl">Digital Religion (eds.)</span>
-          <span class="meta">With Hassan Bashir. Edited volume proposal; submission planned Winter 2026.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block gold">in press<span class="tag">article</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title">Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan</div>
+            <div class="venue"><em><a href="http://digitalhumanities.org/dhq/" class="ext">Digital Humanities Quarterly</a></em>. Special issue on the Global South.</div>
+            <div class="blurb">Pakistani religious music producers often work with pirated software. The article argues that the cracked tools are part of how the craft is taught and shared, not a problem to be cleaned up.</div>
+          </div>
         </div>
-      </li>
-    </ul>
-  </section>
 
-  <section class="block wrap" id="awards">
-    <h2><span class="ix">// 03</span> selected grants &amp; awards</h2>
-    <ul class="list">
-      <li>
-        <span class="date">2025</span>
-        <div>
-          <span class="ttl">Margaret Higgins Memorial Fellowship</span>
-          <span class="meta">University of Toronto, university-wide. CA $2,000.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block green">Dec 2026<span class="tag">forthcoming</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title">Moral traffic: How WhatsApp moves media, rules, and resources in Pakistan's devotional media ecologies</div>
+            <div class="venue"><em><a href="https://journals.sagepub.com/home/MMC" class="ext">Mobile Media and Communication</a></em>. Special issue on messaging applications.</div>
+            <div class="blurb">WhatsApp groups in Pakistan move audio files, religious rulings, and donations through the same channels. The article treats the group chat as a piece of real infrastructure.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2025</span>
-        <div>
-          <span class="ttl">Professor Amilcare Iannucci Graduate Fellowship in the Humanities</span>
-          <span class="meta">University of Toronto, university-wide. CA $5,000.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2024 – 25</span>
-        <div>
-          <span class="ttl"><a href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif">Chancellor Jackman Graduate Fellowship</a></span>
-          <span class="meta">University of Toronto, university-wide. CA $38,000.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2023 – 24</span>
-        <div>
-          <span class="ttl">SSHRC Doctoral Scholarship</span>
-          <span class="meta"><a href="https://www.sshrc-crsh.gc.ca/">Social Sciences and Humanities Research Council of Canada</a>, national competition. CA $20,000.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2021 – 23</span>
-        <div>
-          <span class="ttl">Ontario Graduate Scholarship</span>
-          <span class="meta">Province of Ontario, provincial competition. CA $30,000.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2021 – 22</span>
-        <div>
-          <span class="ttl">iSchools Inc. Research Award</span>
-          <span class="meta"><a href="https://ischools.org/">iSchools Inc.</a>, international competition. CA $5,000.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2022</span>
-        <div>
-          <span class="ttl">School of Graduate Studies Research Travel Grant</span>
-          <span class="meta">University of Toronto. CA $3,000.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2022</span>
-        <div>
-          <span class="ttl">Ethel W. Auster Scholarship for Doctoral Research</span>
-          <span class="meta">University of Toronto. CA $2,000.</span>
-        </div>
-      </li>
-    </ul>
-    <p style="margin-top:18px; font-size:12px; color:var(--ink-dim);">Full list of grants and awards available on request via <a href="mailto:h.asif@mail.utoronto.ca">email</a>.</p>
-  </section>
 
-  <section class="block wrap" id="research">
-    <h2><span class="ix">// 04</span> research experience</h2>
-    <ul class="list">
-      <li>
-        <span class="date">2021 – 22</span>
-        <div>
-          <span class="ttl">Research Assistant, #Blacktronica</span>
-          <span class="meta">Electronic music in Detroit and Berlin. Supervised by <a href="https://www.beth-coleman.net/">Prof. Beth Coleman</a>, University of Toronto Mississauga.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block magenta">under review<span class="tag">article</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title">IslaMixing: Hauntology as an experimental framework for exploring online #Islamogram memes</div>
+            <div class="venue"><em><a href="https://www.tandfonline.com/journals/hmer20" class="ext">Journal of Media and Religion</a></em>.</div>
+            <div class="blurb">An experimental piece on Islamic memes online. It uses ideas about how the past haunts the present to read what circulates under the #Islamogram tag.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2020 – 21</span>
-        <div>
-          <span class="ttl">Participant and Research Assistant, DigiLabs Workshops</span>
-          <span class="meta">University of Toronto and University of Manchester.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2021</span>
-        <div>
-          <span class="ttl">Student Research Trainee, Richard Charles Lee Insights Through Asia Challenge</span>
-          <span class="meta"><a href="https://munkschool.utoronto.ca/ai/">Asian Institute, University of Toronto</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2020 – 21</span>
-        <div>
-          <span class="ttl">Member, McLuhan Centre Reading Group "Sub-Altern-ative Media Technologies"</span>
-          <span class="meta"><a href="https://www.mcluhan.utoronto.ca/">McLuhan Centre for Culture and Technology</a>, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2020 – 21</span>
-        <div>
-          <span class="ttl">Member, Toronto Data Workshop</span>
-          <span class="meta">University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2020 – 21</span>
-        <div>
-          <span class="ttl">Member, Pakistan Reading Group</span>
-          <span class="meta">Centre for South Asian Civilizations, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2018 – 19</span>
-        <div>
-          <span class="ttl">Social Studies Curriculum Developer</span>
-          <span class="meta">Lahore College of Arts and Sciences.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2017 – 18</span>
-        <div>
-          <span class="ttl">Research Consultant</span>
-          <span class="meta"><a href="https://www.barkerlangham.co.uk/">Barker Langham</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2015 – 16</span>
-        <div>
-          <span class="ttl">Research Associate</span>
-          <span class="meta"><a href="https://lums.edu.pk/">Lahore University of Management Sciences</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2015</span>
-        <div>
-          <span class="ttl">Account Manager and Concept Researcher</span>
-          <span class="meta"><a href="https://www.tbwa.com/">TBWA\Worldwide</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2015</span>
-        <div>
-          <span class="ttl">Research Assistant, Media Gallery for Journalism and Communication</span>
-          <span class="meta"><a href="https://www.medill.northwestern.edu/">Medill</a>, Northwestern University.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2013</span>
-        <div>
-          <span class="ttl">Research Assistant, Sociology</span>
-          <span class="meta">Northwestern University.</span>
-        </div>
-      </li>
-    </ul>
-  </section>
+      </div>
 
-  <section class="block wrap" id="field">
-    <h2><span class="ix">// 05</span> field research</h2>
-    <ul class="list">
-      <li>
-        <span class="date">2022</span>
-        <div>
-          <span class="ttl">Devotional media and remix culture</span>
-          <span class="meta">Karachi, Lahore, and adjacent cities, Pakistan. July to December 2022.</span>
+      <h3 class="sub">Peer-reviewed book chapters</h3>
+      <div>
+        <div class="pub-feature">
+          <div class="pub-year-block gold">in press<span class="tag">chapter</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title">Translating truth: AI in digital Islamic sermons and the case of Engineer Muhammad Ali Mirza</div>
+            <div class="venue">In D. Sundaram and C. Tekobbe (Eds.), <em>Social Media, Religion, and Culture</em>. <a href="https://www.routledge.com/" class="ext">Routledge</a>.</div>
+            <div class="blurb">A chapter on AI tools used to translate, edit, and remix Islamic sermons. Focuses on one Pakistani preacher whose talks are heavily AI-edited online.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2015</span>
-        <div>
-          <span class="ttl">Buddhist sculpture and heritage values</span>
-          <span class="meta">Taxila and Islamabad, Pakistan. April to July 2015.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block magenta">in press<span class="tag">chapter</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title">Technical imagination against deepfakes: Reading, bending, and exposing the image game</div>
+            <div class="venue">In J. Tulasiewicz, S. Jovicic, and X. Zhan (Eds.), <em>Ethnographies of Digital Addiction, Harm, and Repair</em>. <a href="https://www.bloomsbury.com/uk/academic/" class="ext">Bloomsbury Academic</a>.</div>
+            <div class="blurb">How everyday viewers learn to spot deepfakes. Argues that understanding how the tools work is itself part of the defense.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2013 – 14</span>
-        <div>
-          <span class="ttl">Cityscapes on experimental film</span>
-          <span class="meta">Paris, France. December 2013 to January 2014.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block green">2017<span class="tag">chapter</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title"><a href="https://doi.org/10.1007/978-981-10-4071-9_7" class="ext">The Buddha Remains: Heritage transactions in Taxila, Pakistan</a></div>
+            <div class="venue">With <a href="https://arthistory.rutgers.edu/people/full-time-faculty/faculty-member/492-rico-trinidad" class="ext">Trinidad Rico</a>. In T. Rico (Ed.), <em>The Making of Islamic Heritage</em>. <a href="https://link.springer.com/book/10.1007/978-981-10-4071-9" class="ext">Palgrave Macmillan</a>.</div>
+            <div class="blurb">What happens when a Muslim-majority country takes care of ancient Buddhist statues. A study of heritage practice in Taxila, Pakistan.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2013</span>
-        <div>
-          <span class="ttl">Female sports participation</span>
-          <span class="meta">Doha, Qatar. September to December 2013.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2013</span>
-        <div>
-          <span class="ttl">Media entrepreneurship in East Asia</span>
-          <span class="meta">Seoul, South Korea. June to August 2013.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2013</span>
-        <div>
-          <span class="ttl">Future of broadband in MENA</span>
-          <span class="meta">Broadband MEA Conference, Dubai, UAE. January to May 2013.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2012 – 14</span>
-        <div>
-          <span class="ttl">Heavy metal music and subculture</span>
-          <span class="meta">Lahore and Islamabad, Pakistan. May 2012 to July 2014.</span>
-        </div>
-      </li>
-    </ul>
-  </section>
+      </div>
 
-  <section class="block wrap" id="professional">
-    <h2><span class="ix">// 06</span> professional experience</h2>
-    <ul class="list">
-      <li>
-        <span class="date">2025</span>
-        <div>
-          <span class="ttl">Chief Presiding Officer</span>
-          <span class="meta"><a href="https://www.utm.utoronto.ca/">University of Toronto Mississauga</a>. Spring examination period: oversaw venue logistics, invigilation teams, accessibility compliance, and incident reporting across the campus.</span>
+      <h3 class="sub">Other writing</h3>
+      <div>
+        <div class="pub-feature">
+          <div class="pub-year-block gold">2025<span class="tag">essay</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title"><a href="https://www.heliotropejournal.net/helio/hall-road" class="ext">Hall Road, Lahore: Devotion's signal chain</a></div>
+            <div class="venue"><em><a href="https://www.heliotropejournal.net/" class="ext">HELIOTROPE</a></em>. Field essay with photographs.</div>
+            <div class="blurb">A walking essay through the Lahore electronics market that keeps Pakistan's religious music industry running. Shops, repair stalls, small studios, late-night software installs.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2021 – 23</span>
-        <div>
-          <span class="ttl">Senior Digital Fellow, Muslims in Canada Archive (MiCA)</span>
-          <span class="meta"><a href="https://www.utoronto.ca/news/u-t-launches-muslims-canada-archives-mica">Institute of Islamic Studies, University of Toronto</a>. Helped initiate a nationwide collection and digitization program; prototyped archival workflows and system architecture with U of T Libraries and partner institutions.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block magenta">2015<span class="tag">field notes</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title">Reports</div>
+            <div class="venue">With <a href="https://arthistory.rutgers.edu/people/full-time-faculty/faculty-member/492-rico-trinidad" class="ext">Trinidad Rico</a>. <em>Anthropology of the Middle East</em>, 10(1), 61 to 88.</div>
+            <div class="blurb">Co-written field notes from heritage research in Pakistan.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2021 – 23</span>
-        <div>
-          <span class="ttl">Senior Digital Fellow, Muslims in Canada Data Initiative (MiCDI)</span>
-          <span class="meta">Institute of Islamic Studies, University of Toronto. Prototyped a Dataverse repository, set metadata schemas and access controls, documented ingestion workflows.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block green">2019<span class="tag">note</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title">Really risky "interpretation."</div>
+            <div class="venue"><em>Association for Heritage Interpretation</em>, 24(1), 36 to 37.</div>
+            <div class="blurb">A short piece on the risks of museum interpretation work.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2017 – 18</span>
-        <div>
-          <span class="ttl">Program Manager</span>
-          <span class="meta"><a href="https://www.amalacademy.org/">Amal Academy</a> (supported by Stanford University and <a href="https://acumen.org/">Acumen</a>). Managed Career Prep Fellowships across Punjab University, UET Lahore, and GCU Lahore; trained 500+ students.</span>
+        <div class="pub-feature">
+          <div class="pub-year-block gold">2013<span class="tag">trade</span></div>
+          <div class="pub-body">
+            <span class="what">What is it about?</span>
+            <div class="title">Rolling out a new broadband era in Qatar</div>
+            <div class="venue"><em>The Edge</em>, 43, 40.</div>
+            <div class="blurb">A trade magazine article on broadband internet expansion in Qatar.</div>
+          </div>
         </div>
-      </li>
-      <li>
-        <span class="date">2017</span>
-        <div>
-          <span class="ttl">Project Assistant, Culture</span>
-          <span class="meta"><a href="https://www.unesco.org/en/fieldoffice/islamabad">UNESCO Pakistan</a>. Built a network of 40 museums, universities, and NGOs; ran digitization workshops at Taxila, Lahore, and Peshawar Museums; established Taxila Museum's first digital archive lab.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2016 – 17</span>
-        <div>
-          <span class="ttl">Consultant, Culture</span>
-          <span class="meta">UNESCO Pakistan. Managed three preservation projects (World Bank, Swiss Embassy, UNESCO) totalling over US $150,000; led policy dialogue supporting Pakistan's ratification of the 2005 UNESCO Convention on Cultural Diversity.</span>
-        </div>
-      </li>
-    </ul>
-    <p style="margin-top:18px; font-size:12px; color:var(--ink-dim);">Additional curatorial projects available on request.</p>
-  </section>
-
-  <section class="block wrap" id="teaching">
-    <h2><span class="ix">// 07</span> teaching</h2>
-
-    <h3 class="sub">Courses taught</h3>
-    <ul class="list">
-      <li>
-        <span class="date">2024, 2025</span>
-        <div>
-          <span class="ttl">Reimagining Global Copyright</span>
-          <span class="meta">Graduate, Faculty of Information, University of Toronto. 25 students. Offered four times.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2023</span>
-        <div>
-          <span class="ttl">Religion, Media and Popular Culture</span>
-          <span class="meta">Undergraduate, UTM ICCIT. 40 students. Offered twice.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025</span>
-        <div>
-          <span class="ttl">Human-Machine Communication</span>
-          <span class="meta">Undergraduate, UTM. Instructor of record. Deferred during parental leave.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025</span>
-        <div>
-          <span class="ttl">Digital Platforms: A Global Perspective</span>
-          <span class="meta">Undergraduate, UTM. Instructor of record. Deferred during parental leave.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2019</span>
-        <div>
-          <span class="ttl">Engaging with Texts</span>
-          <span class="meta">Lahore University of Management Sciences. 45 students.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2018 – 19</span>
-        <div>
-          <span class="ttl">History and Sociology (A-level)</span>
-          <span class="meta">Lahore College of Arts and Sciences. 25 students each.</span>
-        </div>
-      </li>
-    </ul>
-
-    <h3 class="sub" id="ta">Teaching assistant work</h3>
-    <p style="font-size:13px; color:var(--ink-dim); margin-bottom:16px;">
-      <strong style="color:var(--ink);">UTM ICCIT.</strong>
-      Contemporary Communication Technologies (7 sections, 2020 to 2024).
-      Rhetoric and Media (8 sections, 2020 to present).
-      Popular Culture and Society (2026 Winter).
-      Interpersonal Communication (2025 Winter, 2025 Summer).
-      Communication, Technology, and Social Change (2024 Fall).
-      Media Audiences (2021 Winter, 2023 Fall, 2026 Winter).
-      Mind, Media and Representation (2022 Fall).
-      Signs, Referents, and Meaning (2023 Summer).
-      Visual Rhetoric and Digital Environments (2020 Fall).
-      Communicating In and Between Organizations (2020 Fall).
-      Communication and Advertising (2023 Winter, 2024 Winter).
-      Introduction to Visual Culture (2023 Winter).
-    </p>
-    <p style="font-size:13px; color:var(--ink-dim); margin-bottom:16px;">
-      <strong style="color:var(--ink);">Faculty of Information, University of Toronto.</strong>
-      INF2320H Remix Culture (2021 Winter).
-      INF2040H Project Management (2020 Winter).
-      MSL2360H Museums and Indigenous Communities (2020 Winter).
-    </p>
-    <p style="font-size:13px; color:var(--ink-dim);">
-      <strong style="color:var(--ink);">Asian Institute, University of Toronto.</strong>
-      CAS350H1 Asian Youth Cultures (2021 Fall).
-    </p>
-  </section>
-
-  <section class="block wrap" id="presentations">
-    <h2><span class="ix">// 08</span> selected conference presentations</h2>
-    <ul class="list">
-      <li>
-        <span class="date">2025 NOV</span>
-        <div>
-          <span class="ttl">Remixing Devotion: The Digital Audio Workstation as Sacred Space</span>
-          <span class="meta">Sacred Space: Conflicts and Convergences. Trinity College, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025 NOV</span>
-        <div>
-          <span class="ttl">From Breath to Waveform: HCI Lessons from Editing Na'at in Cubase</span>
-          <span class="meta">First Annual Conference on Spirituality, Religion, and Interactive Technology Design (SPIRITED '25), online.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025 JUN</span>
-        <div>
-          <span class="ttl">Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan</span>
-          <span class="meta"><a href="https://www.icahdq.org/">International Communication Association</a> 2025 Pre-Conference "Debating Creator Culture," Boulder, CO.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025 JUN</span>
-        <div>
-          <span class="ttl">Between confusion and deception: Ethical dilemmas in AI-enabled audiovisual remixing of Engineer Muhammad Ali Mirza's sermons</span>
-          <span class="meta"><a href="https://www.acc-cca.ca/">Canadian Communication Association</a> Annual Conference, George Brown College, Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025 APR</span>
-        <div>
-          <span class="ttl">Cracked devotion: Piracy, pedagogy, and Islamic media remixing in Pakistan</span>
-          <span class="meta">South Asia Graduate Student Workshop, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025 FEB</span>
-        <div>
-          <span class="ttl">Mediating truth: Tensions in AI-driven remixing of Engineer Muhammad Ali Mirza's sermons</span>
-          <span class="meta">20th Annual Communication Graduate Caucus Conference, "(In)Tensions," <a href="https://carleton.ca/">Carleton University</a>, Ottawa.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2024 JUN</span>
-        <div>
-          <span class="ttl">Digital desires and distortions: The impact of deepfake pornography in Pakistani cyberspace</span>
-          <span class="meta">Global Digital Intimacies Conference, <a href="https://www.uva.nl/">University of Amsterdam</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2024 MAY</span>
-        <div>
-          <span class="ttl">Technological transcendence: The transformation of Naʻat in Pakistan's digital Islamic landscape</span>
-          <span class="meta"><a href="https://casim.ca/">Canadian Association for the Study of Islam and Muslims</a> Second Biennial Conference, <a href="https://www.smu.ca/">Saint Mary's University</a>, Halifax.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2024 APR</span>
-        <div>
-          <span class="ttl">Performance, sound, music, media, and materiality (panel chair)</span>
-          <span class="meta">Arts of the Indian Ocean Conference, University of Toronto Mississauga.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2023 OCT</span>
-        <div>
-          <span class="ttl">Bytes of blessings: Examining digital technology's influence on Pakistan's Naʻat culture</span>
-          <span class="meta">51st Annual Conference on South Asia, <a href="https://southasia.wisc.edu/">University of Wisconsin-Madison</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2023 MAY</span>
-        <div>
-          <span class="ttl">Prayers, pixels, and piracy: Online presentation of religious self in Pakistan's Naʻat community</span>
-          <span class="meta">Graduate Student Conference, <a href="https://www.ucalgary.ca/">University of Calgary</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2021 SEP</span>
-        <div>
-          <span class="ttl">Rogue representations: Diasporic digital archives of South Asian musical media</span>
-          <span class="meta">Richard Charles Lee Insights Through Asia Challenge, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2021 APR</span>
-        <div>
-          <span class="ttl">Discursive identities: Media remix in Pakistan</span>
-          <span class="meta">South Asian Studies Graduate Symposium, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2021 APR</span>
-        <div>
-          <span class="ttl">Critical technocultural discourse analysis of sampling in Pakistani media remixes</span>
-          <span class="meta">iSchool PhD Research Days, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2016 FEB</span>
-        <div>
-          <span class="ttl">Stillborn Siddhārthas: Reassessing Gandharan art in Pakistan</span>
-          <span class="meta">Liberal Arts International Conference, <a href="https://www.qatar.tamu.edu/">Texas A&amp;M University at Qatar</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2013 SEP</span>
-        <div>
-          <span class="ttl">Broadband development in MENA: Current trends and future directions</span>
-          <span class="meta">6th Annual Meeting of <a href="https://www.asmeascholars.org/">ASMEA</a>, Washington, DC.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2013 MAR</span>
-        <div>
-          <span class="ttl">Wherever I may roam: Heavy metal in Pakistan</span>
-          <span class="meta"><a href="https://iaspm.net/">International Association for the Study of Popular Music</a>, Austin, TX.</span>
-        </div>
-      </li>
-    </ul>
-  </section>
-
-  <section class="block wrap" id="talks">
-    <h2><span class="ix">// 09</span> selected invited talks</h2>
-    <ul class="list">
-      <li>
-        <span class="date">2026 JAN</span>
-        <div>
-          <span class="ttl">Remix, devotion, and media infrastructures in Pakistan</span>
-          <span class="meta">Guest lecture, Remix Culture course, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025 MAR</span>
-        <div>
-          <span class="ttl">Politics, pop, and the pulpit: Where does the sacred end and the meme begin?</span>
-          <span class="meta">Guest lecture, Remix Culture course, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2025 JAN</span>
-        <div>
-          <span class="ttl">Remixing devotion: An exploration of digital media practices in Pakistan</span>
-          <span class="meta">Invited talk, <a href="https://www.humanities.utoronto.ca/">Jackman Humanities Institute</a>, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2023 OCT</span>
-        <div>
-          <span class="ttl">IslaMixing: Digital audio workstations and contemporary devotion</span>
-          <span class="meta">Guest lecture, MI "Remix Culture" seminar, Faculty of Information, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2023 MAY</span>
-        <div>
-          <span class="ttl">Branding beliefs: Self-presentation in the Pakistani Naʻat community</span>
-          <span class="meta">Invited talk, ICCIT seminar, University of Toronto Mississauga.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2020 NOV</span>
-        <div>
-          <span class="ttl">Remixing resistance through sonic heritage: A Tribe Called Red (ATCR)</span>
-          <span class="meta">DigiLabs Workshop, University of Toronto and University of Manchester, online.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2020 FEB</span>
-        <div>
-          <span class="ttl">Cross-cultural project management</span>
-          <span class="meta">Invited talk, MI seminar, University of Toronto.</span>
-        </div>
-      </li>
-    </ul>
-  </section>
-
-  <section class="block wrap" id="service">
-    <h2><span class="ix">// 10</span> service</h2>
-    <ul class="list">
-      <li>
-        <span class="date">2025 –</span>
-        <div>
-          <span class="ttl">Volunteer Mentor, Palestinian Students and Scholars at Risk (PSSAR)</span>
-          <span class="meta">Guide prospective and newly admitted Palestinian graduate students on application strategy, supervisor matching, funding, and cultural adjustment in North America.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">ongoing</span>
-        <div>
-          <span class="ttl">Graduate Student Mentor</span>
-          <span class="meta">Mentor new graduate students, especially from South Asia and the Middle East, on funding, research grants, academic integration, and student group participation.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2022</span>
-        <div>
-          <span class="ttl">Manuscript Reviewer</span>
-          <span class="meta"><a href="https://brill.com/view/journals/rmdc/rmdc-overview.xml">Journal of Religion, Media, and Digital Culture</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2021</span>
-        <div>
-          <span class="ttl">Manuscript Reviewer</span>
-          <span class="meta"><em>Stream: Culture/Politics/Technology</em>, <a href="https://www.sfu.ca/">Simon Fraser University</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2020 – 21</span>
-        <div>
-          <span class="ttl">Mental Health Committee Member</span>
-          <span class="meta">Doctoral Students Association, University of Toronto.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2020</span>
-        <div>
-          <span class="ttl">Volunteer, Our Networks Conference</span>
-          <span class="meta"><a href="https://ournetworks.ca/">Our Networks</a>.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2020</span>
-        <div>
-          <span class="ttl">Contributor, Museum Professionals of Color (MPOC)</span>
-          <span class="meta">iSchool, University of Toronto.</span>
-        </div>
-      </li>
-    </ul>
-  </section>
-
-  <section class="block wrap" id="training">
-    <h2><span class="ix">// 11</span> further training</h2>
-    <ul class="list">
-      <li>
-        <span class="date">2025 MAR</span>
-        <div>
-          <span class="ttl">"Global Southing: Internet and Data Studies Workshop"</span>
-          <span class="meta"><a href="https://www.oii.ox.ac.uk/">Oxford Internet Institute, University of Oxford</a>. Online-hybrid. Critical approaches to AI governance, digital sovereignty, and platform politics from Global South perspectives.</span>
-        </div>
-      </li>
-      <li>
-        <span class="date">2024<br/>SUMMER</span>
-        <div>
-          <span class="ttl">"Computer Class," Centre for Culture and Technology Summer Institute</span>
-          <span class="meta">University of Toronto. Three-week studio pairing code labs with critical seminars. Worked with the Ludus programming language and its turtle-graphics engine; read Papert's <em>Mindstorms</em> and Weizenbaum's <em>Computer Power and Human Reason</em>.</span>
-        </div>
-      </li>
-    </ul>
-  </section>
-
-  <section class="block wrap" id="memberships">
-    <h2><span class="ix">// 12</span> professional memberships</h2>
-    <p class="inline-list">
-      <a href="https://www.acc-cca.ca/">Canadian Communication Association (CCA)</a> ·
-      <a href="https://casim.ca/">Canadian Association for the Study of Islam and Muslims (CASIM)</a> ·
-      <a href="https://archivists.ca/">Association of Canadian Archivists (ACA)</a> ·
-      Museums Association of Pakistan (MAP) ·
-      <a href="https://iaspm.net/">International Association for the Study of Popular Music (IASPM)</a>.
-    </p>
-  </section>
-
-  <section class="block wrap" id="languages">
-    <h2><span class="ix">// 13</span> languages</h2>
-    <div class="chips">
-      <span class="chip">English<span class="lvl">native</span></span>
-      <span class="chip">Urdu<span class="lvl">native</span></span>
-      <span class="chip">Punjabi<span class="lvl">native; Shahmukhi proficient</span></span>
-      <span class="chip">Arabic<span class="lvl">reading proficiency</span></span>
+      </div>
     </div>
   </section>
 
-  <section class="block wrap" id="skills">
-    <h2><span class="ix">// 14</span> technical skills</h2>
-    <div class="skill-group">
-      <div class="label">AUDIO AND MEDIA PRODUCTION</div>
+  <!-- 03 AWARDS -->
+  <section class="block dark tinted-emerald" id="awards">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 03</span> <span class="line"></span> <span>grants + fellowships</span></div>
+        <h2 class="sec-title"><em>Awards.</em></h2>
+        <div class="sec-side-note">national /<br/><span class="accent">institutional</span></div>
+      </div>
+      <ul class="list">
+        <li><span class="date">2025</span><div><span class="ttl">Margaret Higgins Memorial Fellowship</span><span class="meta"><a href="https://www.utoronto.ca/" class="ext">University of Toronto</a>, university-wide. CA $2,000.</span></div></li>
+        <li><span class="date">2025</span><div><span class="ttl">Amilcare Iannucci Graduate Fellowship in the Humanities</span><span class="meta">University of Toronto, university-wide. CA $5,000.</span></div></li>
+        <li><span class="date">2024 / 25</span><div><span class="ttl"><a href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif" class="ext">Chancellor Jackman Graduate Fellowship</a></span><span class="meta"><a href="https://www.humanities.utoronto.ca/" class="ext">Jackman Humanities Institute</a>, University of Toronto. CA $38,000.</span></div></li>
+        <li><span class="date">2023 / 24</span><div><span class="ttl">SSHRC Doctoral Scholarship</span><span class="meta"><a href="https://www.sshrc-crsh.gc.ca/" class="ext">Social Sciences and Humanities Research Council of Canada</a>. CA $20,000.</span></div></li>
+        <li><span class="date">2021 / 23</span><div><span class="ttl">Ontario Graduate Scholarship</span><span class="meta">Province of Ontario, provincial competition. CA $30,000.</span></div></li>
+        <li><span class="date">2021 / 22</span><div><span class="ttl">iSchools Inc. Research Award</span><span class="meta"><a href="https://ischools.org/" class="ext">iSchools Inc.</a>, international competition. CA $5,000.</span></div></li>
+        <li><span class="date">2022</span><div><span class="ttl">School of Graduate Studies Research Travel Grant</span><span class="meta">University of Toronto. CA $3,000.</span></div></li>
+        <li><span class="date">2022</span><div><span class="ttl">Ethel W. Auster Scholarship for Doctoral Research</span><span class="meta">University of Toronto. CA $2,000.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 04 RESEARCH -->
+  <section class="block dark" id="research">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 04</span> <span class="line"></span> <span>positions + groups</span></div>
+        <h2 class="sec-title"><em>Research.</em></h2>
+        <div class="sec-side-note">assistantships /<br/><span class="accent">reading groups</span></div>
+      </div>
+      <ul class="list">
+        <li><span class="date">2021/22</span><div><span class="ttl">Research Assistant, #Blacktronica</span><span class="meta">Research on electronic music scenes in Detroit and Berlin. Supervised by <a href="https://www.utm.utoronto.ca/iccit/people/beth-coleman" class="ext">Beth Coleman</a>, <a href="https://www.utm.utoronto.ca/iccit/" class="ext">ICCIT</a>, UTM.</span></div></li>
+        <li><span class="date">2020/21</span><div><span class="ttl">Participant and Research Assistant, DigiLabs Workshops</span><span class="meta">University of Toronto and University of Manchester.</span></div></li>
+        <li><span class="date">2021</span><div><span class="ttl">Student Research Trainee, Richard Charles Lee Insights Through Asia Challenge</span><span class="meta"><a href="https://munkschool.utoronto.ca/ai/" class="ext">Asian Institute</a>, Munk School of Global Affairs, University of Toronto.</span></div></li>
+        <li><span class="date">2020/21</span><div><span class="ttl">Member, McLuhan Centre Reading Group "Sub-Altern-ative Media Technologies"</span><span class="meta"><a href="https://www.mcluhan.utoronto.ca/" class="ext">McLuhan Centre for Culture and Technology</a>, University of Toronto.</span></div></li>
+        <li><span class="date">2020/21</span><div><span class="ttl">Member, Toronto Data Workshop</span><span class="meta">University of Toronto.</span></div></li>
+        <li><span class="date">2020/21</span><div><span class="ttl">Member, Pakistan Reading Group</span><span class="meta"><a href="https://www.utm.utoronto.ca/csac/centre-south-asian-civilizations" class="ext">Centre for South Asian Civilizations</a>, University of Toronto.</span></div></li>
+        <li><span class="date">2018/19</span><div><span class="ttl">Social Studies Curriculum Developer</span><span class="meta">Lahore College of Arts and Sciences.</span></div></li>
+        <li><span class="date">2017/18</span><div><span class="ttl">Research Consultant</span><span class="meta"><a href="https://www.barkerlangham.co.uk/" class="ext">Barker Langham</a>, a UK cultural consultancy.</span></div></li>
+        <li><span class="date">2015/16</span><div><span class="ttl">Research Associate</span><span class="meta"><a href="https://lums.edu.pk/" class="ext">Lahore University of Management Sciences</a>.</span></div></li>
+        <li><span class="date">2015</span><div><span class="ttl">Account Manager and Concept Researcher</span><span class="meta"><a href="https://www.tbwa.com/" class="ext">TBWA\Worldwide</a>, an international advertising agency.</span></div></li>
+        <li><span class="date">2015</span><div><span class="ttl">RA, Media Gallery for Journalism and Communication</span><span class="meta"><a href="https://www.medill.northwestern.edu/" class="ext">Medill School of Journalism</a>, Northwestern University.</span></div></li>
+        <li><span class="date">2013</span><div><span class="ttl">RA, Sociology</span><span class="meta"><a href="https://www.northwestern.edu/" class="ext">Northwestern University</a>.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-tape"></div></div>
+
+  <!-- 05 FIELD -->
+  <section class="block dark" id="field">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 05</span> <span class="line"></span> <span>fieldwork sites</span></div>
+        <h2 class="sec-title"><em>Field.</em></h2>
+        <div class="sec-side-note">seven sites /<br/><span class="accent">four continents</span></div>
+      </div>
+      <ul class="list">
+        <li><span class="date">2022</span><div><span class="ttl">Religious media and remix culture</span><span class="meta">Karachi, Lahore, and nearby cities in Pakistan. Six months of fieldwork.</span></div></li>
+        <li><span class="date">2015</span><div><span class="ttl">Buddhist sculpture and heritage values</span><span class="meta">Taxila and Islamabad, Pakistan. Three months of fieldwork.</span></div></li>
+        <li><span class="date">2013/14</span><div><span class="ttl">Cityscapes on experimental film</span><span class="meta">Paris, France.</span></div></li>
+        <li><span class="date">2013</span><div><span class="ttl">Women in sport</span><span class="meta">Doha, Qatar.</span></div></li>
+        <li><span class="date">2013</span><div><span class="ttl">Media entrepreneurship in East Asia</span><span class="meta">Seoul, South Korea.</span></div></li>
+        <li><span class="date">2013</span><div><span class="ttl">Future of broadband in the Middle East and North Africa</span><span class="meta">Broadband MEA Conference, Dubai, UAE.</span></div></li>
+        <li><span class="date">2012/14</span><div><span class="ttl">Heavy metal music and subculture</span><span class="meta">Lahore and Islamabad, Pakistan.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 06 PROFESSIONAL -->
+  <section class="block cream" id="professional">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 06</span> <span class="line"></span> <span>roles + appointments</span></div>
+        <h2 class="sec-title"><em>Professional.</em></h2>
+        <div class="sec-side-note">archive · fellowship /<br/><span class="accent">UNESCO · Amal</span></div>
+      </div>
+      <ul class="list">
+        <li><span class="date">2025</span><div><span class="ttl">Chief Presiding Officer</span><span class="meta"><a href="https://www.utm.utoronto.ca/" class="ext">University of Toronto Mississauga</a>. Ran exam logistics for the spring exam period across the campus.</span></div></li>
+        <li><span class="date">2021/23</span><div><span class="ttl">Senior Digital Fellow, Muslims in Canada Archive (MiCA)</span><span class="meta"><a href="https://www.utoronto.ca/news/u-t-launches-muslims-canada-archives-mica" class="ext">Institute of Islamic Studies</a>, University of Toronto. Helped start a national archive of Muslim Canadian history. Built early digital workflows with U of T Libraries.</span></div></li>
+        <li><span class="date">2021/23</span><div><span class="ttl">Senior Digital Fellow, Muslims in Canada Data Initiative (MiCDI)</span><span class="meta">Institute of Islamic Studies, University of Toronto. Built an early data repository. Set up the file structure, access controls, and the process for adding new material.</span></div></li>
+        <li><span class="date">2017/18</span><div><span class="ttl">Program Manager</span><span class="meta"><a href="https://www.amalacademy.org/" class="ext">Amal Academy</a>, an education nonprofit backed by Stanford University and <a href="https://acumen.org/" class="ext">Acumen</a>. Ran career-prep programs for more than 500 students across three Lahore universities.</span></div></li>
+        <li><span class="date">2017</span><div><span class="ttl">Project Assistant, Culture</span><span class="meta"><a href="https://www.unesco.org/en/fieldoffice/islamabad" class="ext">UNESCO Pakistan</a>. Built a network of 40 museums, universities, and NGOs. Ran workshops on digitizing collections at Taxila, Lahore, and Peshawar Museums.</span></div></li>
+        <li><span class="date">2016/17</span><div><span class="ttl">Consultant, Culture</span><span class="meta">UNESCO Pakistan. Managed three preservation projects funded by the World Bank, the Swiss Embassy, and UNESCO. Total budget over US $150,000. Helped Pakistan ratify the 2005 UNESCO cultural diversity convention.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="divider"><div class="divider-tape"></div></div>
+
+  <!-- 07 TEACHING -->
+  <section class="block dark tinted-magenta" id="teaching">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 07</span> <span class="line"></span> <span>courses + TA work</span></div>
+        <h2 class="sec-title"><em>Teaching.</em></h2>
+        <div class="sec-side-note">six courses /<br/><span class="accent">a dozen TAships</span></div>
+      </div>
+
+      <h3 class="sub">Courses taught</h3>
+      <div class="teach">
+        <div class="teach-card">
+          <div class="lvl">GRAD · UofT iSchool</div>
+          <div class="nm">Reimagining Global Copyright</div>
+          <div class="what">A graduate seminar on how copyright works around the world and how it might work better.</div>
+          <div class="when">2024, 2025 · 25 students · four sections</div>
+        </div>
+        <div class="teach-card">
+          <div class="lvl">UNDERGRAD · UTM ICCIT</div>
+          <div class="nm">Religion, Media and Popular Culture</div>
+          <div class="what">An undergraduate course on how religion shows up in movies, TV, and online.</div>
+          <div class="when">2023 · 40 students · two sections</div>
+        </div>
+        <div class="teach-card">
+          <div class="lvl">UNDERGRAD · UTM</div>
+          <div class="nm">Human-Machine Communication</div>
+          <div class="what">A course on how people talk to and through machines, from chatbots to algorithms.</div>
+          <div class="when">Instructor of record · Deferred</div>
+        </div>
+        <div class="teach-card">
+          <div class="lvl">UNDERGRAD · UTM</div>
+          <div class="nm">Digital Platforms: A Global Perspective</div>
+          <div class="what">A course on how digital platforms work in different parts of the world.</div>
+          <div class="when">Instructor of record · Deferred</div>
+        </div>
+        <div class="teach-card">
+          <div class="lvl">UNDERGRAD · LUMS</div>
+          <div class="nm">Engaging with Texts</div>
+          <div class="what">A reading and writing course for university freshmen.</div>
+          <div class="when">2019 · 45 students</div>
+        </div>
+        <div class="teach-card">
+          <div class="lvl">A-LEVEL · Lahore</div>
+          <div class="nm">History and Sociology</div>
+          <div class="what">Pre-university level history and sociology classes.</div>
+          <div class="when">2018 to 2019 · 25 students each</div>
+        </div>
+      </div>
+
+      <h3 class="sub" id="ta">Teaching assistant work</h3>
+      <p class="teach-note"><strong><a href="https://www.utm.utoronto.ca/iccit/" class="ext">UTM ICCIT</a>.</strong> Contemporary Communication Technologies (7 sections, 2020 to 2024) · Rhetoric and Media (8 sections, 2020 to present) · Popular Culture and Society (2026 W) · Interpersonal Communication (2025 W, 2025 Su) · Communication, Technology, and Social Change (2024 F) · Media Audiences (2021 W, 2023 F, 2026 W) · Mind, Media and Representation (2022 F) · Signs, Referents, and Meaning (2023 Su) · Visual Rhetoric and Digital Environments (2020 F) · Communicating In and Between Organizations (2020 F) · Communication and Advertising (2023 W, 2024 W) · Introduction to Visual Culture (2023 W).</p>
+      <p class="teach-note"><strong><a href="https://ischool.utoronto.ca/" class="ext">Faculty of Information</a>, UofT.</strong> INF2320H Remix Culture (2021 W) · INF2040H Project Management (2020 W) · MSL2360H Museums and Indigenous Communities (2020 W).</p>
+      <p class="teach-note"><strong><a href="https://munkschool.utoronto.ca/ai/" class="ext">Asian Institute</a>, UofT.</strong> CAS350H1 Asian Youth Cultures (2021 F).</p>
+    </div>
+  </section>
+
+  <!-- 08 PRESENTATIONS -->
+  <section class="block dark" id="presentations">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 08</span> <span class="line"></span> <span>conference papers</span></div>
+        <h2 class="sec-title"><em>Presentations.</em></h2>
+        <div class="sec-side-note">peer-reviewed /<br/><span class="accent">international</span></div>
+      </div>
+      <ul class="list">
+        <li><span class="date">25 NOV</span><div><span class="ttl">Remixing Devotion: The Digital Audio Workstation as Sacred Space</span><span class="meta">Sacred Space: Conflicts and Convergences. Trinity College, University of Toronto.</span></div></li>
+        <li><span class="date">25 NOV</span><div><span class="ttl">From Breath to Waveform: HCI Lessons from Editing Naat in Cubase</span><span class="meta">SPIRITED '25: First Annual Conference on Spirituality, Religion, and Interactive Technology Design.</span></div></li>
+        <li><span class="date">25 JUN</span><div><span class="ttl">Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan</span><span class="meta"><a href="https://www.icahdq.org/" class="ext">International Communication Association</a> 2025 Pre-Conference "Debating Creator Culture." Boulder, Colorado.</span></div></li>
+        <li><span class="date">25 JUN</span><div><span class="ttl">Between confusion and deception: Ethical dilemmas in AI-enabled audiovisual remixing of Engineer Muhammad Ali Mirza's sermons</span><span class="meta"><a href="https://www.acc-cca.ca/" class="ext">Canadian Communication Association</a> Annual Conference. George Brown College, Toronto.</span></div></li>
+        <li><span class="date">25 APR</span><div><span class="ttl">Cracked devotion: Piracy, pedagogy, and Islamic media remixing in Pakistan</span><span class="meta">South Asia Graduate Student Workshop, University of Toronto.</span></div></li>
+        <li><span class="date">25 FEB</span><div><span class="ttl">Mediating truth: Tensions in AI-driven remixing of Engineer Muhammad Ali Mirza's sermons</span><span class="meta">20th Annual Communication Graduate Caucus Conference, "(In)Tensions." <a href="https://carleton.ca/" class="ext">Carleton University</a>, Ottawa.</span></div></li>
+        <li><span class="date">24 JUN</span><div><span class="ttl">Digital desires and distortions: The impact of deepfake pornography in Pakistani cyberspace</span><span class="meta">Global Digital Intimacies Conference. <a href="https://www.uva.nl/" class="ext">University of Amsterdam</a>.</span></div></li>
+        <li><span class="date">24 MAY</span><div><span class="ttl">Technological transcendence: The transformation of Naat in Pakistan's digital Islamic landscape</span><span class="meta"><a href="https://casim.ca/" class="ext">Canadian Association for the Study of Islam and Muslims</a>. <a href="https://www.smu.ca/" class="ext">Saint Mary's University</a>, Halifax.</span></div></li>
+        <li><span class="date">24 APR</span><div><span class="ttl">Performance, sound, music, media, and materiality (panel chair)</span><span class="meta">Arts of the Indian Ocean Conference. <a href="https://www.utm.utoronto.ca/" class="ext">University of Toronto Mississauga</a>.</span></div></li>
+        <li><span class="date">23 OCT</span><div><span class="ttl">Bytes of blessings: Examining digital technology's influence on Pakistan's Naat culture</span><span class="meta">51st Annual Conference on South Asia. <a href="https://southasia.wisc.edu/" class="ext">University of Wisconsin-Madison</a>.</span></div></li>
+        <li><span class="date">23 MAY</span><div><span class="ttl">Prayers, pixels, and piracy: Online presentation of religious self in Pakistan's Naat community</span><span class="meta">Graduate Student Conference. <a href="https://www.ucalgary.ca/" class="ext">University of Calgary</a>.</span></div></li>
+        <li><span class="date">21 SEP</span><div><span class="ttl">Rogue representations: Diasporic digital archives of South Asian musical media</span><span class="meta">Richard Charles Lee Insights Through Asia Challenge, UofT.</span></div></li>
+        <li><span class="date">21 APR</span><div><span class="ttl">Discursive identities: Media remix in Pakistan</span><span class="meta">South Asian Studies Graduate Symposium, UofT.</span></div></li>
+        <li><span class="date">21 APR</span><div><span class="ttl">Critical technocultural discourse analysis of sampling in Pakistani media remixes</span><span class="meta">iSchool PhD Research Days, UofT.</span></div></li>
+        <li><span class="date">16 FEB</span><div><span class="ttl">Stillborn Siddhārthas: Reassessing Gandharan art in Pakistan</span><span class="meta">Liberal Arts International Conference. <a href="https://www.qatar.tamu.edu/" class="ext">Texas A&amp;M University at Qatar</a>.</span></div></li>
+        <li><span class="date">13 SEP</span><div><span class="ttl">Broadband development in MENA: Current trends and future directions</span><span class="meta">6th Annual Meeting of <a href="https://www.asmeascholars.org/" class="ext">ASMEA</a>. Washington, DC.</span></div></li>
+        <li><span class="date">13 MAR</span><div><span class="ttl">Wherever I may roam: Heavy metal in Pakistan</span><span class="meta"><a href="https://iaspm.net/" class="ext">International Association for the Study of Popular Music</a>. Austin, TX.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 09 INVITED TALKS -->
+  <section class="block cream" id="talks">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 09</span> <span class="line"></span> <span>guest lectures + invited</span></div>
+        <h2 class="sec-title"><em>Invited Talks.</em></h2>
+        <div class="sec-side-note">Jackman · iSchool /<br/><span class="accent">ICCIT</span></div>
+      </div>
+      <ul class="list">
+        <li><span class="date">26 JAN</span><div><span class="ttl">Remix, devotion, and media infrastructures in Pakistan</span><span class="meta">Guest lecture, Remix Culture course, University of Toronto.</span></div></li>
+        <li><span class="date">25 MAR</span><div><span class="ttl">Politics, pop, and the pulpit: Where does the sacred end and the meme begin?</span><span class="meta">Guest lecture, Remix Culture course, University of Toronto.</span></div></li>
+        <li><span class="date">25 JAN</span><div><span class="ttl">Remixing devotion: An exploration of digital media practices in Pakistan</span><span class="meta">Invited talk, <a href="https://www.humanities.utoronto.ca/" class="ext">Jackman Humanities Institute</a>, University of Toronto.</span></div></li>
+        <li><span class="date">23 OCT</span><div><span class="ttl">IslaMixing: Digital audio workstations and contemporary devotion</span><span class="meta">Guest lecture, Master of Information "Remix Culture" seminar, <a href="https://ischool.utoronto.ca/" class="ext">Faculty of Information</a>, UofT.</span></div></li>
+        <li><span class="date">23 MAY</span><div><span class="ttl">Branding beliefs: Self-presentation in the Pakistani Naat community</span><span class="meta">Invited talk, <a href="https://www.utm.utoronto.ca/iccit/" class="ext">ICCIT</a> seminar, UTM.</span></div></li>
+        <li><span class="date">20 NOV</span><div><span class="ttl">Remixing resistance through sonic heritage: A Tribe Called Red</span><span class="meta">DigiLabs Workshop, University of Toronto and University of Manchester.</span></div></li>
+        <li><span class="date">20 FEB</span><div><span class="ttl">Cross-cultural project management</span><span class="meta">Invited talk, Master of Information seminar, UofT.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10 SERVICE -->
+  <section class="block dark" id="service">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 10</span> <span class="line"></span> <span>review + mentoring</span></div>
+        <h2 class="sec-title"><em>Service.</em></h2>
+        <div class="sec-side-note">PSSAR · JRMDC /<br/><span class="accent">mentoring</span></div>
+      </div>
+      <ul class="list">
+        <li><span class="date">2025 –</span><div><span class="ttl">Volunteer Mentor, Palestinian Students and Scholars at Risk (PSSAR)</span><span class="meta">Helps Palestinian graduate students applying to North American programs.</span></div></li>
+        <li><span class="date">ongoing</span><div><span class="ttl">Graduate Student Mentor</span><span class="meta">Helps new graduate students from South Asia and the Middle East with funding and settling in.</span></div></li>
+        <li><span class="date">2022</span><div><span class="ttl">Manuscript Reviewer</span><span class="meta"><a href="https://brill.com/view/journals/rmdc/rmdc-overview.xml" class="ext">Journal of Religion, Media, and Digital Culture</a>.</span></div></li>
+        <li><span class="date">2021</span><div><span class="ttl">Manuscript Reviewer</span><span class="meta"><em>Stream: Culture/Politics/Technology</em>, Simon Fraser University.</span></div></li>
+        <li><span class="date">2020/21</span><div><span class="ttl">Mental Health Committee Member</span><span class="meta">Doctoral Students Association, University of Toronto.</span></div></li>
+        <li><span class="date">2020</span><div><span class="ttl">Volunteer, Our Networks Conference</span><span class="meta">Our Networks.</span></div></li>
+        <li><span class="date">2020</span><div><span class="ttl">Contributor, Museum Professionals of Color (MPOC)</span><span class="meta">iSchool, University of Toronto.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 11 TRAINING -->
+  <section class="block dark tinted-emerald" id="training">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 11</span> <span class="line"></span> <span>further study</span></div>
+        <h2 class="sec-title"><em>Training.</em></h2>
+        <div class="sec-side-note">Oxford /<br/><span class="accent">McLuhan Centre</span></div>
+      </div>
+      <ul class="list">
+        <li><span class="date">25 MAR</span><div><span class="ttl">"Global Southing: Internet and Data Studies Workshop"</span><span class="meta"><a href="https://www.oii.ox.ac.uk/" class="ext">Oxford Internet Institute</a>, University of Oxford. A workshop on AI governance, digital sovereignty, and platform politics, taught from Global South perspectives.</span></div></li>
+        <li><span class="date">24 SUM</span><div><span class="ttl">"Computer Class," Centre for Culture and Technology Summer Institute</span><span class="meta"><a href="https://www.mcluhan.utoronto.ca/" class="ext">McLuhan Centre</a>, University of Toronto. Three weeks of coding labs and critical seminars. Worked with the Ludus programming language; read classic texts on computing and culture.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 12 MEMBERSHIPS -->
+  <section class="block dark" id="memberships">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 12</span> <span class="line"></span> <span>professional associations</span></div>
+        <h2 class="sec-title"><em>Memberships.</em></h2>
+        <div class="sec-side-note">five active /<br/><span class="accent">CCA · CASIM · ACA</span></div>
+      </div>
+      <p class="inline-list">
+        <a href="https://www.acc-cca.ca/" class="ext">Canadian Communication Association (CCA)</a> ·
+        <a href="https://casim.ca/" class="ext">Canadian Association for the Study of Islam and Muslims (CASIM)</a> ·
+        <a href="https://archivists.ca/" class="ext">Association of Canadian Archivists (ACA)</a> ·
+        Museums Association of Pakistan (MAP) ·
+        <a href="https://iaspm.net/" class="ext">International Association for the Study of Popular Music (IASPM)</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- 13 LANGUAGES -->
+  <section class="block dark" id="languages">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 13</span> <span class="line"></span> <span>spoken + written</span></div>
+        <h2 class="sec-title"><em>Languages.</em></h2>
+        <div class="sec-side-note">four /<br/><span class="accent">native + reading</span></div>
+      </div>
       <div class="chips">
-        <span class="chip"><a href="https://www.steinberg.net/cubase/">Cubase</a></span>
-        <span class="chip"><a href="https://www.image-line.com/">FL Studio</a></span>
-        <span class="chip"><a href="https://sonic-pi.net/">Sonic Pi</a></span>
-        <span class="chip"><a href="https://www.adobe.com/creativecloud.html">Adobe Creative Suite</a></span>
-        <span class="chip"><a href="https://ffmpeg.org/">FFmpeg</a></span>
-      </div>
-    </div>
-    <div class="skill-group">
-      <div class="label">PROGRAMMING AND DATA ANALYSIS</div>
-      <div class="chips">
-        <span class="chip"><a href="https://www.python.org/">Python</a></span>
-        <span class="chip">SQL</span>
-        <span class="chip"><a href="https://www.mathworks.com/products/matlab.html">MATLAB</a></span>
-        <span class="chip"><a href="https://www.fon.hum.uva.nl/praat/">Praat</a></span>
-        <span class="chip"><a href="https://opencv.org/">OpenCV</a></span>
+        <span class="chip">English <span class="lvl">native</span></span>
+        <span class="chip">Urdu <span class="lvl">native</span></span>
+        <span class="chip">Punjabi <span class="lvl">native; Shahmukhi reading</span></span>
+        <span class="chip">Arabic <span class="lvl">reading proficiency</span></span>
       </div>
     </div>
   </section>
 
-  <footer class="wrap">
-    <div class="row">
-      <div>Toronto. <span class="dot">●</span> This CV lives online. Send a message at <a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a>.</div>
-      <div>Updated May 2026 · <a href="index.html">← back to home</a></div>
+  <!-- 14 SKILLS -->
+  <section class="block dark" id="skills">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-tag"><span class="num">// 14</span> <span class="line"></span> <span>tools + stacks</span></div>
+        <h2 class="sec-title"><em>Skills.</em></h2>
+        <div class="sec-side-note">DAWs · code /<br/><span class="accent">audio · vision</span></div>
+      </div>
+      <div class="skill-group">
+        <div class="label">// AUDIO AND MEDIA PRODUCTION</div>
+        <div class="chips">
+          <span class="chip"><a href="https://www.steinberg.net/cubase/" class="ext">Cubase</a></span>
+          <span class="chip"><a href="https://www.image-line.com/" class="ext">FL Studio</a></span>
+          <span class="chip"><a href="https://sonic-pi.net/" class="ext">Sonic Pi</a></span>
+          <span class="chip"><a href="https://www.adobe.com/creativecloud.html" class="ext">Adobe Creative Suite</a></span>
+          <span class="chip"><a href="https://ffmpeg.org/" class="ext">FFmpeg</a></span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="label">// PROGRAMMING AND DATA</div>
+        <div class="chips">
+          <span class="chip"><a href="https://www.python.org/" class="ext">Python</a></span>
+          <span class="chip">SQL</span>
+          <span class="chip"><a href="https://www.mathworks.com/products/matlab.html" class="ext">MATLAB</a></span>
+          <span class="chip"><a href="https://www.fon.hum.uva.nl/praat/" class="ext">Praat</a></span>
+          <span class="chip"><a href="https://opencv.org/" class="ext">OpenCV</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap foot-inner">
+      <div class="foot-big">Send a <span class="accent">message.</span> <a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a></div>
+      <div class="foot-meta">
+        <span>MAY 2026 · V.2026.05</span>
+        <span>STATIC HTML · NO ANALYTICS · NO TRACKING</span>
+        <span><a href="index.html">← BACK TO HOME</a></span>
+      </div>
     </div>
   </footer>
 
