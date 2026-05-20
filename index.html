@@ -9,493 +9,341 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
   <style>
     :root {
-      --bg: #0d0c0a;
-      --bg-soft: #15130f;
-      --bg-card: #1a1814;
-      --cream: #ede5d3;
-      --cream-warm: #f5ead2;
-      --emerald: #0a4d2e;
-      --emerald-deep: #062919;
-      --emerald-bright: #1b7d4a;
-      --magenta: #d63384;
-      --magenta-deep: #8a1f55;
-      --gold: #d4a040;
-      --gold-light: #e8c466;
-      --gold-deep: #8a6620;
-      --saffron: #ff8c42;
-      --led: #39ff14;
-      --ink: #ede5d3;
-      --ink-dim: #8a857a;
-      --ink-mid: #b8ad99;
-      --rule: #1f1c16;
-      --rule-strong: #3a352a;
+      --bg: #0d0c0a; --bg-soft: #15130f; --bg-card: #1a1814;
+      --cream: #ede5d3; --cream-warm: #f5ead2;
+      --emerald: #0a4d2e; --emerald-deep: #062919; --emerald-bright: #1b7d4a;
+      --magenta: #d63384; --magenta-deep: #8a1f55;
+      --gold: #d4a040; --gold-light: #e8c466; --gold-deep: #8a6620;
+      --saffron: #ff8c42; --led: #39ff14; --red-warn: #ff4444;
+      --ink: #ede5d3; --ink-dim: #8a857a; --ink-mid: #b8ad99;
+      --rule: #1f1c16; --rule-strong: #3a352a;
+      --uoft-navy: #002a5c; --uoft-navy-deep: #001f4d; --uoft-navy-bright: #003a73;
+      --hamnawa-purple: #220927; --hamnawa-purple-bright: #4a1542;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 14px;
-      line-height: 1.65;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: "";
-      position: fixed; inset: 0; pointer-events: none;
-      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.012) 0, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
-      z-index: 200;
-      mix-blend-mode: overlay;
-    }
-    a {
-      color: inherit;
-      text-decoration: none;
-      background-image: linear-gradient(currentColor, currentColor);
-      background-repeat: no-repeat;
-      background-size: 100% 1px;
-      background-position: 0 100%;
-      transition: opacity .15s ease, color .15s ease;
-      padding-bottom: 1px;
-      opacity: 0.95;
-    }
+    body { background: var(--bg); color: var(--ink); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; line-height: 1.65; min-height: 100vh; overflow-x: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; pointer-events: none; background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.012) 0, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px); z-index: 200; mix-blend-mode: overlay; }
+    a { color: inherit; text-decoration: none; background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat; background-size: 100% 1px; background-position: 0 100%; transition: opacity .15s ease; padding-bottom: 1px; opacity: 0.95; }
     a:hover, a:focus { opacity: 1; outline: none; }
     a.ext::after { content: " ↗"; font-size: 0.82em; display: inline-block; opacity: 0.6; transition: transform .25s cubic-bezier(.7,0,.3,1); }
     a.ext:hover::after { transform: translate(3px, -3px); }
     a.bare { background: none; padding: 0; }
     ::selection { background: var(--led); color: var(--bg); }
-
     .wrap { max-width: 1300px; margin: 0 auto; padding: 0 40px; }
     @media (max-width: 700px) { .wrap { padding: 0 22px; } }
 
-    nav.top {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(13,12,10,0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--rule);
-    }
-    nav.top .inner {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 60px; gap: 16px;
-    }
-    nav.top .brand {
-      color: var(--led); font-weight: 500; letter-spacing: 0.04em; font-size: 13px;
-      background: none; opacity: 1;
-    }
+    nav.top { position: sticky; top: 0; z-index: 50; background: rgba(13,12,10,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--rule); }
+    nav.top .inner { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+    nav.top .brand { color: var(--led); font-weight: 500; letter-spacing: 0.04em; font-size: 13px; background: none; opacity: 1; }
     nav.top .brand::before { content: "▶ "; color: var(--cream); }
     nav.top ul { list-style: none; display: flex; gap: 22px; flex-wrap: wrap; }
     nav.top ul a { font-size: 12px; color: var(--ink-dim); background: none; letter-spacing: 0.04em; opacity: 1; }
     nav.top ul a:hover { color: var(--led); }
 
-    .hero {
-      position: relative;
-      background:
-        radial-gradient(ellipse at 80% 20%, rgba(212,160,64,0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 20% 80%, rgba(214,51,132,0.12) 0%, transparent 50%),
-        var(--emerald);
-      color: var(--cream);
-      overflow: hidden;
-      border-bottom: 2px solid var(--gold);
-    }
-    .hero-pattern {
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d4a040' stroke-width='0.6' opacity='0.18'><path d='M40 0 L48 16 L66 16 L52 28 L58 46 L40 36 L22 46 L28 28 L14 16 L32 16 Z'/><circle cx='40' cy='40' r='3'/></g></svg>");
-      background-size: 80px 80px;
-      pointer-events: none;
-    }
-    .hero-inner {
-      position: relative; z-index: 2;
-      padding: 56px 0 48px;
-      display: grid;
-      grid-template-columns: 1.6fr 1fr;
-      gap: 48px;
-      align-items: center;
-    }
+    .hero { position: relative; background: radial-gradient(ellipse at 80% 20%, rgba(212,160,64,0.15) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(214,51,132,0.12) 0%, transparent 50%), var(--emerald); color: var(--cream); overflow: hidden; border-bottom: 2px solid var(--gold); }
+    .hero-pattern { position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d4a040' stroke-width='0.6' opacity='0.18'><path d='M40 0 L48 16 L66 16 L52 28 L58 46 L40 36 L22 46 L28 28 L14 16 L32 16 Z'/><circle cx='40' cy='40' r='3'/></g></svg>"); background-size: 80px 80px; pointer-events: none; }
+    .hero-inner { position: relative; z-index: 2; padding: 56px 0 48px; display: grid; grid-template-columns: 1.6fr 1fr; gap: 48px; align-items: center; }
     @media (max-width: 920px) { .hero-inner { grid-template-columns: 1fr; gap: 32px; padding: 44px 0 36px; } }
 
-    .doc-tag {
-      display: inline-flex; align-items: center; gap: 12px;
-      padding: 6px 12px;
-      background: rgba(0,0,0,0.4);
-      border: 1px solid var(--gold);
-      color: var(--gold-light);
-      font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .doc-tag .dot {
-      width: 8px; height: 8px; background: var(--led);
-      border-radius: 50%; box-shadow: 0 0 10px var(--led);
-      animation: pulse 2s ease-in-out infinite;
-    }
+    .doc-tag { display: inline-flex; align-items: center; gap: 12px; padding: 6px 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--gold); color: var(--gold-light); font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; margin-bottom: 20px; }
+    .doc-tag .dot { width: 8px; height: 8px; background: var(--led); border-radius: 50%; box-shadow: 0 0 10px var(--led); animation: pulse 2s ease-in-out infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-    h1.name {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 600;
-      font-size: clamp(48px, 8vw, 104px);
-      line-height: 0.9;
-      letter-spacing: -0.04em;
-      color: var(--cream);
-      margin-bottom: 18px;
-    }
+    h1.name { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 600; font-size: clamp(48px, 8vw, 104px); line-height: 0.9; letter-spacing: -0.04em; color: var(--cream); margin-bottom: 18px; }
     h1.name .dot { color: var(--gold-light); }
     h1.name .accent { font-style: italic; color: var(--gold-light); font-variation-settings: "opsz" 144, "SOFT" 80, "wght" 500; }
 
-    .role {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 24, "SOFT" 30, "wght" 400;
-      font-size: clamp(15px, 1.5vw, 18px);
-      line-height: 1.55;
-      color: var(--cream-warm);
-      max-width: 56ch;
-      margin-bottom: 22px;
-    }
+    .role { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 24, "SOFT" 30, "wght" 400; font-size: clamp(15px, 1.5vw, 18px); line-height: 1.55; color: var(--cream-warm); max-width: 56ch; margin-bottom: 22px; }
     .role em { color: var(--gold-light); font-style: italic; }
 
-    .hero-links {
-      display: flex; flex-wrap: wrap; gap: 4px 22px;
-      font-size: 12px;
-    }
+    .hero-links { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 12px; }
     .hero-links a { color: var(--cream); }
     .hero-links a:hover { color: var(--gold-light); }
     .hero-links .sep { color: var(--gold); margin: 0 2px; opacity: 0.6; }
 
-    .portrait-frame {
-      position: relative;
-      width: 100%;
-      max-width: 320px;
-      aspect-ratio: 4/5;
-      background: var(--ink);
-      border: 2px solid var(--gold);
-      overflow: hidden;
-      box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
-      justify-self: end;
-    }
+    .portrait-frame { position: relative; width: 100%; max-width: 320px; aspect-ratio: 4/5; background: var(--ink); border: 2px solid var(--gold); overflow: hidden; box-shadow: 6px 6px 0 rgba(0,0,0,0.4); justify-self: end; }
     @media (max-width: 920px) { .portrait-frame { justify-self: start; max-width: 240px; } }
-    .portrait-frame .ui-top, .portrait-frame .ui-rec {
-      position: absolute; top: 8px;
-      font-size: 9px; letter-spacing: 0.18em;
-      z-index: 5; background: rgba(0,0,0,0.78); padding: 3px 6px;
-      pointer-events: none; color: var(--cream);
-    }
+    .portrait-frame .ui-top, .portrait-frame .ui-rec { position: absolute; top: 8px; font-size: 9px; letter-spacing: 0.18em; z-index: 5; background: rgba(0,0,0,0.78); padding: 3px 6px; pointer-events: none; color: var(--cream); }
     .portrait-frame .ui-top { left: 8px; }
     .portrait-frame .ui-rec { right: 8px; color: var(--saffron); }
     .portrait-frame .ui-rec::before { content: "● "; animation: blink 1.6s infinite; display: inline-block; }
     @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.15; } }
-    .portrait-frame .layer {
-      position: absolute; inset: 0;
-      background-image: var(--src, none);
-      background-size: cover; background-position: center;
-      z-index: 2;
-    }
-    .portrait-frame .scan {
-      position: absolute; inset: 0; z-index: 4;
-      background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.28) 2px, rgba(0,0,0,0.28) 3px);
-      pointer-events: none;
-    }
-    .portrait-frame .placeholder {
-      position: absolute; inset: 0; z-index: 1;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--gold); font-size: 9px; letter-spacing: 0.2em;
-      text-align: center; padding: 16px;
-      background: repeating-linear-gradient(45deg, var(--emerald-deep) 0, var(--emerald-deep) 8px, var(--bg) 8px, var(--bg) 16px);
-    }
+    .portrait-frame .layer { position: absolute; inset: 0; background-image: var(--src, none); background-size: cover; background-position: center; z-index: 2; }
+    .portrait-frame .scan { position: absolute; inset: 0; z-index: 4; background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.28) 2px, rgba(0,0,0,0.28) 3px); pointer-events: none; }
+    .portrait-frame .placeholder { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 9px; letter-spacing: 0.2em; text-align: center; padding: 16px; background: repeating-linear-gradient(45deg, var(--emerald-deep) 0, var(--emerald-deep) 8px, var(--bg) 8px, var(--bg) 16px); }
 
-    .tabs {
-      background: var(--bg-soft);
-      border-bottom: 1px solid var(--rule-strong);
-      position: sticky;
-      top: 60px;
-      z-index: 49;
-      overflow: hidden;
-    }
-    .tabs::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(to right, var(--magenta), var(--gold), var(--emerald-bright), var(--saffron), var(--magenta));
-    }
-    .tabs-inner {
-      display: flex; gap: 4px;
-      overflow-x: auto;
-      padding: 0 40px;
-      max-width: 1300px;
-      margin: 0 auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--gold-deep) transparent;
-    }
+    .tabs { background: var(--bg-soft); border-bottom: 1px solid var(--rule-strong); position: sticky; top: 60px; z-index: 49; overflow: hidden; }
+    .tabs::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, var(--magenta), var(--gold), var(--emerald-bright), var(--saffron), var(--magenta)); }
+    .tabs-inner { display: flex; gap: 4px; overflow-x: auto; padding: 0 40px; max-width: 1300px; margin: 0 auto; scrollbar-width: thin; scrollbar-color: var(--gold-deep) transparent; }
     .tabs-inner::-webkit-scrollbar { height: 2px; }
     .tabs-inner::-webkit-scrollbar-thumb { background: var(--gold-deep); }
-    .tab-btn {
-      background: none; border: none; color: var(--ink-dim); cursor: pointer;
-      padding: 18px 22px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
-      position: relative; white-space: nowrap;
-      transition: color .2s ease;
-    }
+    .tab-btn { background: none; border: none; color: var(--ink-dim); cursor: pointer; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; position: relative; white-space: nowrap; transition: color .2s ease; }
     .tab-btn:hover { color: var(--cream); }
     .tab-btn.active { color: var(--gold-light); }
     .tab-btn.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--gold); }
     .tab-btn .ix { color: var(--led); margin-right: 8px; opacity: 0.7; }
     .tab-btn.active .ix { color: var(--led); opacity: 1; }
-    @media (max-width: 700px) {
-      .tabs-inner { padding: 0 22px; }
-      .tab-btn { padding: 16px 14px; font-size: 10px; letter-spacing: 0.18em; }
-    }
+    .tab-btn.special { color: var(--saffron); }
+    .tab-btn.special.active { color: var(--gold-light); }
+    .tab-btn.special .ix { color: var(--magenta); }
+    @media (max-width: 700px) { .tabs-inner { padding: 0 22px; } .tab-btn { padding: 16px 12px; font-size: 10px; letter-spacing: 0.18em; } }
 
     main { min-height: 50vh; padding: 56px 0 80px; position: relative; }
     .panel { display: none; opacity: 0; }
     .panel.active { display: block; animation: fadeIn .4s cubic-bezier(.7,0,.3,1) forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-    .panel-head {
-      display: flex; justify-content: space-between; align-items: end;
-      gap: 18px; margin-bottom: 40px; flex-wrap: wrap;
-    }
-    .panel-title {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500;
-      font-size: clamp(32px, 5vw, 56px);
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      color: var(--cream);
-    }
+    .panel-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 40px; flex-wrap: wrap; }
+    .panel-title { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500; font-size: clamp(32px, 5vw, 56px); line-height: 0.95; letter-spacing: -0.03em; color: var(--cream); }
     .panel-title em { color: var(--gold-light); font-style: italic; }
-    .panel-note {
-      font-size: 11px; letter-spacing: 0.2em;
-      color: var(--ink-dim); text-transform: uppercase; text-align: right;
-    }
+    .panel-note { font-size: 11px; letter-spacing: 0.2em; color: var(--ink-dim); text-transform: uppercase; text-align: right; }
     .panel-note .accent { color: var(--gold); }
+    .panel-intro { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 22, "SOFT" 30; font-size: clamp(14px, 1.3vw, 17px); line-height: 1.6; color: var(--ink-mid); max-width: 70ch; margin-bottom: 36px; }
+    .panel-intro em { color: var(--gold-light); font-style: italic; }
+    .panel-intro strong { color: var(--cream); font-weight: 500; }
 
-    .now-grid { display: grid; grid-template-columns: 140px 1fr; gap: 28px; }
-    @media (max-width: 700px) { .now-grid { grid-template-columns: 1fr; gap: 12px; } }
-    .now-grid .stamp { font-size: 10px; letter-spacing: 0.24em; color: var(--saffron); padding-top: 6px; }
-    .now-grid p {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 22, "SOFT" 30;
-      font-size: clamp(15px, 1.3vw, 18px);
-      line-height: 1.6;
-      max-width: 64ch;
-      margin-bottom: 18px;
-      color: var(--ink);
-    }
-    .now-grid p:last-child { margin-bottom: 0; }
-    .now-grid em { color: var(--gold-light); font-style: italic; }
-    .now-grid a { color: var(--cream); }
+    /* NOW (idea-driven) */
+    .lead { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 32, "SOFT" 30, "wght" 400; font-size: clamp(18px, 1.7vw, 22px); line-height: 1.55; color: var(--cream-warm); max-width: 68ch; margin-bottom: 52px; }
+    .lead em { color: var(--gold-light); font-style: italic; }
+    .lead a { color: var(--cream); }
 
+    .concepts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--rule-strong); border: 1px solid var(--rule-strong); margin-bottom: 56px; }
+    @media (max-width: 760px) { .concepts { grid-template-columns: 1fr; } }
+    .concept { background: var(--bg); padding: 30px 28px 32px; position: relative; transition: background .2s ease; border-left: 3px solid var(--rule-strong); }
+    .concept:hover { background: var(--bg-soft); }
+    .concept:nth-child(1) { border-left-color: var(--emerald-bright); }
+    .concept:nth-child(2) { border-left-color: var(--gold); }
+    .concept:nth-child(3) { border-left-color: var(--magenta); }
+    .concept:nth-child(4) { border-left-color: var(--saffron); }
+    .concept:nth-child(5) { border-left-color: var(--emerald-bright); }
+    .concept:nth-child(6) { border-left-color: var(--gold); }
+    .concept .num { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.28em; margin-bottom: 14px; color: var(--saffron); }
+    .concept:nth-child(1) .num { color: var(--emerald-bright); }
+    .concept:nth-child(2) .num { color: var(--gold-light); }
+    .concept:nth-child(3) .num { color: var(--magenta); }
+    .concept:nth-child(4) .num { color: var(--saffron); }
+    .concept:nth-child(5) .num { color: var(--emerald-bright); }
+    .concept:nth-child(6) .num { color: var(--gold-light); }
+    .concept h3 { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 80, "SOFT" 40, "wght" 500; font-size: clamp(22px, 2.2vw, 30px); font-style: italic; line-height: 1.1; letter-spacing: -0.02em; color: var(--cream); margin-bottom: 14px; }
+    .concept p { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 20, "SOFT" 30; font-size: 14.5px; line-height: 1.62; color: var(--ink-mid); max-width: 52ch; }
+    .concept p em { color: var(--gold-light); font-style: italic; }
+
+    .desk { border-top: 1px solid var(--rule-strong); padding-top: 40px; }
+    .desk-h { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 80, "SOFT" 40, "wght" 500; font-size: clamp(24px, 2.4vw, 32px); color: var(--gold-light); margin-bottom: 26px; font-style: italic; letter-spacing: -0.02em; }
+    .desk-h .desk-mark { color: var(--led); font-family: 'JetBrains Mono', monospace; font-style: normal; font-size: 0.55em; margin-right: 10px; letter-spacing: 0.1em; }
+    .desk-list { list-style: none; display: grid; gap: 0; }
+    .desk-list li { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 22, "SOFT" 30; font-size: 15.5px; line-height: 1.5; color: var(--ink); display: grid; grid-template-columns: 130px 1fr; gap: 18px; padding: 14px 0; border-bottom: 1px dotted var(--rule-strong); }
+    .desk-list li:last-child { border-bottom: none; }
+    @media (max-width: 600px) { .desk-list li { grid-template-columns: 1fr; gap: 4px; } }
+    .desk-list em { color: var(--gold-light); font-style: italic; }
+    .desk-list a { color: var(--cream); }
+    .desk-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--saffron); padding-top: 4px; }
+    .desk-list li:nth-child(2n) .desk-tag { color: var(--gold-light); }
+    .desk-list li:nth-child(3n) .desk-tag { color: var(--magenta); }
+    .desk-list li:nth-child(4n) .desk-tag { color: var(--emerald-bright); }
+
+    /* WRITING */
     .pubs-grid { display: grid; gap: 1px; background: var(--rule-strong); border: 1px solid var(--rule-strong); }
-    .pub-row {
-      background: var(--bg);
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 32px;
-      padding: 26px 28px;
-      transition: background .2s ease;
-    }
+    .pub-row { background: var(--bg); display: grid; grid-template-columns: 140px 1fr; gap: 32px; padding: 26px 28px; transition: background .2s ease; }
     .pub-row:hover { background: var(--bg-soft); }
     @media (max-width: 700px) { .pub-row { grid-template-columns: 1fr; gap: 8px; padding: 22px; } }
-    .pub-row .yr {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 144, "SOFT" 0;
-      font-size: 30px; color: var(--saffron); line-height: 0.95; letter-spacing: -0.02em;
-    }
-    .pub-row .yr .kind {
-      display: block; font-family: 'JetBrains Mono', monospace;
-      font-size: 9px; letter-spacing: 0.22em; color: var(--ink-dim);
-      text-transform: uppercase; margin-top: 6px;
-    }
-    .pub-row .ttl {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 26, "SOFT" 20;
-      font-size: 19px; color: var(--cream); line-height: 1.3;
-      margin-bottom: 8px; font-weight: 500;
-    }
+    .pub-row .yr { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 144, "SOFT" 0; font-size: 30px; color: var(--saffron); line-height: 0.95; letter-spacing: -0.02em; }
+    .pub-row .yr .kind { display: block; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.22em; color: var(--ink-dim); text-transform: uppercase; margin-top: 6px; }
+    .pub-row .ttl { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 26, "SOFT" 20; font-size: 19px; color: var(--cream); line-height: 1.3; margin-bottom: 8px; font-weight: 500; }
     .pub-row .venue { font-size: 12px; color: var(--ink-dim); margin-bottom: 8px; font-style: italic; }
-    .pub-row .blurb {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 18, "SOFT" 30;
-      font-size: 14px; color: var(--ink-mid); line-height: 1.55; max-width: 64ch;
-    }
+    .pub-row .blurb { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 18, "SOFT" 30; font-size: 14px; color: var(--ink-mid); line-height: 1.55; max-width: 64ch; }
 
+    /* TEACHING */
     .teach-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: var(--rule-strong); border: 1px solid var(--rule-strong); }
-    .teach-cell {
-      background: var(--bg); padding: 26px 24px; min-height: 180px;
-      display: flex; flex-direction: column; transition: background .2s ease;
-    }
+    .teach-cell { background: var(--bg); padding: 26px 24px; min-height: 180px; display: flex; flex-direction: column; transition: background .2s ease; }
     .teach-cell:hover { background: var(--bg-soft); }
-    .teach-cell .lvl {
-      font-size: 10px; letter-spacing: 0.24em;
-      color: var(--led); margin-bottom: 14px;
-      padding-bottom: 10px; border-bottom: 1px solid var(--rule-strong);
-    }
+    .teach-cell .lvl { font-size: 10px; letter-spacing: 0.24em; color: var(--led); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--rule-strong); }
     .teach-cell:nth-child(4n+2) .lvl { color: var(--gold-light); }
     .teach-cell:nth-child(4n+3) .lvl { color: var(--magenta); }
     .teach-cell:nth-child(4n) .lvl { color: var(--saffron); }
-    .teach-cell .nm {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 26, "SOFT" 20;
-      font-size: 18px; color: var(--cream); line-height: 1.25; margin-bottom: 10px;
-    }
-    .teach-cell .what {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 18, "SOFT" 30;
-      font-size: 13px; color: var(--cream-warm);
-      font-style: italic; line-height: 1.5; margin-bottom: 12px;
-    }
+    .teach-cell .nm { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 26, "SOFT" 20; font-size: 18px; color: var(--cream); line-height: 1.25; margin-bottom: 10px; }
+    .teach-cell .what { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 18, "SOFT" 30; font-size: 13px; color: var(--cream-warm); font-style: italic; line-height: 1.5; margin-bottom: 12px; }
     .teach-cell .when { font-size: 11px; color: var(--ink-dim); margin-top: auto; }
 
+    /* SPEAKING */
     .talks-grid { display: grid; gap: 1px; background: var(--rule-strong); border-top: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong); }
-    .talk-row {
-      background: var(--bg);
-      display: grid; grid-template-columns: 110px 1fr; gap: 28px;
-      padding: 22px 0; align-items: baseline;
-      transition: background .2s ease;
-    }
+    .talk-row { background: var(--bg); display: grid; grid-template-columns: 110px 1fr; gap: 28px; padding: 22px 0; align-items: baseline; transition: background .2s ease; }
     .talk-row:hover { background: var(--bg-soft); }
     @media (max-width: 700px) { .talk-row { grid-template-columns: 1fr; gap: 4px; padding: 18px 0; } }
-    .talk-row .when {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 28, "SOFT" 0;
-      font-size: 17px; color: var(--saffron); padding-left: 28px;
-    }
+    .talk-row .when { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 28, "SOFT" 0; font-size: 17px; color: var(--saffron); padding-left: 28px; }
     @media (max-width: 700px) { .talk-row .when { padding-left: 22px; } }
-    .talk-row .what {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 22, "SOFT" 20;
-      font-size: 17px; color: var(--cream);
-      line-height: 1.3; padding-right: 28px;
-    }
+    .talk-row .what { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 22, "SOFT" 20; font-size: 17px; color: var(--cream); line-height: 1.3; padding-right: 28px; }
     @media (max-width: 700px) { .talk-row .what { padding-right: 22px; padding-left: 22px; } }
     .talk-row .where { display: block; font-size: 12px; color: var(--ink-dim); margin-top: 6px; line-height: 1.55; font-style: italic; }
 
-    /* PRESS PANEL: with real images */
-    .press-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 18px;
-    }
-    .press-card {
-      background: var(--bg-soft);
-      border: 1px solid var(--rule-strong);
-      overflow: hidden;
-      transition: all .25s cubic-bezier(.7,0,.3,1);
-      display: block;
-      position: relative;
-      background-image: none;
-    }
+    /* PRESS */
+    .press-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .press-card { background: var(--bg-soft); border: 1px solid var(--rule-strong); overflow: hidden; transition: all .25s cubic-bezier(.7,0,.3,1); display: block; position: relative; background-image: none; }
     .press-card:hover { transform: translateY(-4px); border-color: var(--gold); }
-    .press-image {
-      width: 100%;
-      aspect-ratio: 16/10;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      overflow: hidden;
-      border-bottom: 1px solid var(--rule-strong);
-    }
-    .press-image::before {
-      content: "";
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%);
-      pointer-events: none; z-index: 2;
-    }
-    .press-image.no-img {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='none' stroke='%23d4a040' stroke-width='0.5' opacity='0.3'><path d='M30 5 L36 22 L54 22 L40 32 L46 50 L30 38 L14 50 L20 32 L6 22 L24 22 Z'/></g></svg>");
-      background-size: 60px 60px;
-    }
-    .press-image.no-img.green { background-color: var(--emerald); }
-    .press-image.no-img.magenta { background-color: var(--magenta-deep); }
-    .press-image.no-img.gold { background-color: var(--gold-deep); }
-    .press-image .source-tag {
-      position: absolute; top: 14px; left: 14px;
-      background: rgba(0,0,0,0.75);
-      color: var(--gold-light);
-      padding: 4px 10px;
-      font-size: 9px; letter-spacing: 0.24em;
-      text-transform: uppercase;
-      z-index: 3;
-    }
-    .press-image .read-tag {
-      position: absolute; bottom: 14px; right: 14px;
-      background: var(--gold);
-      color: var(--bg);
-      padding: 5px 12px;
-      font-size: 9px; letter-spacing: 0.24em;
-      text-transform: uppercase;
-      z-index: 3;
-      font-weight: 600;
-    }
+    .press-image { width: 100%; aspect-ratio: 16/10; background-size: cover; background-position: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--rule-strong); }
+    .press-image::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%); pointer-events: none; z-index: 2; }
+    .press-image .source-tag { position: absolute; top: 14px; left: 14px; background: rgba(0,0,0,0.75); color: var(--gold-light); padding: 4px 10px; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; z-index: 3; }
+    .press-image .read-tag { position: absolute; bottom: 14px; right: 14px; background: var(--gold); color: var(--bg); padding: 5px 12px; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; z-index: 3; font-weight: 600; }
+    .press-image.cover { display: flex; flex-direction: column; justify-content: center; padding: 28px 28px 56px; position: relative; }
+    .press-image.cover::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.5) 100%); z-index: 2; pointer-events: none; }
+    .press-image.cover .cover-content { position: relative; z-index: 1; }
+    .press-image.cover .cover-name { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 600; font-size: clamp(38px, 5.5vw, 64px); line-height: 0.9; letter-spacing: -0.035em; margin-bottom: 8px; }
+    .press-image.cover .cover-sub { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 22, "SOFT" 30; font-size: 13px; font-style: italic; letter-spacing: 0.005em; opacity: 0.85; }
+    .press-image.cover-ischool { background: linear-gradient(135deg, var(--uoft-navy-deep) 0%, var(--uoft-navy) 55%, var(--uoft-navy-bright) 100%); color: var(--cream); }
+    .press-image.cover-ischool::after { content: ""; position: absolute; inset: 0; z-index: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><g fill='none' stroke='%23ede5d3' stroke-width='0.5' opacity='0.07'><circle cx='60' cy='60' r='40'/><circle cx='60' cy='60' r='28'/><line x1='10' y1='60' x2='110' y2='60'/><line x1='60' y1='10' x2='60' y2='110'/></g></svg>"); background-size: 120px 120px; }
+    .press-image.cover-jackman { background: linear-gradient(135deg, #5a3f10 0%, var(--gold-deep) 50%, #b8862e 100%); color: var(--cream-warm); }
+    .press-image.cover-jackman::after { content: ""; position: absolute; inset: 0; z-index: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><g fill='none' stroke='%23ede5d3' stroke-width='0.5' opacity='0.12'><path d='M50 5 L60 35 L92 35 L66 53 L76 85 L50 65 L24 85 L34 53 L8 35 L40 35 Z'/></g></svg>"); background-size: 100px 100px; }
+    .press-image.cover-hamnawa { background: linear-gradient(135deg, var(--hamnawa-purple) 0%, #381243 60%, var(--hamnawa-purple-bright) 100%); color: var(--cream-warm); }
+    .press-image.cover-hamnawa::after { content: ""; position: absolute; inset: 0; z-index: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d63384' stroke-width='0.6' opacity='0.18'><rect x='10' y='30' width='60' height='20' rx='2'/><circle cx='22' cy='40' r='4'/><circle cx='58' cy='40' r='4'/><line x1='34' y1='40' x2='46' y2='40'/></g></svg>"); background-size: 80px 80px; }
+    .press-image.cover-hamnawa .cover-name { font-style: italic; }
     .press-body { padding: 22px 22px 24px; }
-    .press-body .h {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 24, "SOFT" 20;
-      font-size: 17px; color: var(--cream);
-      line-height: 1.3; margin-bottom: 10px; font-weight: 500;
-    }
+    .press-body .h { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 24, "SOFT" 20; font-size: 17px; color: var(--cream); line-height: 1.3; margin-bottom: 10px; font-weight: 500; }
     .press-body .meta { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.04em; font-style: italic; }
 
-    .else-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1px;
-      background: var(--rule-strong);
-      border: 1px solid var(--rule-strong);
-    }
-    .else-cell {
-      background: var(--bg);
-      padding: 24px 22px;
-      transition: background .2s ease;
-      background-image: none;
-    }
+    /* ELSEWHERE */
+    .else-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--rule-strong); border: 1px solid var(--rule-strong); }
+    .else-cell { background: var(--bg); padding: 24px 22px; transition: background .2s ease; background-image: none; }
     .else-cell:hover { background: var(--bg-soft); }
-    .else-cell .k {
-      font-size: 10px; letter-spacing: 0.24em;
-      color: var(--gold); display: block; margin-bottom: 10px;
-    }
-    .else-cell .v {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 22, "SOFT" 20;
-      font-size: 16px; color: var(--cream); line-height: 1.3;
-    }
+    .else-cell .k { font-size: 10px; letter-spacing: 0.24em; color: var(--gold); display: block; margin-bottom: 10px; }
+    .else-cell .v { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 22, "SOFT" 20; font-size: 16px; color: var(--cream); line-height: 1.3; }
 
-    footer {
-      background: linear-gradient(180deg, var(--bg) 0%, var(--emerald-deep) 100%);
-      padding: 56px 0;
-      border-top: 1px solid var(--gold);
-      position: relative;
-    }
-    footer::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d4a040' stroke-width='0.5' opacity='0.08'><path d='M40 0 L48 16 L66 16 L52 28 L58 46 L40 36 L22 46 L28 28 L14 16 L32 16 Z'/></g></svg>");
-      background-size: 80px 80px;
-      pointer-events: none;
-    }
+    /* LAB */
+    .transport { background: var(--bg-soft); border: 1px solid var(--rule-strong); padding: 22px 26px; margin-bottom: 28px; display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: center; }
+    @media (max-width: 800px) { .transport { grid-template-columns: 1fr; gap: 18px; } }
+    .transport .play-group { display: flex; gap: 10px; }
+    button.t-btn { font-family: 'JetBrains Mono', monospace; background: var(--bg); border: 1px solid var(--rule-strong); color: var(--cream); padding: 14px 20px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: all .15s ease; min-width: 100px; }
+    button.t-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+    button.t-btn.play { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 600; }
+    button.t-btn.play.playing { background: var(--magenta); border-color: var(--magenta); color: var(--cream); }
+    button.t-btn.play:hover { background: var(--gold-light); }
+    button.t-btn.play.playing:hover { background: var(--magenta-deep); }
+    button.t-btn:disabled, button.t-btn.play:disabled { opacity: 0.4; cursor: not-allowed; background: var(--bg-soft); color: var(--ink-dim); border-color: var(--rule-strong); }
+    .tempo { display: flex; align-items: center; gap: 16px; font-size: 10px; letter-spacing: 0.24em; color: var(--ink-dim); text-transform: uppercase; }
+    .tempo .val { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 60, "SOFT" 0; font-size: 26px; color: var(--gold-light); line-height: 1; letter-spacing: -0.02em; min-width: 50px; }
+    .tempo input[type='range'] { flex: 1; min-width: 100px; appearance: none; -webkit-appearance: none; height: 4px; background: var(--rule-strong); outline: none; border-radius: 2px; }
+    .tempo input[type='range']::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; background: var(--gold); border-radius: 50%; cursor: pointer; transition: transform .15s ease; }
+    .tempo input[type='range']::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    .tempo input[type='range']::-moz-range-thumb { width: 16px; height: 16px; background: var(--gold); border-radius: 50%; cursor: pointer; border: none; }
+    .preset-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .preset-group .preset { font-size: 10px; letter-spacing: 0.2em; padding: 8px 12px; background: var(--bg); border: 1px solid var(--rule-strong); color: var(--ink-dim); cursor: pointer; text-transform: uppercase; transition: all .15s ease; }
+    .preset-group .preset:hover { border-color: var(--gold); color: var(--gold-light); }
+    .seq-label { font-size: 10px; letter-spacing: 0.28em; color: var(--saffron); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+    .seq-label .line { flex: 1; height: 1px; background: var(--rule-strong); }
+    .seq { background: var(--bg-soft); border: 1px solid var(--rule-strong); padding: 20px; overflow-x: auto; }
+    .track { display: grid; grid-template-columns: 130px 36px 1fr; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px dotted var(--rule-strong); min-width: 720px; }
+    .track:last-child { border-bottom: none; }
+    .track .label { display: flex; flex-direction: column; gap: 3px; }
+    .track .label .nm { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 24, "SOFT" 30; font-size: 15px; color: var(--cream); font-weight: 500; }
+    .track .label .nm em { color: var(--gold-light); font-style: italic; font-size: 13px; }
+    .track .label .meta { font-size: 9px; color: var(--ink-dim); letter-spacing: 0.18em; text-transform: uppercase; }
+    .track .preview { width: 32px; height: 32px; background: var(--bg); border: 1px solid var(--rule-strong); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 13px; transition: all .12s ease; }
+    .track .preview:hover { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+    .steps { display: grid; grid-template-columns: repeat(16, 1fr); gap: 4px; }
+    .step { aspect-ratio: 1; background: var(--bg); border: 1px solid var(--rule-strong); cursor: pointer; transition: all .12s ease; position: relative; }
+    .step:hover { border-color: var(--gold); }
+    .step.active { box-shadow: inset 0 0 0 2px var(--gold); }
+    .track.dum .step.active { background: var(--emerald-bright); }
+    .track.tin .step.active { background: var(--magenta); }
+    .track.clap .step.active { background: var(--saffron); }
+    .track.bell .step.active { background: var(--gold); }
+    .step.beat { border-left-color: var(--gold-deep); }
+    .step.head { box-shadow: inset 0 0 0 2px var(--cream); animation: headPulse 0.15s ease-out; }
+    @keyframes headPulse { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+    /* GAME */
+    .game-head { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
+    .stats { display: flex; gap: 22px; font-size: 10px; letter-spacing: 0.24em; color: var(--ink-dim); text-transform: uppercase; }
+    .stats .stat .v { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 60, "SOFT" 0; font-size: 26px; color: var(--gold-light); line-height: 1; display: block; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .stats .stat .v.green { color: var(--led); }
+    .stats .stat .v.magenta { color: var(--magenta); }
+    .chain-label, .tray-label { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+    .chain-label { color: var(--saffron); }
+    .tray-label { color: var(--magenta); }
+    .chain-label .line, .tray-label .line { flex: 1; height: 1px; background: var(--rule-strong); }
+    .chain { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 36px; }
+    @media (max-width: 880px) { .chain { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 520px) { .chain { grid-template-columns: repeat(2, 1fr); } }
+    .slot { position: relative; aspect-ratio: 1 / 1.15; background: repeating-linear-gradient(45deg, rgba(212,160,64,0.04) 0 6px, transparent 6px 12px), var(--bg-soft); border: 2px dashed var(--rule-strong); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: all .25s ease; color: var(--ink-dim); }
+    .slot.over { border-color: var(--gold); background: rgba(212,160,64,0.08); }
+    .slot.filled { border-style: solid; border-color: var(--rule-strong); background: var(--bg-soft); }
+    .slot.correct { border-color: var(--led); box-shadow: 0 0 18px rgba(57,255,20,0.25); }
+    .slot.wrong { border-color: var(--red-warn); box-shadow: 0 0 14px rgba(255,68,68,0.18); }
+    .slot .pos { font-size: 10px; letter-spacing: 0.24em; color: var(--gold); font-weight: 600; }
+    .slot.filled .pos { display: none; }
+    .slot .pos-label { font-size: 9px; color: var(--ink-dim); letter-spacing: 0.18em; text-transform: uppercase; text-align: center; padding: 0 8px; }
+    .slot.filled .pos-label { display: none; }
+    .gear-card { width: 100%; height: 100%; padding: 12px 8px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: grab; user-select: none; transition: transform .15s ease; position: relative; }
+    .gear-card:active { cursor: grabbing; }
+    .gear-card.dragging { opacity: 0.5; }
+    .gear-card .icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    .gear-card .icon svg { width: 100%; height: 100%; }
+    .gear-card .nm { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 22, "SOFT" 30; font-size: 12px; color: var(--cream); text-align: center; line-height: 1.15; font-weight: 500; }
+    .gear-card .role-tag { font-size: 8px; letter-spacing: 0.16em; color: var(--ink-dim); text-transform: uppercase; text-align: center; }
+    .gear-card.mic { background: linear-gradient(135deg, var(--emerald-deep), var(--emerald)); border: 1px solid var(--gold); }
+    .gear-card.preamp { background: linear-gradient(135deg, var(--magenta-deep), var(--magenta)); border: 1px solid var(--gold); }
+    .gear-card.eq { background: linear-gradient(135deg, var(--gold-deep), #6b4d18); border: 1px solid var(--gold); }
+    .gear-card.comp { background: linear-gradient(135deg, #4a1a2e, var(--magenta-deep)); border: 1px solid var(--gold); }
+    .gear-card.reverb { background: linear-gradient(135deg, var(--emerald-deep), #1a3d5e); border: 1px solid var(--gold); }
+    .gear-card.speaker { background: linear-gradient(135deg, #3a2010, var(--saffron)); border: 1px solid var(--gold); }
+    .gear-card.mic .role-tag, .gear-card.preamp .role-tag, .gear-card.comp .role-tag, .gear-card.reverb .role-tag { color: var(--gold-light); }
+    .gear-card.eq .role-tag { color: var(--cream-warm); }
+    .gear-card.speaker .role-tag, .gear-card.speaker .nm { color: var(--bg); }
+    .tray { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding: 18px; background: var(--bg-soft); border: 1px solid var(--rule-strong); min-height: 200px; }
+    .tray .gear-card { aspect-ratio: 1 / 1.15; min-height: 160px; }
+    .result-bar { margin-top: 28px; padding: 22px 26px; background: var(--bg-soft); border: 1px solid var(--rule-strong); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .result-bar.success { border-color: var(--led); background: rgba(57,255,20,0.04); }
+    .result-bar.fail { border-color: var(--red-warn); }
+    .result-msg { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 30, "SOFT" 30; font-size: clamp(15px, 1.5vw, 19px); color: var(--cream); line-height: 1.4; flex: 1; min-width: 200px; }
+    .result-bar.success .result-msg { color: var(--led); }
+    .result-bar.fail .result-msg { color: var(--red-warn); }
+    .result-msg em { color: var(--gold-light); font-style: italic; }
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ===== CV (full record tab) ===== */
+    .cv-sec { padding: 38px 0 8px; border-bottom: 1px solid var(--rule); }
+    .cv-sec:last-of-type { border-bottom: none; }
+    .cv-sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 26px; }
+    .cv-sec-mark { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--led); letter-spacing: 0.1em; }
+    .cv-sec-title { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500; font-size: clamp(24px, 3.2vw, 36px); line-height: 1; letter-spacing: -0.03em; color: var(--cream); }
+    .cv-sec-title em { color: var(--gold-light); font-style: italic; }
+    .cv-subhead { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--saffron); margin: 24px 0 12px; padding-bottom: 8px; border-bottom: 1px dotted var(--rule-strong); }
+    .cv-subhead:first-of-type { margin-top: 0; }
+    .cv-row { display: grid; grid-template-columns: 150px 1fr; gap: 26px; padding: 13px 0; border-bottom: 1px dotted var(--rule-strong); align-items: baseline; }
+    .cv-row:last-child { border-bottom: none; }
+    @media (max-width: 680px) { .cv-row { grid-template-columns: 1fr; gap: 4px; padding: 15px 0; } }
+    .cv-row .date { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--saffron); letter-spacing: 0.06em; padding-top: 2px; }
+    .cv-row .t { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 24, "SOFT" 20; font-size: 17px; color: var(--cream); line-height: 1.3; font-weight: 500; margin-bottom: 4px; }
+    .cv-row .t em { font-style: italic; color: var(--gold-light); }
+    .cv-row .sub { font-size: 12px; color: var(--ink-mid); line-height: 1.55; font-style: italic; }
+    .cv-row .sub a { color: var(--cream); font-style: normal; }
+    .cv-row ul { list-style: none; margin-top: 8px; display: grid; gap: 5px; }
+    .cv-row ul li { font-size: 12px; color: var(--ink-mid); line-height: 1.5; padding-left: 16px; position: relative; }
+    .cv-row ul li::before { content: "·"; position: absolute; left: 4px; color: var(--gold); }
+    .cv-pub { padding: 15px 0; border-bottom: 1px dotted var(--rule-strong); }
+    .cv-pub:last-child { border-bottom: none; }
+    .cv-pub .cite { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 20, "SOFT" 20; font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+    .cv-pub .cite .au { color: var(--cream); font-weight: 600; }
+    .cv-pub .cite em { font-style: italic; color: var(--gold-light); }
+    .cv-pub .cite a { color: var(--cream); }
+    .cv-pub .tagline { font-size: 11.5px; color: var(--ink-dim); margin-top: 6px; font-style: italic; }
+    .cv-plain { display: grid; gap: 0; }
+    .cv-plain .item { display: grid; grid-template-columns: 180px 1fr; gap: 20px; padding: 12px 0; border-bottom: 1px dotted var(--rule-strong); }
+    .cv-plain .item:last-child { border-bottom: none; }
+    @media (max-width: 680px) { .cv-plain .item { grid-template-columns: 1fr; gap: 4px; } }
+    .cv-plain .item .k { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); padding-top: 2px; }
+    .cv-plain .item .v { font-size: 13px; color: var(--ink); line-height: 1.55; }
+    .cv-note { font-size: 11px; color: var(--ink-dim); font-style: italic; margin-top: 14px; }
+
+    footer { background: linear-gradient(180deg, var(--bg) 0%, var(--emerald-deep) 100%); padding: 56px 0; border-top: 1px solid var(--gold); position: relative; }
+    footer::before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d4a040' stroke-width='0.5' opacity='0.08'><path d='M40 0 L48 16 L66 16 L52 28 L58 46 L40 36 L22 46 L28 28 L14 16 L32 16 Z'/></g></svg>"); background-size: 80px 80px; pointer-events: none; }
     .foot-inner { position: relative; z-index: 2; }
-    .foot-big {
-      font-family: 'Fraunces', Georgia, serif;
-      font-variation-settings: "opsz" 144, "SOFT" 40, "wght" 500;
-      font-size: clamp(28px, 4.5vw, 52px);
-      line-height: 1;
-      color: var(--cream);
-      margin-bottom: 28px;
-      max-width: 18ch;
-      letter-spacing: -0.025em;
-    }
-    .foot-big a {
-      background-image: linear-gradient(var(--gold-light), var(--gold-light));
-      background-size: 100% 2px;
-    }
+    .foot-big { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 144, "SOFT" 40, "wght" 500; font-size: clamp(28px, 4.5vw, 52px); line-height: 1; color: var(--cream); margin-bottom: 28px; max-width: 18ch; letter-spacing: -0.025em; }
+    .foot-big a { background-image: linear-gradient(var(--gold-light), var(--gold-light)); background-size: 100% 2px; }
     .foot-big .accent { color: var(--gold-light); font-style: italic; }
-    .foot-meta {
-      display: flex; justify-content: space-between; flex-wrap: wrap;
-      gap: 12px; padding-top: 22px;
-      border-top: 1px solid rgba(212,160,64,0.3);
-      font-size: 10px; letter-spacing: 0.22em;
-      color: var(--cream-warm); text-transform: uppercase;
-    }
+    .foot-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 22px; border-top: 1px solid rgba(212,160,64,0.3); font-size: 10px; letter-spacing: 0.22em; color: var(--cream-warm); text-transform: uppercase; }
     .foot-meta a { color: var(--gold-light); }
 
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
@@ -507,9 +355,9 @@
     <div class="wrap inner">
       <a href="index.html" class="brand">h.asif</a>
       <ul>
-        <li><a href="cv.html">cv</a></li>
-        <li><a href="lab.html">lab</a></li>
-        <li><a href="game.html">game</a></li>
+        <li><a href="#cv" data-jump="cv">cv</a></li>
+        <li><a href="#lab" data-jump="lab">lab</a></li>
+        <li><a href="#game" data-jump="game">game</a></li>
       </ul>
     </div>
   </nav>
@@ -523,7 +371,7 @@
           <span>HASSANASIF.NET · LIVE · 2026.05</span>
         </div>
         <h1 class="name">Hassan <span class="accent">Asif</span><span class="dot">.</span></h1>
-        <p class="role">PhD, Information, <a href="https://www.utoronto.ca/" class="ext">University of Toronto</a>. Scholar of <em>digital religion</em>, <em>remix</em>, and <em>infrastructure</em>.</p>
+        <p class="role">Scholar of <em>digital religion and media</em>. I study how AI-assisted edits, captions, and audio travel across platforms and reshape doctrine, authority, and aesthetic form.</p>
         <div class="hero-links">
           <a href="mailto:h.asif@mail.utoronto.ca">Email</a>
           <span class="sep">·</span>
@@ -556,112 +404,132 @@
       <button class="tab-btn" data-tab-btn="teaching"><span class="ix">03</span>teaching</button>
       <button class="tab-btn" data-tab-btn="speaking"><span class="ix">04</span>speaking</button>
       <button class="tab-btn" data-tab-btn="press"><span class="ix">05</span>press</button>
-      <button class="tab-btn" data-tab-btn="elsewhere"><span class="ix">06</span>elsewhere</button>
+      <button class="tab-btn" data-tab-btn="cv"><span class="ix">06</span>cv</button>
+      <button class="tab-btn special" data-tab-btn="lab"><span class="ix">07</span>lab</button>
+      <button class="tab-btn special" data-tab-btn="game"><span class="ix">08</span>game</button>
+      <button class="tab-btn" data-tab-btn="elsewhere"><span class="ix">09</span>elsewhere</button>
     </div>
   </nav>
 
   <main>
     <div class="wrap">
 
+      <!-- NOW: idea-driven, concept blocks + on the desk -->
       <section class="panel active" data-tab="now">
         <div class="panel-head">
           <h2 class="panel-title"><em>Now.</em></h2>
-          <div class="panel-note">current work /<br/><span class="accent">may 2026</span></div>
+          <div class="panel-note">what I'm thinking about /<br/><span class="accent">may 2026</span></div>
         </div>
-        <div class="now-grid">
-          <div class="stamp">MAY · 2026</div>
-          <div>
-            <p>I defended my PhD at the <a href="https://ischool.utoronto.ca/" class="ext">Faculty of Information</a>, with a collaborative specialization at the <a href="https://munkschool.utoronto.ca/ai/collaborative-masters-specialization-south-asian-studies" class="ext">Centre for South Asian Studies</a> at the Munk School. The dissertation, <em>Remixing Devotion: Digital Media Practices in Pakistan</em>, follows naat and Islamic sermon media through home studios, repair markets, broadcast control rooms, and WhatsApp chains. Conferral is October 2026.</p>
-            <p>I am turning chapters into journal articles, drafting a book proposal, and teaching at <a href="https://www.utm.utoronto.ca/iccit/" class="ext">UTM ICCIT</a>. A forthcoming chapter in <a href="https://journals.sagepub.com/home/MMC" class="ext">Mobile Media and Communication</a> looks at how WhatsApp moves not just media but rules and resources through Pakistan's devotional media ecologies.</p>
-            <p>Recent recognition: <a href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif" class="ext">Chancellor Jackman Graduate Fellow</a>, Margaret Higgins Memorial Fellow, Amilcare Iannucci Graduate Fellow in the Humanities, and <a href="https://www.sshrc-crsh.gc.ca/" class="ext">SSHRC</a> Doctoral Scholar.</p>
+
+        <p class="lead">My work follows a signal chain. From a singer's breath at the microphone, through cables, knobs, and code, to the speaker that fills a room. The chain is Pakistan's <em>devotional</em> media: <em>naat</em> in praise of the Prophet, Islamic sermons, sufi music, and the remixers, pirates, archivists, and engineers who keep all of it moving. Fieldwork to date has centred on South Asia and its global diasporas, with sustained attention to platforms, archives, and informal media economies.</p>
+
+        <div class="concepts">
+
+          <div class="concept">
+            <div class="num">01 · CONCEPT</div>
+            <h3>The DAW as sacred space</h3>
+            <p>Cubase, FL Studio, Audacity. Cracked copies running on home computers in Karachi and Lahore. Devotional music gets edited on a timeline now. Breath gets cut, reverb gets automated, the live vocal gets quantized to the grid. The Digital Audio Workstation is doing work mosques and mihrabs used to do, and we have no theology of it yet.</p>
           </div>
+
+          <div class="concept">
+            <div class="num">02 · CONCEPT</div>
+            <h3>Piracy as practice, not problem</h3>
+            <p>Pakistani producers use unauthorized software the way they use second-hand cars. It works, it breaks, somebody on Hall Road fixes it. The apparatus of knowledge sharing the global IP framework cannot see is also an apparatus of repair. Cracked tools are not a problem to fix. They are how the craft works.</p>
+          </div>
+
+          <div class="concept">
+            <div class="num">03 · CONCEPT</div>
+            <h3>Blur the preacher</h3>
+            <p>A remixer cuts a sermon, blurs the preacher's face, recaptions the audio, and reposts it. Authority used to live in the body of the man at the pulpit. Now it lives in an edit anyone can make on a laptop. I track what happens to religious authority when the source can be reassembled at will.</p>
+          </div>
+
+          <div class="concept">
+            <div class="num">04 · CONCEPT</div>
+            <h3>Obfuscation as revelation</h3>
+            <p>The compression artefact, the blurred face, the muddied lyric, the YouTube re-upload of a re-upload. In devotional remix these are not failures of fidelity. They are how the sacred travels through a medium that cannot bear its full weight. The 'low resolution' is a feature.</p>
+          </div>
+
+          <div class="concept">
+            <div class="num">05 · CONCEPT</div>
+            <h3>WhatsApp as devotional ecology</h3>
+            <p>The platform built for personal messaging in California is doing the work that printing presses, radio stations, and pulpit announcements used to do. Sermon clips, fatwas, donation requests, prayer schedules, jokes about the imam. The group chat is real infrastructure.</p>
+          </div>
+
+          <div class="concept">
+            <div class="num">06 · CONCEPT</div>
+            <h3>Where does the sacred end and the meme begin?</h3>
+            <p>AI captions a sermon. A deepfake puts new words in a scholar's mouth. An <em>#Islamogram</em> meme loops a devotional clip into a joke. These objects haunt each other. Old forms of authority keep returning in glitched, remixed shapes, and the line between worship and play stops holding.</p>
+          </div>
+
+        </div>
+
+        <div class="desk">
+          <h3 class="desk-h"><span class="desk-mark">//</span> On the desk</h3>
+          <ul class="desk-list">
+            <li><span class="desk-tag">chasing</span> How a cracked copy of Cubase becomes a devotional instrument, and what a theology of the timeline would even look like.</li>
+            <li><span class="desk-tag">writing</span> An article on WhatsApp as <em>moral traffic</em>, where sermon clips, fatwas, and donations move through one pipe. Forthcoming in <em>Mobile Media and Communication</em>.</li>
+            <li><span class="desk-tag">writing</span> A chapter on AI in Islamic sermons, read through the case of the preacher Engineer Muhammad Ali Mirza.</li>
+            <li><span class="desk-tag">writing</span> A chapter on the technical imagination needed to read deepfakes against the grain.</li>
+            <li><span class="desk-tag">under review</span> An article on hauntology and online <em>#Islamogram</em> memes for the <em>Journal of Media and Religion</em>.</li>
+            <li><span class="desk-tag">reading</span> Charles Hirschkind on the cassette sermon. Birgit Meyer on religious aesthetics. Lisa Nakamura on race and the internet.</li>
+            <li><span class="desk-tag">listening</span> Naat archives via <a href="https://hamnawa.net/" class="ext">Hamnawa</a> and <a href="https://discostan.bandcamp.com/" class="ext">Discostan</a>. Hall Road YouTube channels that document repair work in real time.</li>
+            <li><span class="desk-tag">teaching</span> Reimagining Global Copyright at the iSchool, plus TA work across more than a dozen UTM ICCIT courses.</li>
+          </ul>
         </div>
       </section>
 
+      <!-- WRITING -->
       <section class="panel" data-tab="writing">
         <div class="panel-head">
           <h2 class="panel-title"><em>Writing.</em></h2>
           <div class="panel-note">selected /<br/><span class="accent">full list on cv</span></div>
         </div>
         <div class="pubs-grid">
-          <div class="pub-row">
-            <div class="yr">2025<span class="kind">article</span></div>
-            <div>
-              <div class="ttl"><a href="https://doi.org/10.1177/01634437251353093" class="ext">Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives</a></div>
-              <div class="venue"><em><a href="https://journals.sagepub.com/home/mcs" class="ext">Media, Culture and Society</a></em>, 47(8), 1599 to 1618.</div>
-              <div class="blurb">How two small online archives keep South Asian music alive when the big platforms forget it: <a href="https://discostan.bandcamp.com/" class="ext">Discostan</a> (Los Angeles record label) and <a href="https://hamnawa.net/" class="ext">Hamnawa</a> (a publication on Pakistani pop).</div>
-            </div>
-          </div>
-          <div class="pub-row">
-            <div class="yr">2025<span class="kind">essay</span></div>
-            <div>
-              <div class="ttl"><a href="https://www.heliotropejournal.net/helio/hall-road" class="ext">Hall Road, Lahore: Devotion's signal chain</a></div>
-              <div class="venue"><em><a href="https://www.heliotropejournal.net/" class="ext">HELIOTROPE</a></em>. Field essay with photographs.</div>
-              <div class="blurb">A walking essay through the Lahore electronics market that keeps Pakistan's religious music industry running. Shops, repair stalls, small studios.</div>
-            </div>
-          </div>
-          <div class="pub-row">
-            <div class="yr">2024<span class="kind">article</span></div>
-            <div>
-              <div class="ttl"><a href="https://doi.org/10.1163/21659214-bja10110" class="ext">"Blur the preacher": Media remix and digital technocultural practice in Pakistan</a></div>
-              <div class="venue"><em><a href="https://brill.com/view/journals/rmdc/rmdc-overview.xml" class="ext">Journal of Religion, Media and Digital Culture</a></em>, 13(3), 363 to 386.</div>
-              <div class="blurb">YouTube remixers in Pakistan cut, blur, and rebuild religious sermons. What happens to a preacher's authority when his words get edited and reshared?</div>
-            </div>
-          </div>
-          <div class="pub-row">
-            <div class="yr">in press<span class="kind">article</span></div>
-            <div>
-              <div class="ttl">Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan</div>
-              <div class="venue"><em><a href="http://digitalhumanities.org/dhq/" class="ext">Digital Humanities Quarterly</a></em>. Special issue on the Global South.</div>
-              <div class="blurb">Pakistani religious music producers often work with pirated software. The article argues that cracked tools are part of the craft, not a problem to fix.</div>
-            </div>
-          </div>
-          <div class="pub-row">
-            <div class="yr">Dec 2026<span class="kind">forthcoming</span></div>
-            <div>
-              <div class="ttl">Moral traffic: How WhatsApp moves media, rules, and resources in Pakistan's devotional media ecologies</div>
-              <div class="venue"><em><a href="https://journals.sagepub.com/home/MMC" class="ext">Mobile Media and Communication</a></em>. Special issue on messaging applications.</div>
-              <div class="blurb">WhatsApp groups move audio files, religious rulings, and donations through the same channels. The article treats the group chat as real infrastructure.</div>
-            </div>
-          </div>
+          <div class="pub-row"><div class="yr">2025<span class="kind">article</span></div><div>
+            <div class="ttl"><a href="https://doi.org/10.1177/01634437251353093" class="ext">Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives</a></div>
+            <div class="venue"><em><a href="https://journals.sagepub.com/home/mcs" class="ext">Media, Culture and Society</a></em>, 47(8), 1599 to 1618.</div>
+            <div class="blurb">How two small online archives keep South Asian music alive when the big platforms forget it: <a href="https://discostan.bandcamp.com/" class="ext">Discostan</a> (Los Angeles record label) and <a href="https://hamnawa.net/" class="ext">Hamnawa</a> (a publication on Pakistani pop).</div>
+          </div></div>
+          <div class="pub-row"><div class="yr">2025<span class="kind">essay</span></div><div>
+            <div class="ttl"><a href="https://www.heliotropejournal.net/helio/hall-road" class="ext">Hall Road, Lahore: Devotion's signal chain</a></div>
+            <div class="venue"><em><a href="https://www.heliotropejournal.net/" class="ext">HELIOTROPE</a></em>. Field essay with photographs.</div>
+            <div class="blurb">A walking essay through the Lahore electronics market that keeps Pakistan's religious music industry running. Shops, repair stalls, small studios.</div>
+          </div></div>
+          <div class="pub-row"><div class="yr">2024<span class="kind">article</span></div><div>
+            <div class="ttl"><a href="https://doi.org/10.1163/21659214-bja10110" class="ext">"Blur the preacher": Media remix and digital technocultural practice in Pakistan</a></div>
+            <div class="venue"><em><a href="https://brill.com/view/journals/rmdc/rmdc-overview.xml" class="ext">Journal of Religion, Media and Digital Culture</a></em>, 13(3), 363 to 386.</div>
+            <div class="blurb">YouTube remixers in Pakistan cut, blur, and rebuild religious sermons. What happens to a preacher's authority when his words get edited and reshared?</div>
+          </div></div>
+          <div class="pub-row"><div class="yr">in press<span class="kind">article</span></div><div>
+            <div class="ttl">Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan</div>
+            <div class="venue"><em><a href="http://digitalhumanities.org/dhq/" class="ext">Digital Humanities Quarterly</a></em>. Special issue on the Global South.</div>
+            <div class="blurb">Pakistani religious music producers often work with pirated software. The article argues that cracked tools are part of the craft, not a problem to fix.</div>
+          </div></div>
+          <div class="pub-row"><div class="yr">Dec 2026<span class="kind">forthcoming</span></div><div>
+            <div class="ttl">Moral traffic: How WhatsApp moves media, rules, and resources in Pakistan's devotional media ecologies</div>
+            <div class="venue"><em><a href="https://journals.sagepub.com/home/MMC" class="ext">Mobile Media and Communication</a></em>. Special issue on messaging applications.</div>
+            <div class="blurb">WhatsApp groups move audio files, religious rulings, and donations through the same channels. The article treats the group chat as real infrastructure.</div>
+          </div></div>
         </div>
-        <p style="margin-top: 28px; font-size: 12px; color: var(--ink-dim);">Full publication list on the <a href="cv.html">CV page</a>.</p>
+        <p style="margin-top:28px; font-size:12px; color:var(--ink-dim);">Full publication list on the <a href="#cv" data-jump="cv">CV tab</a>.</p>
       </section>
 
+      <!-- TEACHING -->
       <section class="panel" data-tab="teaching">
         <div class="panel-head">
           <h2 class="panel-title"><em>Teaching.</em></h2>
           <div class="panel-note">courses /<br/><span class="accent">UofT · UTM</span></div>
         </div>
         <div class="teach-grid">
-          <div class="teach-cell">
-            <div class="lvl">GRAD · UofT iSchool</div>
-            <div class="nm">Reimagining Global Copyright</div>
-            <div class="what">A graduate seminar on how copyright works around the world and how it might work better.</div>
-            <div class="when">2024, 2025 · 25 students · four sections</div>
-          </div>
-          <div class="teach-cell">
-            <div class="lvl">UNDERGRAD · UTM ICCIT</div>
-            <div class="nm">Religion, Media and Popular Culture</div>
-            <div class="what">An undergraduate course on how religion shows up in movies, TV, and online.</div>
-            <div class="when">2023 · 40 students · two sections</div>
-          </div>
-          <div class="teach-cell">
-            <div class="lvl">UNDERGRAD · UTM</div>
-            <div class="nm">Human-Machine Communication</div>
-            <div class="what">A course on how people talk to and through machines, from chatbots to algorithms.</div>
-            <div class="when">Instructor of record · Deferred</div>
-          </div>
-          <div class="teach-cell">
-            <div class="lvl">UNDERGRAD · UTM</div>
-            <div class="nm">Digital Platforms: A Global Perspective</div>
-            <div class="what">A course on how digital platforms work in different parts of the world.</div>
-            <div class="when">Instructor of record · Deferred</div>
-          </div>
+          <div class="teach-cell"><div class="lvl">GRAD · UofT iSchool</div><div class="nm">Reimagining Global Copyright</div><div class="what">A graduate seminar on how copyright works around the world and how it might work better.</div><div class="when">2024, 2025 · 25 students · four sections</div></div>
+          <div class="teach-cell"><div class="lvl">UNDERGRAD · UTM ICCIT</div><div class="nm">Religion, Media and Popular Culture</div><div class="what">An undergraduate course on how religion shows up in movies, TV, and online.</div><div class="when">2023 · 40 students · two sections</div></div>
+          <div class="teach-cell"><div class="lvl">UNDERGRAD · UTM</div><div class="nm">Human-Machine Communication</div><div class="what">A course on how people talk to and through machines, from chatbots to algorithms.</div><div class="when">Instructor of record · Deferred</div></div>
+          <div class="teach-cell"><div class="lvl">UNDERGRAD · UTM</div><div class="nm">Digital Platforms: A Global Perspective</div><div class="what">A course on how digital platforms work in different parts of the world.</div><div class="when">Instructor of record · Deferred</div></div>
         </div>
-        <p style="margin-top: 28px; font-size: 12px; color: var(--ink-dim);">TA work on more than a dozen courses on the <a href="cv.html#teaching">CV page</a>.</p>
+        <p style="margin-top:28px; font-size:12px; color:var(--ink-dim);">TA work on more than a dozen courses on the <a href="#cv" data-jump="cv">CV tab</a>.</p>
       </section>
 
+      <!-- SPEAKING -->
       <section class="panel" data-tab="speaking">
         <div class="panel-head">
           <h2 class="panel-title"><em>Speaking.</em></h2>
@@ -677,82 +545,251 @@
         </div>
       </section>
 
+      <!-- PRESS -->
       <section class="panel" data-tab="press">
         <div class="panel-head">
           <h2 class="panel-title"><em>Press.</em></h2>
           <div class="panel-note">features + coverage /<br/><span class="accent">2024 — 2026</span></div>
         </div>
         <div class="press-grid">
-
           <a href="https://ischool.utoronto.ca/news/phd-candidate-hassan-asif-spotlighted-by-the-ischools-organization/" class="press-card bare" target="_blank" rel="noopener">
-            <div class="press-image" style="background-image: url('https://static.wixstatic.com/media/4cd557_2741787a22e74594a1e71928f46683f9~mv2.jpg/v1/fill/w_800,h_500,al_c/4cd557_2741787a22e74594a1e71928f46683f9~mv2.jpg');">
-              <span class="source-tag">iSchool U of T</span>
-              <span class="read-tag">Read ↗</span>
+            <div class="press-image cover cover-ischool">
+              <div class="cover-content"><div class="cover-name">iSchool</div><div class="cover-sub">University of Toronto · Faculty of Information</div></div>
+              <span class="source-tag">iSchool U of T</span><span class="read-tag">Read ↗</span>
             </div>
-            <div class="press-body">
-              <div class="h">PhD candidate Hassan Asif spotlighted by the iSchools Organization</div>
-              <div class="meta">Interview · Apr 2026</div>
-            </div>
+            <div class="press-body"><div class="h">PhD candidate Hassan Asif spotlighted by the iSchools Organization</div><div class="meta">Interview · Apr 2026</div></div>
           </a>
-
           <a href="https://www.ischools.org/post/featured-member-hassan-asif" class="press-card bare" target="_blank" rel="noopener">
-            <div class="press-image" style="background-image: url('https://static.wixstatic.com/media/4cd557_2741787a22e74594a1e71928f46683f9~mv2.jpg/v1/fill/w_800,h_500,al_c/4cd557_2741787a22e74594a1e71928f46683f9~mv2.jpg');">
-              <span class="source-tag">iSchools.org</span>
-              <span class="read-tag">Read ↗</span>
+            <div class="press-image" style="background-image: url('https://static.wixstatic.com/media/39c5e8_1fa4b05fc1ed4037ad0c6e173a772a89~mv2.png');">
+              <span class="source-tag">iSchools.org</span><span class="read-tag">Read ↗</span>
             </div>
-            <div class="press-body">
-              <div class="h">Featured Member, Issue #11: Hassan Asif</div>
-              <div class="meta">iSchools Organization · Dec 2025</div>
-            </div>
+            <div class="press-body"><div class="h">Featured Member, Issue #11: Hassan Asif</div><div class="meta">iSchools Organization · Dec 2025</div></div>
           </a>
-
           <a href="https://www.humanities.utoronto.ca/news/jhi-circle-fellows-spotlight-hassan-asif" class="press-card bare" target="_blank" rel="noopener">
-            <div class="press-image" style="background-image: url('https://www.humanities.utoronto.ca/sites/www.humanities.utoronto.ca/files/styles/ne_3btn_widget/public/hassan%20740.png?itok=xL8H1ON7');">
-              <span class="source-tag">Jackman Humanities</span>
-              <span class="read-tag">Read ↗</span>
+            <div class="press-image" style="background-image: url('https://www.humanities.utoronto.ca/sites/www.humanities.utoronto.ca/files/styles/banner_img_style/public/field/images/jhi%20lobby%20panorama%202.jpg');">
+              <span class="source-tag">Jackman Humanities</span><span class="read-tag">Read ↗</span>
             </div>
-            <div class="press-body">
-              <div class="h">JHI Circle of Fellows Spotlight: Hassan Asif</div>
-              <div class="meta">Fellowship profile · Mar 2025</div>
-            </div>
+            <div class="press-body"><div class="h">JHI Circle of Fellows Spotlight: Hassan Asif</div><div class="meta">Fellowship profile · Mar 2025</div></div>
           </a>
-
           <a href="https://ischool.utoronto.ca/news/chancellor-jackman-graduate-fellow/" class="press-card bare" target="_blank" rel="noopener">
-            <div class="press-image no-img gold">
-              <span class="source-tag">iSchool U of T</span>
-              <span class="read-tag">Read ↗</span>
+            <div class="press-image cover cover-jackman">
+              <div class="cover-content"><div class="cover-name">Chancellor<br/>Jackman</div><div class="cover-sub">Graduate Fellow · 2024 to 2025</div></div>
+              <span class="source-tag">iSchool U of T</span><span class="read-tag">Read ↗</span>
             </div>
-            <div class="press-body">
-              <div class="h">As Jackman Fellow, PhD student Hassan Asif will explore underground Islamic media</div>
-              <div class="meta">Announcement · Aug 2024</div>
-            </div>
+            <div class="press-body"><div class="h">As Jackman Fellow, PhD student Hassan Asif will explore underground Islamic media</div><div class="meta">Announcement · Aug 2024</div></div>
           </a>
-
           <a href="https://www.heliotropejournal.net/helio/hall-road" class="press-card bare" target="_blank" rel="noopener">
             <div class="press-image" style="background-image: url('https://images.squarespace-cdn.com/content/v1/6047daeeaff86c5b1c1246a1/4a08f78f-44bf-447f-81c1-85e5ffa1da16/Fig.+1.jpg');">
-              <span class="source-tag">HELIOTROPE</span>
-              <span class="read-tag">Read ↗</span>
+              <span class="source-tag">HELIOTROPE</span><span class="read-tag">Read ↗</span>
             </div>
-            <div class="press-body">
-              <div class="h">Hall Road, Lahore: Devotion's signal chain</div>
-              <div class="meta">Original field essay with photographs · 2025</div>
-            </div>
+            <div class="press-body"><div class="h">Hall Road, Lahore: Devotion's signal chain</div><div class="meta">Original field essay with photographs · 2025</div></div>
           </a>
-
           <a href="https://hamnawa.net/" class="press-card bare" target="_blank" rel="noopener">
-            <div class="press-image no-img magenta">
-              <span class="source-tag">Hamnawa</span>
-              <span class="read-tag">Visit ↗</span>
+            <div class="press-image cover cover-hamnawa">
+              <div class="cover-content"><div class="cover-name">Hamnawa</div><div class="cover-sub">A publication on Pakistani pop · By Zeerak Ahmed</div></div>
+              <span class="source-tag">Hamnawa</span><span class="read-tag">Visit ↗</span>
             </div>
-            <div class="press-body">
-              <div class="h">Subject of academic study: Hamnawa, a publication on Pakistani pop</div>
-              <div class="meta">Zeerak Ahmed's archive · discussed in MCS article</div>
-            </div>
+            <div class="press-body"><div class="h">Subject of academic study in <em>Media, Culture and Society</em></div><div class="meta">Zeerak Ahmed's archive · discussed in Hassan's 2025 MCS article</div></div>
           </a>
-
         </div>
       </section>
 
+      <!-- CV -->
+      <section class="panel" data-tab="cv">
+        <div class="panel-head">
+          <h2 class="panel-title"><em>CV.</em></h2>
+          <div class="panel-note">full record /<br/><span class="accent">updated may 2026</span></div>
+        </div>
+        <p class="panel-intro">Scholar of digital religion and media. I study how AI assisted edits, captions, and audio travel across platforms and reshape <strong>doctrine, authority, and aesthetic form</strong>. My work combines ethnography, close reading of audiovisual remixes, and media genealogy. Contact: <a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a>. A one-page version is available <a href="https://www.hassanasif.net" class="ext">on request</a>.</p>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 01</span><h3 class="cv-sec-title"><em>Education</em></h3></div>
+          <div class="cv-row"><div class="date">2026</div><div><div class="t">PhD, Information. University of Toronto</div><div class="sub"><a href="https://munkschool.utoronto.ca/ai/collaborative-masters-specialization-south-asian-studies" class="ext">Collaborative Specialization in South Asian Studies</a>. Defended May 2026; conferral October 2026.</div><div class="sub" style="margin-top:6px;">Dissertation: "Remixing Devotion: Digital Media Practices in Pakistan."</div><ul><li>Supervisor: Prof. Seamus Ross</li><li>Committee: Prof. Mark V. Campbell, Prof. Farzaneh Hemmasi</li><li>Internal Examiner: Prof. Nadia Caidi, Faculty of Information, University of Toronto</li><li>External Examiner: Prof. Rahul Mukherjee, Cinema and Media Studies and English, University of Pennsylvania</li></ul></div></div>
+          <div class="cv-row"><div class="date">2015</div><div><div class="t">MA, Museums and Gallery Practice. University College London</div><div class="sub">Distinction. Dissertation: "The Muslim Buddha: Sculpture and Heritage Values in Taxila, Pakistan." Supervisor: Prof. Trinidad Rico.</div></div></div>
+          <div class="cv-row"><div class="date">2014</div><div><div class="t">BS, Communication Studies. Northwestern University</div><div class="sub">Cum laude, GPA 3.75. Minor: Cultural Anthropology.</div></div></div>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 02</span><h3 class="cv-sec-title"><em>Publications</em></h3></div>
+          <div class="cv-subhead">Peer-Reviewed Journal Articles</div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (2025). Discostan and Hamnawa: Between erasure and preservation in South Asian digital diasporic archives. <em>Media, Culture and Society</em>, 47(8), 1599 to 1618. <a href="https://doi.org/10.1177/01634437251353093" class="ext">doi.org/10.1177/01634437251353093</a></div><div class="tagline">How two small online archives keep South Asian music alive when the big platforms forget it.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (2024). "Blur the preacher": Media remix and digital technocultural practice in Pakistan. <em>Journal of Religion, Media and Digital Culture</em>, 13(3), 363 to 386. <a href="https://doi.org/10.1163/21659214-bja10110" class="ext">doi.org/10.1163/21659214-bja10110</a></div><div class="tagline">What happens to a preacher's authority when his words can be edited by anyone with a laptop.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (in press). Obfuscation as revelation: Knowledge sharing, piracy, and Islamic devotional remixing in Pakistan. <em>Digital Humanities Quarterly</em>, special issue on digitization and machine learning in the Global South.</div><div class="tagline">Cracked software as part of the craft, not a problem to fix.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (forthcoming 2026). Moral traffic: How WhatsApp moves media, rules, and resources in Pakistan's devotional media ecologies. <em>Mobile Media and Communication</em>, special issue on messaging applications and global cultures of mobility.</div><div class="tagline">The group chat as real religious infrastructure.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (under review). IslaMixing: Hauntology as an experimental framework for exploring online #Islamogram memes. <em>Journal of Media and Religion</em>.</div></div>
+          <div class="cv-subhead">Peer-Reviewed Book Chapters</div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (in press). Translating truth: AI in digital Islamic sermons and the case of Engineer Muhammad Ali Mirza. In D. Sundaram and C. Tekobbe (Eds.), <em>Social Media, Religion, and Culture</em>. Routledge.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (in press). Technical imagination against deepfakes: Reading, bending, and exposing the image game. In J. Tulasiewicz, S. Jovicic, and X. Zhan (Eds.), <em>Ethnographies of Digital Addiction, Harm, and Repair</em>. Bloomsbury Academic.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H., and Rico, T.</span> (2017). The Buddha Remains: Heritage transactions in Taxila, Pakistan. In T. Rico (Ed.), <em>The Making of Islamic Heritage</em>. Palgrave Macmillan. <a href="https://doi.org/10.1007/978-981-10-4071-9_7" class="ext">doi.org/10.1007/978-981-10-4071-9_7</a></div></div>
+          <div class="cv-subhead">Other Contributions</div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (2025). Hall Road, Lahore: Devotion's signal chain. <em>HELIOTROPE</em>. <a href="https://www.heliotropejournal.net/helio/hall-road" class="ext">heliotropejournal.net/helio/hall-road</a></div><div class="tagline">A walking field essay through the Lahore electronics market, with photographs.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (2019). Really risky "interpretation." <em>Association for Heritage Interpretation</em>, 24(1), 36 to 37.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Rico, T., and Asif, H.</span> (2015). Reports. <em>Anthropology of the Middle East</em>, 10(1), 61 to 88.</div></div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (2013). Rolling out a new broadband era in Qatar. <em>The Edge</em>, 43, 40.</div></div>
+          <div class="cv-subhead">Works in Progress</div>
+          <div class="cv-pub"><div class="cite"><span class="au">Asif, H.</span> (co-editor). (in preparation). <em>Digital Religion</em> [edited volume; proposal planned for Winter 2026].</div></div>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 03</span><h3 class="cv-sec-title"><em>Grants and Awards</em></h3></div>
+          <div class="cv-row"><div class="date">2025</div><div><div class="t">Margaret Higgins Memorial Fellowship</div><div class="sub">University-wide. CA $2,000.</div></div></div>
+          <div class="cv-row"><div class="date">2025</div><div><div class="t">Professor Amilcare Iannucci Graduate Fellowship in the Humanities</div><div class="sub">University-wide. CA $5,000.</div></div></div>
+          <div class="cv-row"><div class="date">2024 to 2025</div><div><div class="t">Chancellor Jackman Graduate Fellowship</div><div class="sub">University-wide. CA $38,000.</div></div></div>
+          <div class="cv-row"><div class="date">2023 to 2024</div><div><div class="t">SSHRC Doctoral Scholarship</div><div class="sub">National competition. CA $20,000.</div></div></div>
+          <div class="cv-row"><div class="date">2021 to 2023</div><div><div class="t">Ontario Graduate Scholarship</div><div class="sub">Provincial competition. CA $30,000.</div></div></div>
+          <div class="cv-row"><div class="date">2021 to 2022</div><div><div class="t">iSchools Inc. Research Award</div><div class="sub">International competition. CA $5,000.</div></div></div>
+          <div class="cv-row"><div class="date">2022</div><div><div class="t">SGS Research Travel Grant; Ethel W. Auster Scholarship</div><div class="sub">University-wide. CA $3,000 and CA $2,000.</div></div></div>
+          <p class="cv-note">Full list of grants and awards available on request.</p>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 04</span><h3 class="cv-sec-title"><em>Research Experience</em></h3></div>
+          <div class="cv-row"><div class="date">2021 to 2022</div><div><div class="t">Research Assistant, #Blacktronica Electronic Music in Detroit and Berlin</div><div class="sub">Prof. Beth Coleman, University of Toronto Mississauga.</div></div></div>
+          <div class="cv-row"><div class="date">2020 to 2021</div><div><div class="t">Participant and Research Assistant, DigiLabs Workshops</div><div class="sub">University of Toronto and University of Manchester.</div></div></div>
+          <div class="cv-row"><div class="date">2021</div><div><div class="t">Student Research Trainee, Insights Through Asia Challenge</div><div class="sub">Asian Institute, University of Toronto.</div></div></div>
+          <div class="cv-row"><div class="date">2020 to 2021</div><div><div class="t">Reading groups: McLuhan Centre, Toronto Data Workshop</div><div class="sub">University of Toronto.</div></div></div>
+          <div class="cv-row"><div class="date">2015 to 2019</div><div><div class="t">Earlier research and curriculum roles</div><div class="sub">Lahore College of Arts and Sciences; Barker Langham; Lahore University of Management Sciences; TBWA\Worldwide; Northwestern University.</div></div></div>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 05</span><h3 class="cv-sec-title"><em>Field Research</em></h3></div>
+          <div class="cv-row"><div class="date">2022</div><div><div class="t">Devotional media and remix culture</div><div class="sub">Karachi, Lahore, and adjacent cities, Pakistan.</div></div></div>
+          <div class="cv-row"><div class="date">2015</div><div><div class="t">Buddhist sculpture and heritage values</div><div class="sub">Taxila and Islamabad, Pakistan.</div></div></div>
+          <div class="cv-row"><div class="date">2012 to 2014</div><div><div class="t">Earlier fieldwork</div><div class="sub">Experimental film (Paris); female sports participation (Doha); media entrepreneurship (Seoul); heavy metal subculture (Lahore, Islamabad).</div></div></div>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 06</span><h3 class="cv-sec-title"><em>Professional Experience</em></h3></div>
+          <div class="cv-row"><div class="date">2025</div><div><div class="t">Chief Presiding Officer, University of Toronto Mississauga</div><div class="sub">Oversaw UTM's spring examination period across multiple venues; supervised presiding officers and invigilators; liaised with Accessibility Services.</div></div></div>
+          <div class="cv-row"><div class="date">2021 to 2023</div><div><div class="t">Senior Digital Fellow, Muslims in Canada Archive and Data Initiative</div><div class="sub">Institute of Islamic Studies, University of Toronto.</div><ul><li>Helped initiate a nationwide collection and digitization program; prototyped archival workflows with U of T Libraries.</li><li>Led RFP processes for Access to Memory (AtoM) hosting; prototyped a Dataverse repository with metadata schemas and access controls.</li></ul></div></div>
+          <div class="cv-row"><div class="date">2016 to 2018</div><div><div class="t">Program Manager (Amal Academy); Project Assistant and Consultant, Culture (UNESCO Pakistan)</div><div class="sub">Trained more than 500 students; ran heritage digitization workshops preserving over 2,000 artefacts; managed preservation projects with budgets over US $150,000.</div></div></div>
+          <p class="cv-note">Additional curatorial and professional roles available on request.</p>
+        </div>
+
+        <div class="cv-sec" id="cv-teaching">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 07</span><h3 class="cv-sec-title"><em>Teaching</em></h3></div>
+          <div class="cv-subhead">Courses Taught</div>
+          <div class="cv-row"><div class="date">2024, 2025</div><div><div class="t">Reimagining Global Copyright</div><div class="sub">Graduate, University of Toronto. 25 students, offered four times.</div></div></div>
+          <div class="cv-row"><div class="date">2023</div><div><div class="t">Religion, Media and Popular Culture</div><div class="sub">Undergraduate, UTM. 40 students, offered twice.</div></div></div>
+          <div class="cv-row"><div class="date">Appointed</div><div><div class="t">Human-Machine Communication; Digital Platforms: A Global Perspective</div><div class="sub">Undergraduate, UTM. Instructor of record; offerings deferred.</div></div></div>
+          <div class="cv-row"><div class="date">2018 to 2019</div><div><div class="t">Engaging with Texts; History and Sociology</div><div class="sub">Lahore University of Management Sciences and Lahore College of Arts and Sciences.</div></div></div>
+          <div class="cv-subhead">Teaching Assistant</div>
+          <div class="cv-row"><div class="date">2020 to 2026</div><div><div class="t">ICCIT, University of Toronto Mississauga</div><div class="sub">More than a dozen courses across communication, media, and culture.</div><ul><li>Contemporary Communication Technologies (7 sections); Rhetoric and Media (8 sections)</li><li>Media Audiences; Communication and Advertising; Mind, Media and Representation; Visual Culture; and others</li></ul></div></div>
+          <div class="cv-row"><div class="date">2020 to 2021</div><div><div class="t">Faculty of Information and Asian Institute, University of Toronto</div><div class="sub">Remix Culture; Project Management; Museums and Indigenous Communities; Asian Youth Cultures.</div></div></div>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 08</span><h3 class="cv-sec-title"><em>Conference Presentations</em></h3></div>
+          <div class="cv-row"><div class="date">Nov 2025</div><div><div class="t"><em>Remixing Devotion: The Digital Audio Workstation as Sacred Space</em></div><div class="sub">Sacred Space: Conflicts and Convergences. Trinity College, University of Toronto.</div></div></div>
+          <div class="cv-row"><div class="date">Nov 2025</div><div><div class="t"><em>From Breath to Waveform: HCI Lessons from Editing Naat in Cubase</em></div><div class="sub">SPIRITED '25: Conference on Spirituality, Religion, and Interactive Technology Design.</div></div></div>
+          <div class="cv-row"><div class="date">Jun 2025</div><div><div class="t"><em>Obfuscation as revelation: Piracy and Islamic devotional remixing in Pakistan</em></div><div class="sub">International Communication Association 2025 Pre-Conference. Boulder, Colorado.</div></div></div>
+          <div class="cv-row"><div class="date">Jun 2025</div><div><div class="t"><em>Between confusion and deception: Ethical dilemmas in AI-enabled remixing of sermons</em></div><div class="sub">Canadian Communication Association Annual Conference. George Brown College, Toronto.</div></div></div>
+          <div class="cv-row"><div class="date">2025</div><div><div class="t"><em>Cracked devotion</em>; <em>Mediating truth</em></div><div class="sub">South Asia Graduate Student Workshop, University of Toronto; Communication Graduate Caucus Conference, Carleton University.</div></div></div>
+          <div class="cv-row"><div class="date">Jun 2024</div><div><div class="t"><em>Digital desires and distortions: Deepfake pornography in Pakistani cyberspace</em></div><div class="sub">Global Digital Intimacies Conference. University of Amsterdam.</div></div></div>
+          <div class="cv-row"><div class="date">May 2024</div><div><div class="t"><em>Technological transcendence: The transformation of Naat in Pakistan's digital Islamic landscape</em></div><div class="sub">Canadian Association for the Study of Islam and Muslims, Second Biennial Conference. Halifax.</div></div></div>
+          <div class="cv-row"><div class="date">Oct 2023</div><div><div class="t"><em>Bytes of blessings: Digital technology's influence on Pakistan's Naat culture</em></div><div class="sub">51st Annual Conference on South Asia. University of Wisconsin-Madison.</div></div></div>
+          <div class="cv-row"><div class="date">2013 to 2023</div><div><div class="t">Earlier presentations</div><div class="sub">On Naat self-presentation, diasporic music archives, media remix, Gandharan art, MENA broadband, and heavy metal in Pakistan. Full list on request.</div></div></div>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 09</span><h3 class="cv-sec-title"><em>Invited Talks</em></h3></div>
+          <div class="cv-row"><div class="date">Jan 2026</div><div><div class="t"><em>Remix, devotion, and media infrastructures in Pakistan</em></div><div class="sub">Guest lecture, Remix Culture course, University of Toronto.</div></div></div>
+          <div class="cv-row"><div class="date">Mar 2025</div><div><div class="t"><em>Politics, pop, and the pulpit: Where does the sacred end and the meme begin?</em></div><div class="sub">Guest lecture, Remix Culture course, University of Toronto.</div></div></div>
+          <div class="cv-row"><div class="date">Jan 2025</div><div><div class="t"><em>Remixing devotion: An exploration of digital media practices in Pakistan</em></div><div class="sub">Invited talk, Jackman Humanities Institute, University of Toronto.</div></div></div>
+          <div class="cv-row"><div class="date">2020 to 2023</div><div><div class="t">Earlier guest lectures and talks</div><div class="sub">On digital audio workstations and devotion, Naat self-presentation, sonic heritage, and cross-cultural project management. University of Toronto and UTM.</div></div></div>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 10</span><h3 class="cv-sec-title"><em>Service and Training</em></h3></div>
+          <div class="cv-row"><div class="date">2025 to now</div><div><div class="t">Volunteer Mentor, Palestinian Students and Scholars at Risk (PSSAR)</div><div class="sub">Guide Palestinian graduate students on applications, supervisor matching, funding, and adjustment in North America.</div></div></div>
+          <div class="cv-row"><div class="date">Ongoing</div><div><div class="t">Graduate Student Mentor; Manuscript Reviewer</div><div class="sub">Mentor students from South Asia and the Middle East. Reviewer for <em>Journal of Religion, Media, and Digital Culture</em> and <em>Stream</em>.</div></div></div>
+          <div class="cv-row"><div class="date">2024, 2025</div><div><div class="t">Training: Centre for Culture and Technology Summer Institute; Oxford Internet Institute</div><div class="sub">Code labs with critical seminars (Ludus, turtle graphics, Papert, Weizenbaum); Global South approaches to AI governance and platform politics.</div></div></div>
+        </div>
+
+        <div class="cv-sec">
+          <div class="cv-sec-head"><span class="cv-sec-mark">// 11</span><h3 class="cv-sec-title"><em>Languages and Skills</em></h3></div>
+          <div class="cv-plain">
+            <div class="item"><div class="k">Languages</div><div class="v">English, Urdu, Punjabi (native fluency; Punjabi also in Shahmukhi script). Arabic (reading proficiency).</div></div>
+            <div class="item"><div class="k">Audio and Media</div><div class="v">Cubase, FL Studio, Sonic Pi, Adobe Creative Suite, FFmpeg.</div></div>
+            <div class="item"><div class="k">Programming and Data</div><div class="v">Python, SQL, MATLAB, Praat signal processing, OpenCV.</div></div>
+            <div class="item"><div class="k">Memberships</div><div class="v">CCA, CASIM, Association of Canadian Archivists, Museums Association of Pakistan, IASPM.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LAB -->
+      <section class="panel" data-tab="lab">
+        <div class="panel-head">
+          <h2 class="panel-title"><em>Lab.</em></h2>
+          <div class="panel-note">16-step sequencer /<br/><span class="accent">audio interactive</span></div>
+        </div>
+        <p class="panel-intro">Build a short loop. Four percussion tracks, sixteen steps, one tempo. <strong>Click the cells to switch them on, hit play, and adjust as it loops.</strong> Sounds are loosely modeled on the percussion you would hear at a <em>mehfil</em>. Try the presets at the top right. Headphones recommended.</p>
+
+        <div class="transport">
+          <div class="play-group">
+            <button class="t-btn play" id="labPlayBtn">▶ Play</button>
+            <button class="t-btn" id="labClearBtn">Clear</button>
+          </div>
+          <div class="tempo">
+            <span>BPM</span><span class="val" id="labBpmVal">96</span>
+            <input type="range" id="labBpmSlider" min="50" max="180" value="96" />
+          </div>
+          <div class="preset-group">
+            <button class="preset" data-preset="dhamaal">Dhamaal</button>
+            <button class="preset" data-preset="qawwali">Qawwali</button>
+            <button class="preset" data-preset="hiphop">Hip-hop</button>
+          </div>
+        </div>
+
+        <div class="seq-label"><span>// SEQUENCER</span> <span class="line"></span> <span>16 STEPS · 4 TRACKS</span></div>
+        <div class="seq" id="labSeq">
+          <div class="track dum" data-track="dum"><div class="label"><div class="nm">Dum <em>(low)</em></div><div class="meta">Tabla · bass</div></div><div class="preview" data-preview="dum" title="Preview">▶</div><div class="steps" data-steps="dum"></div></div>
+          <div class="track tin" data-track="tin"><div class="label"><div class="nm">Tin <em>(high)</em></div><div class="meta">Tabla · treble</div></div><div class="preview" data-preview="tin" title="Preview">▶</div><div class="steps" data-steps="tin"></div></div>
+          <div class="track clap" data-track="clap"><div class="label"><div class="nm">Clap</div><div class="meta">Daf · hand</div></div><div class="preview" data-preview="clap" title="Preview">▶</div><div class="steps" data-steps="clap"></div></div>
+          <div class="track bell" data-track="bell"><div class="label"><div class="nm">Bell</div><div class="meta">Chime · accent</div></div><div class="preview" data-preview="bell" title="Preview">▶</div><div class="steps" data-steps="bell"></div></div>
+        </div>
+      </section>
+
+      <!-- GAME -->
+      <section class="panel" data-tab="game">
+        <div class="panel-head">
+          <h2 class="panel-title">Mehfil <em>Rig.</em></h2>
+          <div class="panel-note">signal chain puzzle /<br/><span class="accent">drag and drop</span></div>
+        </div>
+        <p class="panel-intro">Drag each piece of audio gear into the slot where you think it belongs. The chain reads left to right. <strong>When all six slots are filled, press check to see if you got it right.</strong> If the chain is correct, you can play a synthesized <em>naat</em> through it.</p>
+
+        <div class="game-head">
+          <div class="stats">
+            <div class="stat"><span class="v" id="statFilled">0</span>of 6 placed</div>
+            <div class="stat"><span class="v green" id="statCorrect">0</span>in correct spot</div>
+            <div class="stat"><span class="v magenta" id="statAttempts">0</span>checks used</div>
+          </div>
+        </div>
+
+        <div class="chain-label"><span>// CHAIN</span> <span class="line"></span> <span>POS 01 → 06</span></div>
+        <div class="chain" id="chain">
+          <div class="slot" data-slot="0"><div class="pos">01</div><div class="pos-label">Where the voice<br/>starts</div></div>
+          <div class="slot" data-slot="1"><div class="pos">02</div><div class="pos-label">Boost the<br/>weak signal</div></div>
+          <div class="slot" data-slot="2"><div class="pos">03</div><div class="pos-label">Shape the<br/>tone</div></div>
+          <div class="slot" data-slot="3"><div class="pos">04</div><div class="pos-label">Even out<br/>the volume</div></div>
+          <div class="slot" data-slot="4"><div class="pos">05</div><div class="pos-label">Add room<br/>and weight</div></div>
+          <div class="slot" data-slot="5"><div class="pos">06</div><div class="pos-label">Where it<br/>finally lands</div></div>
+        </div>
+
+        <div class="tray-label"><span>// GEAR TRAY</span> <span class="line"></span> <span>DRAG ANY PIECE INTO A SLOT</span></div>
+        <div class="tray" id="tray"></div>
+
+        <div class="result-bar" id="resultBar">
+          <div class="result-msg" id="resultMsg">Fill all six slots, then check your chain.</div>
+          <div class="controls">
+            <button class="t-btn" id="gameResetBtn">Reset</button>
+            <button class="t-btn play" id="checkBtn" disabled>Check chain ✓</button>
+            <button class="t-btn play" id="gamePlayBtn" disabled style="display:none;">▶ Play through chain</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ELSEWHERE -->
       <section class="panel" data-tab="elsewhere">
         <div class="panel-head">
           <h2 class="panel-title"><em>Elsewhere.</em></h2>
@@ -765,7 +802,7 @@
           <a href="https://www.humanities.utoronto.ca/people/fellows/circle-fellows/hassan-asif" class="else-cell ext" target="_blank" rel="noopener"><span class="k">FELLOWSHIP</span><span class="v">Jackman Humanities</span></a>
           <a href="https://utoronto.academia.edu/HassanAsif" class="else-cell ext" target="_blank" rel="noopener"><span class="k">PAPERS</span><span class="v">Academia.edu</span></a>
           <a href="https://www.researchgate.net/profile/Hassan-Asif-3" class="else-cell ext" target="_blank" rel="noopener"><span class="k">PAPERS</span><span class="v">ResearchGate</span></a>
-          <a href="cv.html" class="else-cell"><span class="k">FULL CV</span><span class="v">Curriculum Vitae</span></a>
+          <a href="#cv" data-jump="cv" class="else-cell"><span class="k">FULL CV</span><span class="v">Curriculum Vitae</span></a>
           <a href="https://instagram.com/hassan.4sif" class="else-cell ext" target="_blank" rel="noopener"><span class="k">SOCIAL</span><span class="v">Instagram</span></a>
         </div>
       </section>
@@ -779,7 +816,7 @@
       <div class="foot-meta">
         <span>MAY 2026 · V.2026.05</span>
         <span>STATIC HTML · NO ANALYTICS · NO TRACKING</span>
-        <span><a href="cv.html">CV ↗</a> · <a href="lab.html">LAB ↗</a> · <a href="game.html">GAME ↗</a></span>
+        <span><a href="#cv" data-jump="cv">CV ↗</a></span>
       </div>
     </div>
   </footer>
@@ -791,12 +828,21 @@
       tabs.forEach(t => t.classList.toggle('active', t.dataset.tabBtn === name));
       panels.forEach(p => p.classList.toggle('active', p.dataset.tab === name));
       if (history.replaceState) history.replaceState(null, '', '#' + name);
+      if (name !== 'lab' && window.__labStop) window.__labStop();
     }
     tabs.forEach(t => t.addEventListener('click', () => activateTab(t.dataset.tabBtn)));
+    document.querySelectorAll('a[data-jump]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        activateTab(a.dataset.jump);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
     if (window.location.hash) {
       const target = window.location.hash.slice(1);
       if (document.querySelector('[data-tab="' + target + '"]')) activateTab(target);
     }
+
     (function () {
       const frame = document.getElementById('portrait');
       if (!frame) return;
@@ -806,6 +852,269 @@
       const img = new Image();
       img.onerror = () => { frame.querySelectorAll('.layer').forEach(el => el.style.display = 'none'); };
       img.src = m[2];
+    })();
+
+    // LAB
+    (function () {
+      const NUM_STEPS = 16;
+      const TRACKS = ['dum', 'tin', 'clap', 'bell'];
+      const state = { dum: new Array(NUM_STEPS).fill(false), tin: new Array(NUM_STEPS).fill(false), clap: new Array(NUM_STEPS).fill(false), bell: new Array(NUM_STEPS).fill(false) };
+      let playing = false, currentStep = 0, seqLoop = null, audioReady = false;
+      let kick, hat, snare, bell, masterCompressor, masterGain;
+
+      TRACKS.forEach(name => {
+        const container = document.querySelector(`#labSeq [data-steps="${name}"]`);
+        for (let i = 0; i < NUM_STEPS; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'step';
+          if (i % 4 === 0) cell.classList.add('beat');
+          cell.dataset.step = i;
+          cell.addEventListener('click', () => { state[name][i] = !state[name][i]; cell.classList.toggle('active', state[name][i]); });
+          container.appendChild(cell);
+        }
+      });
+      function renderState() {
+        TRACKS.forEach(name => {
+          const cells = document.querySelectorAll(`#labSeq [data-steps="${name}"] .step`);
+          cells.forEach((c, i) => c.classList.toggle('active', state[name][i]));
+        });
+      }
+      const PRESETS = {
+        dhamaal: { dum:[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0], tin:[0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0], clap:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], bell:[1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0] },
+        qawwali: { dum:[1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0], tin:[0,0,1,0,1,0,0,0,1,0,1,0,0,0,1,1], clap:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], bell:[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] },
+        hiphop:  { dum:[1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0], tin:[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], clap:[0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0], bell:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1] }
+      };
+      document.querySelectorAll('.preset').forEach(b => {
+        b.addEventListener('click', () => {
+          const p = PRESETS[b.dataset.preset]; if (!p) return;
+          TRACKS.forEach(t => { state[t] = p[t].map(v => v === 1); });
+          renderState();
+        });
+      });
+      document.getElementById('labClearBtn').addEventListener('click', () => {
+        TRACKS.forEach(t => { state[t] = new Array(NUM_STEPS).fill(false); });
+        renderState();
+      });
+      const bpmSlider = document.getElementById('labBpmSlider');
+      const bpmVal = document.getElementById('labBpmVal');
+      bpmSlider.addEventListener('input', () => {
+        const v = parseInt(bpmSlider.value, 10);
+        bpmVal.textContent = v;
+        if (typeof Tone !== 'undefined') Tone.Transport.bpm.value = v;
+      });
+      async function setupAudio() {
+        if (audioReady) return;
+        await Tone.start();
+        masterCompressor = new Tone.Compressor({ threshold: -14, ratio: 3, attack: 0.005, release: 0.1 });
+        masterGain = new Tone.Gain(0.85).toDestination();
+        masterCompressor.connect(masterGain);
+        kick = new Tone.MembraneSynth({ pitchDecay: 0.05, octaves: 6, oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.35, sustain: 0.01, release: 1.2 } }).connect(masterCompressor);
+        kick.volume.value = 0;
+        hat = new Tone.MembraneSynth({ pitchDecay: 0.02, octaves: 3, oscillator: { type: 'triangle' }, envelope: { attack: 0.001, decay: 0.15, sustain: 0.01, release: 0.4 } }).connect(masterCompressor);
+        hat.volume.value = -4;
+        snare = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.12, sustain: 0 } }).connect(masterCompressor);
+        snare.volume.value = -8;
+        bell = new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.6, release: 0.4 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).connect(masterCompressor);
+        bell.volume.value = -18;
+        Tone.Transport.bpm.value = parseInt(bpmSlider.value, 10);
+        audioReady = true;
+      }
+      function triggerSound(name, time) {
+        if (name === 'dum') kick.triggerAttackRelease('C1', '8n', time);
+        else if (name === 'tin') hat.triggerAttackRelease('C3', '16n', time);
+        else if (name === 'clap') snare.triggerAttackRelease('16n', time);
+        else if (name === 'bell') bell.triggerAttackRelease('C5', '16n', time);
+      }
+      document.querySelectorAll('.preview').forEach(b => {
+        b.addEventListener('click', async () => { await setupAudio(); triggerSound(b.dataset.preview, Tone.now()); });
+      });
+      const playBtn = document.getElementById('labPlayBtn');
+      async function startLoop() {
+        await setupAudio();
+        currentStep = 0;
+        seqLoop = new Tone.Loop((time) => {
+          Tone.Draw.schedule(() => {
+            document.querySelectorAll('#labSeq .step.head').forEach(el => el.classList.remove('head'));
+            document.querySelectorAll(`#labSeq .step[data-step="${currentStep}"]`).forEach(el => el.classList.add('head'));
+          }, time);
+          TRACKS.forEach(t => { if (state[t][currentStep]) triggerSound(t, time); });
+          currentStep = (currentStep + 1) % NUM_STEPS;
+        }, '16n').start(0);
+        Tone.Transport.start();
+        playing = true;
+        playBtn.classList.add('playing');
+        playBtn.textContent = '■ Stop';
+      }
+      function stopLoop() {
+        if (seqLoop) { seqLoop.stop(); seqLoop.dispose(); seqLoop = null; }
+        if (typeof Tone !== 'undefined') Tone.Transport.stop();
+        document.querySelectorAll('#labSeq .step.head').forEach(el => el.classList.remove('head'));
+        playing = false;
+        playBtn.classList.remove('playing');
+        playBtn.textContent = '▶ Play';
+      }
+      playBtn.addEventListener('click', () => { if (playing) stopLoop(); else startLoop(); });
+      window.__labStop = stopLoop;
+      TRACKS.forEach(t => { state[t] = PRESETS.qawwali[t].map(v => v === 1); });
+      renderState();
+    })();
+
+    // GAME
+    (function () {
+      const GEAR = [
+        { id: 'mic', name: 'Microphone', role: 'Picks up the voice', correctPosition: 0, cls: 'mic',
+          svg: `<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='18' y='6' width='12' height='22' rx='6' fill='%23ede5d3' stroke='%23d4a040' stroke-width='1.5'/><path d='M14 22 v3 a10 10 0 0 0 20 0 v-3' stroke='%23d4a040' stroke-width='1.5' fill='none'/><line x1='24' y1='35' x2='24' y2='42' stroke='%23d4a040' stroke-width='1.5'/><line x1='18' y1='42' x2='30' y2='42' stroke='%23d4a040' stroke-width='1.5'/></svg>` },
+        { id: 'preamp', name: 'Audio Interface', role: 'Boosts the signal', correctPosition: 1, cls: 'preamp',
+          svg: `<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='4' y='14' width='40' height='20' rx='2' fill='%23ede5d3' stroke='%23d4a040' stroke-width='1.5'/><circle cx='12' cy='24' r='4' fill='none' stroke='%23d4a040' stroke-width='1.5'/><line x1='12' y1='21' x2='12' y2='27' stroke='%23d4a040' stroke-width='1.5'/><circle cx='24' cy='24' r='4' fill='none' stroke='%23d4a040' stroke-width='1.5'/><line x1='22' y1='22' x2='26' y2='26' stroke='%23d4a040' stroke-width='1.5'/><rect x='32' y='20' width='8' height='8' fill='none' stroke='%23d4a040' stroke-width='1.5'/></svg>` },
+        { id: 'eq', name: 'EQ', role: 'Shapes the tone', correctPosition: 2, cls: 'eq',
+          svg: `<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='4' y='8' width='40' height='32' rx='2' fill='%23ede5d3' stroke='%23d4a040' stroke-width='1.5'/><line x1='10' y1='12' x2='10' y2='36' stroke='%23d4a040' stroke-width='1.5'/><circle cx='10' cy='18' r='2.5' fill='%23d4a040'/><line x1='20' y1='12' x2='20' y2='36' stroke='%23d4a040' stroke-width='1.5'/><circle cx='20' cy='28' r='2.5' fill='%23d4a040'/><line x1='30' y1='12' x2='30' y2='36' stroke='%23d4a040' stroke-width='1.5'/><circle cx='30' cy='22' r='2.5' fill='%23d4a040'/><line x1='40' y1='12' x2='40' y2='36' stroke='%23d4a040' stroke-width='1.5'/><circle cx='40' cy='32' r='2.5' fill='%23d4a040'/></svg>` },
+        { id: 'comp', name: 'Compressor', role: 'Levels the dynamics', correctPosition: 3, cls: 'comp',
+          svg: `<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='4' y='10' width='40' height='28' rx='2' fill='%23ede5d3' stroke='%23d4a040' stroke-width='1.5'/><path d='M8 30 L18 30 L18 24 L24 24 L24 20 L40 20' stroke='%23d4a040' stroke-width='1.5' fill='none'/><circle cx='12' cy='34' r='1.5' fill='%23d4a040'/><circle cx='36' cy='34' r='1.5' fill='%23d4a040'/></svg>` },
+        { id: 'reverb', name: 'Reverb', role: 'Adds room and weight', correctPosition: 4, cls: 'reverb',
+          svg: `<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='24' cy='24' r='4' fill='%23ede5d3' stroke='%23d4a040' stroke-width='1.5'/><circle cx='24' cy='24' r='10' fill='none' stroke='%23d4a040' stroke-width='1.5' opacity='0.7'/><circle cx='24' cy='24' r='16' fill='none' stroke='%23d4a040' stroke-width='1.5' opacity='0.4'/><circle cx='24' cy='24' r='22' fill='none' stroke='%23d4a040' stroke-width='1.5' opacity='0.2'/></svg>` },
+        { id: 'speaker', name: 'Speaker', role: 'Reaches the audience', correctPosition: 5, cls: 'speaker',
+          svg: `<svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='4' width='28' height='40' rx='2' fill='%23ede5d3' stroke='%230d0c0a' stroke-width='1.5'/><circle cx='24' cy='32' r='8' fill='%230d0c0a'/><circle cx='24' cy='32' r='4' fill='%23ede5d3'/><circle cx='24' cy='14' r='3.5' fill='%230d0c0a'/></svg>` }
+      ];
+      function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+      const tray = document.getElementById('tray');
+      const chain = document.getElementById('chain');
+      const slots = chain.querySelectorAll('.slot');
+      const resultBar = document.getElementById('resultBar');
+      const resultMsg = document.getElementById('resultMsg');
+      const checkBtn = document.getElementById('checkBtn');
+      const playBtn = document.getElementById('gamePlayBtn');
+      const resetBtn = document.getElementById('gameResetBtn');
+      const statFilled = document.getElementById('statFilled');
+      const statCorrect = document.getElementById('statCorrect');
+      const statAttempts = document.getElementById('statAttempts');
+      let attempts = 0;
+      function buildCard(g) {
+        const c = document.createElement('div');
+        c.className = `gear-card ${g.cls}`;
+        c.draggable = true;
+        c.dataset.gearId = g.id;
+        c.innerHTML = `<div class="icon">${g.svg}</div><div class="nm">${g.name}</div><div class="role-tag">${g.role}</div>`;
+        attachDrag(c);
+        return c;
+      }
+      function attachDrag(card) {
+        card.addEventListener('dragstart', e => { card.classList.add('dragging'); e.dataTransfer.setData('text/gearId', card.dataset.gearId); e.dataTransfer.effectAllowed = 'move'; });
+        card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      }
+      function setupTray() { tray.innerHTML = ''; shuffle(GEAR).forEach(g => tray.appendChild(buildCard(g))); }
+      function getGearById(id) { return GEAR.find(g => g.id === id); }
+      function updateStats() {
+        const filled = chain.querySelectorAll('.slot.filled').length;
+        statFilled.textContent = filled;
+        statAttempts.textContent = attempts;
+        checkBtn.disabled = filled !== 6;
+      }
+      function clearMarks() {
+        slots.forEach(s => s.classList.remove('correct', 'wrong'));
+        resultBar.classList.remove('success', 'fail');
+      }
+      function placeCardInSlot(card, slot) {
+        const existing = slot.querySelector('.gear-card');
+        if (existing) tray.appendChild(existing);
+        slot.appendChild(card);
+        slot.classList.add('filled');
+        clearMarks();
+        updateStats();
+      }
+      slots.forEach(slot => {
+        slot.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; slot.classList.add('over'); });
+        slot.addEventListener('dragleave', () => slot.classList.remove('over'));
+        slot.addEventListener('drop', e => {
+          e.preventDefault(); slot.classList.remove('over');
+          const id = e.dataTransfer.getData('text/gearId');
+          const card = document.querySelector(`.gear-card[data-gear-id="${id}"]`);
+          if (!card) return;
+          placeCardInSlot(card, slot);
+        });
+      });
+      tray.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+      tray.addEventListener('drop', e => {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/gearId');
+        const card = document.querySelector(`.gear-card[data-gear-id="${id}"]`);
+        if (!card) return;
+        const parent = card.parentElement;
+        if (parent.classList.contains('slot')) parent.classList.remove('filled');
+        tray.appendChild(card);
+        clearMarks();
+        updateStats();
+      });
+      checkBtn.addEventListener('click', () => {
+        attempts += 1;
+        clearMarks();
+        let correctCount = 0;
+        slots.forEach((s, i) => {
+          const card = s.querySelector('.gear-card');
+          if (!card) return;
+          const g = getGearById(card.dataset.gearId);
+          if (g.correctPosition === i) { s.classList.add('correct'); correctCount += 1; }
+          else s.classList.add('wrong');
+        });
+        statCorrect.textContent = correctCount;
+        statAttempts.textContent = attempts;
+        if (correctCount === 6) {
+          resultBar.classList.remove('fail'); resultBar.classList.add('success');
+          resultMsg.innerHTML = `Signal chain complete. <em>Now play the naat through it.</em>`;
+          checkBtn.style.display = 'none';
+          playBtn.style.display = 'inline-block';
+          playBtn.disabled = false;
+        } else {
+          resultBar.classList.remove('success'); resultBar.classList.add('fail');
+          resultMsg.innerHTML = `${correctCount} of 6 in the right place. <em>The wrong slots are highlighted. Try again.</em>`;
+        }
+      });
+      resetBtn.addEventListener('click', () => {
+        slots.forEach(s => {
+          const card = s.querySelector('.gear-card');
+          if (card) tray.appendChild(card);
+          s.classList.remove('filled', 'correct', 'wrong');
+        });
+        attempts = 0;
+        resultMsg.innerHTML = 'Fill all six slots, then check your chain.';
+        checkBtn.style.display = 'inline-block';
+        checkBtn.disabled = true;
+        playBtn.style.display = 'none';
+        playBtn.disabled = true;
+        clearMarks();
+        updateStats();
+      });
+      let gAudioReady = false;
+      let gSynth, gEq, gComp, gReverb, gMasterGain;
+      async function setupGameAudio() {
+        if (gAudioReady) return;
+        await Tone.start();
+        gMasterGain = new Tone.Gain(0.7).toDestination();
+        gReverb = new Tone.Reverb({ decay: 3.5, wet: 0.5 }).connect(gMasterGain);
+        await gReverb.generate();
+        gComp = new Tone.Compressor({ threshold: -18, ratio: 4, attack: 0.01, release: 0.2 }).connect(gReverb);
+        gEq = new Tone.EQ3({ low: -6, mid: 2, high: 4 }).connect(gComp);
+        gSynth = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.15, decay: 0.2, sustain: 0.7, release: 1.2 } }).connect(gEq);
+        gAudioReady = true;
+      }
+      async function playNaat() {
+        await setupGameAudio();
+        const notes = ['E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'B4', 'G4', 'A4', 'G4'];
+        const durations = ['4n', '8n', '4n', '4n', '8n', '4n', '4n', '4n', '8n', '2n'];
+        const now = Tone.now();
+        let t = 0;
+        notes.forEach((n, i) => {
+          gSynth.triggerAttackRelease(n, durations[i], now + t);
+          t += (durations[i] === '4n' ? 0.5 : durations[i] === '8n' ? 0.25 : 1.0);
+        });
+      }
+      playBtn.addEventListener('click', async () => {
+        playBtn.disabled = true;
+        playBtn.textContent = '▶ Playing...';
+        try { await playNaat(); } catch (err) { console.error(err); }
+        setTimeout(() => { playBtn.disabled = false; playBtn.textContent = '▶ Play again'; }, 5500);
+      });
+      setupTray();
+      updateStats();
     })();
   </script>
 </body>
