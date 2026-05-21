@@ -135,12 +135,13 @@
     .desk-h { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 80, "SOFT" 40, "wght" 500; font-size: clamp(24px, 2.4vw, 32px); color: var(--gold-light); margin-bottom: 26px; font-style: italic; letter-spacing: -0.02em; }
     .desk-h .desk-mark { color: var(--led); font-family: 'JetBrains Mono', monospace; font-style: normal; font-size: 0.55em; margin-right: 10px; letter-spacing: 0.1em; }
     .desk-list { list-style: none; display: grid; gap: 0; }
-    .desk-list li { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 22, "SOFT" 30; font-size: 15.5px; line-height: 1.5; color: var(--ink); display: grid; grid-template-columns: 130px 1fr; gap: 18px; padding: 14px 0; border-bottom: 1px dotted var(--rule-strong); }
+    .desk-list li { display: grid; grid-template-columns: 124px 1fr; gap: 22px; align-items: baseline; padding: 15px 0; border-bottom: 1px dotted var(--rule-strong); }
     .desk-list li:last-child { border-bottom: none; }
-    @media (max-width: 600px) { .desk-list li { grid-template-columns: 1fr; gap: 4px; } }
-    .desk-list em { color: var(--gold-light); font-style: italic; }
-    .desk-list a { color: var(--cream); }
-    .desk-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--saffron); padding-top: 4px; }
+    @media (max-width: 600px) { .desk-list li { grid-template-columns: 1fr; gap: 6px; } }
+    .desk-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--saffron); white-space: nowrap; }
+    .desk-body { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 22, "SOFT" 30; font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+    .desk-body em { color: var(--gold-light); font-style: italic; }
+    .desk-body a { color: var(--cream); }
     .desk-list li:nth-child(2n) .desk-tag { color: var(--gold-light); }
     .desk-list li:nth-child(3n) .desk-tag { color: var(--magenta); }
     .desk-list li:nth-child(4n) .desk-tag { color: var(--emerald-bright); }
@@ -426,12 +427,12 @@
         <div class="desk">
           <h3 class="desk-h"><span class="desk-mark">//</span> Where the work stands</h3>
           <ul class="desk-list">
-            <li><span class="desk-tag">published</span> Three peer-reviewed pieces on digital devotional media in Pakistan, in <em>Media, Culture and Society</em>, the <em>Journal of Religion, Media and Digital Culture</em>, and a field essay in <em>HELIOTROPE</em>. See the Writing tab.</li>
-            <li><span class="desk-tag">in press</span> An article in <em>Digital Humanities Quarterly</em>, plus two book chapters with Routledge and Bloomsbury.</li>
-            <li><span class="desk-tag">forthcoming</span> An article in <em>Mobile Media and Communication</em>, due late 2026.</li>
-            <li><span class="desk-tag">under review</span> A further journal article, currently out for peer review.</li>
-            <li><span class="desk-tag">in progress</span> A book manuscript drawn from the dissertation, and a co-edited volume on digital religion.</li>
-            <li><span class="desk-tag">teaching</span> Reimagining Global Copyright at the iSchool, plus TA work across more than a dozen UTM ICCIT courses.</li>
+            <li><span class="desk-tag">published</span><span class="desk-body">Three peer-reviewed pieces on digital devotional media in Pakistan, in <em>Media, Culture and Society</em>, the <em>Journal of Religion, Media and Digital Culture</em>, and a field essay in <em>HELIOTROPE</em>. See the Writing tab.</span></li>
+            <li><span class="desk-tag">in press</span><span class="desk-body">An article in <em>Digital Humanities Quarterly</em>, plus two book chapters with Routledge and Bloomsbury.</span></li>
+            <li><span class="desk-tag">forthcoming</span><span class="desk-body">An article in <em>Mobile Media and Communication</em>, due late 2026.</span></li>
+            <li><span class="desk-tag">under review</span><span class="desk-body">A further journal article, currently out for peer review.</span></li>
+            <li><span class="desk-tag">in progress</span><span class="desk-body">A book manuscript drawn from the dissertation, and a co-edited volume on digital religion.</span></li>
+            <li><span class="desk-tag">teaching</span><span class="desk-body">Reimagining Global Copyright at the iSchool, plus TA work across more than a dozen UTM ICCIT courses.</span></li>
           </ul>
         </div>
       </section>
@@ -773,7 +774,6 @@
       <div class="foot-big">Send a <span class="accent">message.</span> <a href="mailto:h.asif@mail.utoronto.ca">h.asif@mail.utoronto.ca</a></div>
       <div class="foot-meta">
         <span>MAY 2026 · V.2026.05</span>
-        <span>STATIC HTML · NO ANALYTICS · NO TRACKING</span>
         <span><a href="#cv" data-jump="cv">CV ↗</a></span>
       </div>
     </div>
