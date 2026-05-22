@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#0a4d2e" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
   <style>
     :root {
@@ -338,6 +338,131 @@
     .cv-plain .item .v { font-size: 13px; color: var(--ink); line-height: 1.55; }
     .cv-note { font-size: 11px; color: var(--ink-dim); font-style: italic; margin-top: 14px; }
 
+    /* ===== TECHNO-SPIRITUAL ACCENTS ===== */
+    .hero::after {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><g fill='none' stroke='%2339ff14' stroke-width='0.6' opacity='0.10'><path d='M0 44 H60 V14 H120 V70 H180'/><path d='M0 120 H34 V170'/><path d='M80 180 V130 H134 V96 H180'/><path d='M14 0 V30 H44'/></g><g fill='%2339ff14' opacity='0.16'><circle cx='60' cy='14' r='2.4'/><circle cx='120' cy='70' r='2.4'/><circle cx='34' cy='120' r='2.4'/><circle cx='134' cy='96' r='2.4'/><circle cx='44' cy='30' r='2.4'/></g></svg>");
+      background-size: 180px 180px;
+    }
+    .hero-inner, .doc-tag, h1.name, .role, .hero-links { position: relative; z-index: 3; }
+
+    /* faint circuit weave on section backgrounds for the games tab */
+    .circuit-bg { position: relative; }
+    .circuit-bg::before {
+      content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><g fill='none' stroke='%23d4a040' stroke-width='0.5' opacity='0.07'><path d='M10 0 V40 H50 V90 H10'/><path d='M70 0 V30 H110 V70'/><path d='M140 110 H90 V140'/><circle cx='50' cy='40' r='2' fill='%23d4a040'/><circle cx='110' cy='30' r='2' fill='%23d4a040'/><circle cx='90' cy='110' r='2' fill='%23d4a040'/></g></svg>");
+      background-size: 140px 140px;
+    }
+    .circuit-bg > * { position: relative; z-index: 1; }
+
+    /* ===== GAMES sub-switcher ===== */
+    .game-switch { display: flex; gap: 0; margin-bottom: 30px; border: 1px solid var(--rule-strong); width: fit-content; max-width: 100%; flex-wrap: wrap; }
+    .game-switch button { font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5; letter-spacing: 0.02em; padding: 15px 18px; background: var(--bg-soft); color: var(--ink-dim); border: none; border-right: 1px solid var(--rule-strong); cursor: pointer; transition: all .15s ease; text-transform: uppercase; }
+    .game-switch button:last-child { border-right: none; }
+    .game-switch button:hover { color: var(--gold-light); }
+    .game-switch button.active { background: var(--gold); color: var(--bg); }
+    .game-sub { display: none; }
+    .game-sub.active { display: block; animation: fadeIn .35s ease forwards; }
+
+    /* ===== PIRATE ROUTE (8-bit) ===== */
+    .pr-wrap { background: var(--bg-soft); border: 1px solid var(--rule-strong); padding: 20px; }
+    .pr-hud { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.6; color: var(--cream); }
+    .pr-hud .group { display: flex; gap: 18px; flex-wrap: wrap; }
+    .pr-hud .lab { color: var(--saffron); }
+    .pr-hud .val { color: var(--led); }
+    .pr-hud .val.gold { color: var(--gold-light); }
+    .pr-hud .val.magenta { color: var(--magenta); }
+    .pr-stage { position: relative; width: 100%; max-width: 600px; margin: 0 auto; background: #07120c; border: 2px solid var(--gold); box-shadow: 0 0 24px rgba(57,255,20,0.08); }
+    .pr-stage canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+    .pr-stage .scanlines { position: absolute; inset: 0; pointer-events: none; z-index: 3; background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.22) 2px, rgba(0,0,0,0.22) 4px); }
+    .pr-overlay { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; background: rgba(7,18,12,0.88); padding: 28px; }
+    .pr-overlay.hidden { display: none; }
+    .pr-overlay h4 { font-family: 'Press Start 2P', monospace; font-size: clamp(13px, 2.4vw, 22px); color: var(--gold-light); line-height: 1.6; }
+    .pr-overlay p { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cream-warm); max-width: 44ch; line-height: 1.7; }
+    .pr-btn { font-family: 'Press Start 2P', monospace; font-size: 11px; background: var(--gold); color: var(--bg); border: none; padding: 14px 18px; cursor: pointer; transition: all .15s ease; text-transform: uppercase; }
+    .pr-btn:hover { background: var(--gold-light); }
+    .pr-controls { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-top: 16px; flex-wrap: wrap; }
+    .pr-dpad { display: grid; grid-template-columns: repeat(3, 46px); grid-template-rows: repeat(3, 46px); gap: 5px; }
+    .pr-dpad button { background: var(--bg); border: 1px solid var(--rule-strong); color: var(--gold-light); font-size: 15px; cursor: pointer; transition: all .12s ease; }
+    .pr-dpad button:hover, .pr-dpad button:active { border-color: var(--gold); background: var(--gold-deep); color: var(--cream); }
+    .pr-dpad .up { grid-column: 2; grid-row: 1; }
+    .pr-dpad .left { grid-column: 1; grid-row: 2; }
+    .pr-dpad .right { grid-column: 3; grid-row: 2; }
+    .pr-dpad .down { grid-column: 2; grid-row: 3; }
+    .pr-dpad .mid { grid-column: 2; grid-row: 2; border: none; background: none; }
+    .pr-hint { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); line-height: 1.6; max-width: 42ch; font-style: italic; }
+
+    /* ===================================================================
+       MEHFIL STREET  ·  loud landing aesthetic (hero + now + games only)
+       grounded in naat-mehfil street decoration: jhalar lights, flag
+       bunting, flex naat posters, tangled wires, loudspeaker horns,
+       xerox grain, bootleg glitch. Sacred Urdu stays clean, never glitched.
+    =================================================================== */
+    :root { --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='gr'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23gr)'/%3E%3C/svg%3E"); }
+
+    /* xerox grain + loud-panel scoping */
+    .grain { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0.4; mix-blend-mode: overlay; background-image: var(--grain); }
+    .panel.loud { position: relative; }
+    .panel.loud::after { content: ""; position: absolute; inset: -10px 0 0; z-index: 0; pointer-events: none; opacity: 0.3; mix-blend-mode: overlay; background-image: var(--grain); }
+    .panel.loud > * { position: relative; z-index: 1; }
+
+    /* jhalar / string lights */
+    .mehfil-lights { position: relative; display: flex; justify-content: space-between; align-items: flex-start; padding: 0 14px; height: 24px; }
+    .mehfil-lights::before { content: ""; position: absolute; top: 2px; left: 0; right: 0; height: 0; border-top: 2px dotted var(--gold-deep); opacity: 0.7; }
+    .mehfil-lights .bulb { position: relative; width: 8px; height: 11px; border-radius: 50% 50% 55% 55%; margin-top: 6px; animation: tw 2.6s infinite ease-in-out; }
+    .mehfil-lights .bulb::before { content: ""; position: absolute; top: -5px; left: 50%; width: 1px; height: 5px; background: var(--gold-deep); transform: translateX(-50%); }
+    .mehfil-lights .bulb:nth-child(5n+1) { background: var(--saffron); box-shadow: 0 0 9px var(--saffron); }
+    .mehfil-lights .bulb:nth-child(5n+2) { background: var(--led); box-shadow: 0 0 9px rgba(57,255,20,0.8); }
+    .mehfil-lights .bulb:nth-child(5n+3) { background: var(--gold-light); box-shadow: 0 0 9px var(--gold); }
+    .mehfil-lights .bulb:nth-child(5n+4) { background: var(--magenta); box-shadow: 0 0 9px var(--magenta); }
+    .mehfil-lights .bulb:nth-child(5n+5) { background: var(--cream); box-shadow: 0 0 9px rgba(237,229,211,0.7); }
+    @keyframes tw { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    /* flag bunting / jhandiyan */
+    .bunting { position: relative; display: flex; justify-content: center; flex-wrap: nowrap; overflow: hidden; padding-top: 1px; }
+    .bunting::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--gold-deep); opacity: 0.6; }
+    .bunting i { flex: 0 0 auto; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 19px solid var(--emerald-bright); filter: drop-shadow(0 2px 0 rgba(0,0,0,0.25)); }
+    .bunting i:nth-child(3n+2) { border-top-color: var(--cream); }
+    .bunting i:nth-child(3n+3) { border-top-color: var(--gold); }
+
+    /* tangled overhead wires (pirate-modernity infrastructure) */
+    .hero-wires { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.55; }
+
+    /* loudspeaker horn on a pole */
+    .horn { position: absolute; z-index: 1; pointer-events: none; width: 92px; height: auto; opacity: 0.85; }
+    .horn-r { top: 18px; right: 26px; transform: rotate(8deg); }
+    @media (max-width: 920px) { .horn-r { width: 64px; right: 14px; top: 40px; } }
+
+    /* glitch on the ENGLISH name only (never on sacred text) */
+    h1.name.glitch { position: relative; }
+    h1.name.glitch::before, h1.name.glitch::after { content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%; z-index: -1; pointer-events: none; }
+    h1.name.glitch::before { color: var(--magenta); animation: glx 5s infinite steps(2, end); }
+    h1.name.glitch::after { color: var(--emerald-bright); animation: glx2 5s infinite steps(2, end); }
+    @keyframes glx { 0%, 90%, 100% { transform: translate(-2px, 0); } 93% { transform: translate(-5px, 1px); } 96% { transform: translate(2px, -1px); } }
+    @keyframes glx2 { 0%, 90%, 100% { transform: translate(2px, 0); } 93% { transform: translate(5px, -1px); } 96% { transform: translate(-2px, 1px); } }
+
+    /* naat poster (flex banner pinned to the wall) */
+    .hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0; }
+    @media (max-width: 920px) { .hero-right { align-items: flex-start; } }
+    .naat-poster { position: relative; width: 100%; max-width: 250px; margin: 0 0 -14px 0; transform: rotate(-2.5deg); z-index: 4; }
+    .np-frame { position: relative; background: linear-gradient(160deg, var(--emerald) 0%, var(--emerald-deep) 100%); border: 2px solid var(--gold); padding: 16px 14px 14px; text-align: center; overflow: hidden; box-shadow: 4px 6px 0 rgba(0,0,0,0.45); }
+    .np-frame::before { content: ""; position: absolute; inset: 5px; border: 1px solid var(--gold-deep); opacity: 0.7; pointer-events: none; }
+    .np-frame::after { content: ""; position: absolute; inset: 0; background-image: var(--grain); opacity: 0.22; mix-blend-mode: overlay; pointer-events: none; }
+    .np-dome { display: block; width: 46px; height: auto; margin: 0 auto 6px; position: relative; }
+    .np-top { font-family: 'Noto Nastaliq Urdu', serif; font-size: 13px; color: var(--gold-light); line-height: 2.1; margin-bottom: 2px; position: relative; }
+    .np-big { font-family: 'Noto Nastaliq Urdu', serif; font-size: 21px; color: var(--cream-warm); line-height: 2.3; position: relative; }
+    .np-rule { width: 60%; height: 1px; background: var(--gold-deep); margin: 8px auto 6px; opacity: 0.6; }
+    .np-sub { font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.22em; color: var(--gold-light); text-transform: uppercase; position: relative; }
+    .np-tape { position: absolute; width: 48px; height: 17px; background: rgba(232,196,102,0.22); border: 1px solid rgba(212,160,64,0.45); z-index: 5; }
+    .np-tape-1 { top: -8px; left: 22px; transform: rotate(-9deg); }
+    .np-tape-2 { bottom: -8px; right: 24px; transform: rotate(7deg); }
+
+    /* cassette graphic (bootleg media object) */
+    .cassette { display: inline-block; width: 100%; max-width: 200px; height: auto; }
+
+    /* doc-tag restyled as a green permit sticker */
+    .hero .doc-tag { background: var(--emerald-deep); border-color: var(--gold); color: var(--gold-light); }
+
     footer { background: linear-gradient(180deg, var(--bg) 0%, var(--emerald-deep) 100%); padding: 56px 0; border-top: 1px solid var(--gold); position: relative; }
     footer::before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d4a040' stroke-width='0.5' opacity='0.08'><path d='M40 0 L48 16 L66 16 L52 28 L58 46 L40 36 L22 46 L28 28 L14 16 L32 16 Z'/></g></svg>"); background-size: 80px 80px; pointer-events: none; }
     .foot-inner { position: relative; z-index: 2; }
@@ -358,20 +483,54 @@
       <ul>
         <li><a href="#cv" data-jump="cv">cv</a></li>
         <li><a href="#lab" data-jump="lab">lab</a></li>
-        <li><a href="#game" data-jump="game">game</a></li>
+        <li><a href="#games" data-jump="games">games</a></li>
       </ul>
     </div>
   </nav>
 
   <header class="hero">
     <div class="hero-pattern" aria-hidden="true"></div>
+
+    <svg class="hero-wires" viewBox="0 0 1200 420" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="none" stroke="#d4a040" stroke-width="1.4" opacity="0.5">
+        <path d="M0 70 C 220 28, 360 130, 600 78 S 980 26, 1200 96"/>
+        <path d="M0 150 C 260 196, 520 96, 760 168 S 1080 214, 1200 150"/>
+        <path d="M0 250 C 240 220, 430 320, 700 256 S 1020 300, 1200 240"/>
+      </g>
+      <g fill="none" stroke="#1b7d4a" stroke-width="1.2" opacity="0.45">
+        <path d="M0 110 C 180 150, 420 60, 640 120 S 1000 170, 1200 120"/>
+        <path d="M0 320 C 300 360, 560 280, 820 340 S 1100 300, 1200 350"/>
+      </g>
+      <g fill="#d4a040" opacity="0.7">
+        <circle cx="600" cy="78" r="3"/><circle cx="760" cy="168" r="3"/><circle cx="700" cy="256" r="3"/><circle cx="640" cy="120" r="2.5"/>
+      </g>
+      <g fill="#e8c466" opacity="0.5">
+        <rect x="355" y="120" width="14" height="7" transform="rotate(18 362 123)"/>
+        <rect x="815" y="332" width="14" height="7" transform="rotate(-12 822 335)"/>
+      </g>
+    </svg>
+
+    <svg class="horn horn-r" viewBox="0 0 90 90" aria-hidden="true">
+      <g fill="none" stroke="#e8c466" stroke-width="2.2">
+        <line x1="14" y1="6" x2="30" y2="34"/>
+        <circle cx="34" cy="40" r="10"/>
+        <path d="M42 33 L82 16 L82 64 L42 47 Z"/>
+      </g>
+      <circle cx="34" cy="40" r="3.5" fill="#e8c466"/>
+    </svg>
+
+    <div class="mehfil-lights" data-n="30" aria-hidden="true" style="position:relative;z-index:3;"></div>
+    <div class="bunting" data-n="34" aria-hidden="true" style="position:relative;z-index:3;"></div>
+
+    <div class="grain" aria-hidden="true"></div>
+
     <div class="wrap hero-inner">
-      <div>
+      <div class="hero-left">
         <div class="doc-tag">
           <span class="dot"></span>
-          <span>HASSANASIF.NET · LIVE · 2026.05</span>
+          <span>HALL ROAD · LIVE FEED · 2026</span>
         </div>
-        <h1 class="name">Hassan <span class="accent">Asif</span><span class="dot">.</span></h1>
+        <h1 class="name glitch" data-text="Hassan Asif.">Hassan <span class="accent">Asif</span><span class="dot">.</span></h1>
         <p class="role">Scholar of <em>digital religion and media</em>. I study what happens when digital technology meets religious life: how devotional sound, sermons, and sacred images are made, edited, shared, and remixed across platforms, and how those practices reshape doctrine, authority, and aesthetic form.</p>
         <div class="hero-links">
           <a href="mailto:h.asif@mail.utoronto.ca">Email</a>
@@ -388,12 +547,38 @@
         </div>
       </div>
 
-      <div class="portrait-frame" id="portrait" style="--src:url('hassan_glitch_effects.gif');">
-        <div class="ui-top">HASSAN.GIF</div>
-        <div class="ui-rec">REC</div>
-        <div class="placeholder">DROP GIF AT<br/>hassan_glitch_effects.gif</div>
-        <div class="layer"></div>
-        <div class="scan"></div>
+      <div class="hero-right">
+        <div class="naat-poster">
+          <span class="np-tape np-tape-1"></span>
+          <span class="np-tape np-tape-2"></span>
+          <div class="np-frame">
+            <svg class="np-dome" viewBox="0 0 60 60" aria-hidden="true">
+              <g fill="none" stroke="#e8c466" stroke-width="1.6">
+                <path d="M30 4 a4 4 0 1 0 3 7"/>
+                <line x1="30" y1="12" x2="30" y2="17"/>
+                <path d="M18 40 C 16 26, 24 18, 30 17 C 36 18, 44 26, 42 40 Z"/>
+                <rect x="16" y="40" width="28" height="14"/>
+                <line x1="8" y1="54" x2="52" y2="54"/>
+                <line x1="11" y1="30" x2="11" y2="54"/>
+                <line x1="49" y1="30" x2="49" y2="54"/>
+                <path d="M9 30 a2 2 0 0 1 4 0"/>
+                <path d="M47 30 a2 2 0 0 1 4 0"/>
+              </g>
+            </svg>
+            <div class="np-top" dir="rtl" lang="ur">محفلِ نعت</div>
+            <div class="np-big" dir="rtl" lang="ur">یا نبی سلام علیک</div>
+            <div class="np-rule"></div>
+            <div class="np-sub">LAHORE · KARACHI · ON CASSETTE</div>
+          </div>
+        </div>
+
+        <div class="portrait-frame" id="portrait" style="--src:url('hassan_glitch_effects.gif');">
+          <div class="ui-top">HASSAN.GIF</div>
+          <div class="ui-rec">REC</div>
+          <div class="placeholder">DROP GIF AT<br/>hassan_glitch_effects.gif</div>
+          <div class="layer"></div>
+          <div class="scan"></div>
+        </div>
       </div>
     </div>
   </header>
@@ -407,7 +592,7 @@
       <button class="tab-btn" data-tab-btn="press"><span class="ix">05</span>press</button>
       <button class="tab-btn" data-tab-btn="cv"><span class="ix">06</span>cv</button>
       <button class="tab-btn special" data-tab-btn="lab"><span class="ix">07</span>lab</button>
-      <button class="tab-btn special" data-tab-btn="game"><span class="ix">08</span>game</button>
+      <button class="tab-btn special" data-tab-btn="games"><span class="ix">08</span>games</button>
       <button class="tab-btn" data-tab-btn="elsewhere"><span class="ix">09</span>elsewhere</button>
     </div>
   </nav>
@@ -416,13 +601,14 @@
     <div class="wrap">
 
       <!-- NOW: idea-driven, concept blocks + on the desk -->
-      <section class="panel active" data-tab="now">
+      <section class="panel active loud" data-tab="now">
+        <div class="mehfil-lights" data-n="26" aria-hidden="true" style="margin-bottom:30px;"></div>
         <div class="panel-head">
           <h2 class="panel-title"><em>Now.</em></h2>
-          <div class="panel-note">what I'm thinking about /<br/><span class="accent">may 2026</span></div>
+          <div class="panel-note">where things stand /<br/><span class="accent">may 2026</span></div>
         </div>
 
-        <p class="lead">My work follows a signal chain. From a singer's breath at the microphone, through cables, knobs, and code, to the speaker that fills a room. The chain is Pakistan's <em>devotional</em> media: <em>naat</em> in praise of the Prophet, Islamic sermons, sufi music, and the remixers, pirates, archivists, and engineers who keep all of it moving. Fieldwork to date has centred on South Asia and its global diasporas, with sustained attention to platforms, archives, and informal media economies.</p>
+        <p class="lead">A snapshot of where the work stands right now. For the ideas themselves, read the <a href="#cv" data-jump="cv">published pieces</a>.</p>
 
         <div class="desk">
           <h3 class="desk-h"><span class="desk-mark">//</span> Where the work stands</h3>
@@ -709,41 +895,87 @@
         </div>
       </section>
 
-      <!-- GAME -->
-      <section class="panel" data-tab="game">
+      <!-- GAMES -->
+      <section class="panel loud" data-tab="games">
+        <div class="mehfil-lights" data-n="26" aria-hidden="true" style="margin-bottom:30px;"></div>
         <div class="panel-head">
-          <h2 class="panel-title">Mehfil <em>Rig.</em></h2>
-          <div class="panel-note">signal chain puzzle /<br/><span class="accent">drag and drop</span></div>
+          <h2 class="panel-title"><em>Games.</em></h2>
+          <div class="panel-note">two playable toys /<br/><span class="accent">the studio + the street</span></div>
         </div>
-        <p class="panel-intro">Drag each piece of audio gear into the slot where you think it belongs. The chain reads left to right. <strong>When all six slots are filled, press check to see if you got it right.</strong> If the chain is correct, you can play a synthesized <em>naat</em> through it.</p>
 
-        <div class="game-head">
-          <div class="stats">
-            <div class="stat"><span class="v" id="statFilled">0</span>of 6 placed</div>
-            <div class="stat"><span class="v green" id="statCorrect">0</span>in correct spot</div>
-            <div class="stat"><span class="v magenta" id="statAttempts">0</span>checks used</div>
+        <div class="game-switch">
+          <button class="active" data-game="mehfil">Mehfil Rig</button>
+          <button data-game="pirate">Pirate Route</button>
+        </div>
+
+        <!-- MEHFIL RIG -->
+        <div class="game-sub active" data-game-sub="mehfil">
+          <p class="panel-intro">Drag each piece of audio gear into the slot where you think it belongs. The chain reads left to right. <strong>When all six slots are filled, press check to see if you got it right.</strong> If the chain is correct, you can play a synthesized <em>naat</em> through it.</p>
+
+          <div class="game-head">
+            <div class="stats">
+              <div class="stat"><span class="v" id="statFilled">0</span>of 6 placed</div>
+              <div class="stat"><span class="v green" id="statCorrect">0</span>in correct spot</div>
+              <div class="stat"><span class="v magenta" id="statAttempts">0</span>checks used</div>
+            </div>
+          </div>
+
+          <div class="chain-label"><span>// CHAIN</span> <span class="line"></span> <span>POS 01 → 06</span></div>
+          <div class="chain" id="chain">
+            <div class="slot" data-slot="0"><div class="pos">01</div><div class="pos-label">Where the voice<br/>starts</div></div>
+            <div class="slot" data-slot="1"><div class="pos">02</div><div class="pos-label">Boost the<br/>weak signal</div></div>
+            <div class="slot" data-slot="2"><div class="pos">03</div><div class="pos-label">Shape the<br/>tone</div></div>
+            <div class="slot" data-slot="3"><div class="pos">04</div><div class="pos-label">Even out<br/>the volume</div></div>
+            <div class="slot" data-slot="4"><div class="pos">05</div><div class="pos-label">Add room<br/>and weight</div></div>
+            <div class="slot" data-slot="5"><div class="pos">06</div><div class="pos-label">Where it<br/>finally lands</div></div>
+          </div>
+
+          <div class="tray-label"><span>// GEAR TRAY</span> <span class="line"></span> <span>DRAG ANY PIECE INTO A SLOT</span></div>
+          <div class="tray" id="tray"></div>
+
+          <div class="result-bar" id="resultBar">
+            <div class="result-msg" id="resultMsg">Fill all six slots, then check your chain.</div>
+            <div class="controls">
+              <button class="t-btn" id="gameResetBtn">Reset</button>
+              <button class="t-btn play" id="checkBtn" disabled>Check chain ✓</button>
+              <button class="t-btn play" id="gamePlayBtn" disabled style="display:none;">▶ Play through chain</button>
+            </div>
           </div>
         </div>
 
-        <div class="chain-label"><span>// CHAIN</span> <span class="line"></span> <span>POS 01 → 06</span></div>
-        <div class="chain" id="chain">
-          <div class="slot" data-slot="0"><div class="pos">01</div><div class="pos-label">Where the voice<br/>starts</div></div>
-          <div class="slot" data-slot="1"><div class="pos">02</div><div class="pos-label">Boost the<br/>weak signal</div></div>
-          <div class="slot" data-slot="2"><div class="pos">03</div><div class="pos-label">Shape the<br/>tone</div></div>
-          <div class="slot" data-slot="3"><div class="pos">04</div><div class="pos-label">Even out<br/>the volume</div></div>
-          <div class="slot" data-slot="4"><div class="pos">05</div><div class="pos-label">Add room<br/>and weight</div></div>
-          <div class="slot" data-slot="5"><div class="pos">06</div><div class="pos-label">Where it<br/>finally lands</div></div>
-        </div>
+        <!-- PIRATE ROUTE -->
+        <div class="game-sub" data-game-sub="pirate">
+          <p class="panel-intro">An <strong>8-bit delivery run</strong> through Lahore's informal media economy. You carry a bootleg reel; four customers are waiting, and the raid squads are not. <strong>Arrow keys or WASD to move</strong>, or use the pad. Deliver all four without getting caught.</p>
 
-        <div class="tray-label"><span>// GEAR TRAY</span> <span class="line"></span> <span>DRAG ANY PIECE INTO A SLOT</span></div>
-        <div class="tray" id="tray"></div>
+          <div class="pr-wrap">
+            <div class="pr-hud">
+              <div class="group">
+                <span><span class="lab">LIVES</span> <span class="val magenta" id="prLives">3</span></span>
+                <span><span class="lab">DROPPED</span> <span class="val gold" id="prDeliv">0/4</span></span>
+              </div>
+              <div class="group"><span class="lab">ROUTE</span> <span class="val">LAHORE</span></div>
+            </div>
 
-        <div class="result-bar" id="resultBar">
-          <div class="result-msg" id="resultMsg">Fill all six slots, then check your chain.</div>
-          <div class="controls">
-            <button class="t-btn" id="gameResetBtn">Reset</button>
-            <button class="t-btn play" id="checkBtn" disabled>Check chain ✓</button>
-            <button class="t-btn play" id="gamePlayBtn" disabled style="display:none;">▶ Play through chain</button>
+            <div class="pr-stage">
+              <canvas id="prCanvas" width="540" height="396"></canvas>
+              <div class="scanlines"></div>
+              <div class="pr-overlay" id="prOverlay">
+                <h4 id="prOvTitle">PIRATE ROUTE</h4>
+                <p id="prOvText">Deliver a bootleg reel to four customers across Lahore. Dodge the raid squads. Arrow keys or WASD to move, or use the pad below.</p>
+                <button class="pr-btn" id="prOvBtn">Start run</button>
+              </div>
+            </div>
+
+            <div class="pr-controls">
+              <div class="pr-dpad" id="prDpad">
+                <button class="up" data-dir="up" aria-label="up">▲</button>
+                <button class="left" data-dir="left" aria-label="left">◀</button>
+                <span class="mid"></span>
+                <button class="right" data-dir="right" aria-label="right">▶</button>
+                <button class="down" data-dir="down" aria-label="down">▼</button>
+              </div>
+              <div class="pr-hint">The squads chase when you get close. Lead them off, loop back, and drop the reel on a waiting customer.</div>
+            </div>
           </div>
         </div>
       </section>
@@ -787,6 +1019,11 @@
       panels.forEach(p => p.classList.toggle('active', p.dataset.tab === name));
       if (history.replaceState) history.replaceState(null, '', '#' + name);
       if (name !== 'lab' && window.__labStop) window.__labStop();
+      if (name !== 'games' && window.__pirateStop) window.__pirateStop();
+      if (name === 'games') {
+        const pSub = document.querySelector('.game-sub[data-game-sub="pirate"]');
+        if (pSub && pSub.classList.contains('active') && window.__pirateStart) window.__pirateStart();
+      }
     }
     tabs.forEach(t => t.addEventListener('click', () => activateTab(t.dataset.tabBtn)));
     document.querySelectorAll('a[data-jump]').forEach(a => {
@@ -1071,8 +1308,212 @@
         try { await playNaat(); } catch (err) { console.error(err); }
         setTimeout(() => { playBtn.disabled = false; playBtn.textContent = '▶ Play again'; }, 5500);
       });
-      setupTray();
-      updateStats();
+    // MEHFIL DECOR: populate jhalar lights + flag bunting
+    (function () {
+      document.querySelectorAll('.mehfil-lights').forEach(el => {
+        const n = el.dataset.n ? parseInt(el.dataset.n, 10) : 24;
+        for (let i = 0; i < n; i++) {
+          const b = document.createElement('span');
+          b.className = 'bulb';
+          b.style.animationDelay = ((i % 6) * 0.32).toFixed(2) + 's';
+          el.appendChild(b);
+        }
+      });
+      document.querySelectorAll('.bunting').forEach(el => {
+        const n = el.dataset.n ? parseInt(el.dataset.n, 10) : 22;
+        for (let i = 0; i < n; i++) el.appendChild(document.createElement('i'));
+      });
+    })();
+
+    // PIRATE ROUTE (8-bit delivery)
+    (function () {
+      const canvas = document.getElementById('prCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const TILE = 36, COLS = 15, ROWS = 11;
+      canvas.width = COLS * TILE;
+      canvas.height = ROWS * TILE;
+
+      const MAP = [
+        "###############",
+        "#.............#",
+        "#.##.##.##.##.#",
+        "#.............#",
+        "#.##.##.##.##.#",
+        "#.............#",
+        "#.##.##.##.##.#",
+        "#.............#",
+        "#.##.##.##.##.#",
+        "#.............#",
+        "###############"
+      ];
+      function walkable(c, r) { return r >= 0 && r < ROWS && c >= 0 && c < COLS && MAP[r][c] !== '#'; }
+
+      const START = { c: 1, r: 9 };
+      const CUSTOMERS = [ {c:1,r:1}, {c:13,r:1}, {c:13,r:9}, {c:7,r:5} ];
+      const POLICE_START = [ {c:7,r:1}, {c:1,r:7}, {c:13,r:7} ];
+      const SPEED = 3.4, POLICE_SPEED = 2.3;
+
+      let player, police, customers, lives, delivered, state, invuln;
+      let active = false, animId = null;
+
+      function center(t) { return { x: t.c*TILE + TILE/2, y: t.r*TILE + TILE/2 }; }
+      function mkEntity(t, speed) { const ctr = center(t); return { c:t.c, r:t.r, x:ctr.x, y:ctr.y, tc:t.c, tr:t.r, moving:false, speed }; }
+
+      function reset(full) {
+        player = mkEntity(START, SPEED);
+        police = POLICE_START.map(p => mkEntity(p, POLICE_SPEED));
+        if (full) { customers = CUSTOMERS.map(c => ({ ...c, done:false })); delivered = 0; lives = 3; }
+        invuln = 70;
+        updateHud();
+      }
+      function tryMove(ent, dc, dr) {
+        if (ent.moving) return;
+        const nc = ent.c + dc, nr = ent.r + dr;
+        if (walkable(nc, nr)) { ent.tc = nc; ent.tr = nr; ent.moving = true; }
+      }
+      function stepEntity(ent) {
+        if (!ent.moving) return;
+        const tgt = center({ c: ent.tc, r: ent.tr });
+        const dx = tgt.x - ent.x, dy = tgt.y - ent.y, dist = Math.hypot(dx, dy);
+        if (dist <= ent.speed) { ent.x = tgt.x; ent.y = tgt.y; ent.c = ent.tc; ent.r = ent.tr; ent.moving = false; }
+        else { ent.x += (dx/dist)*ent.speed; ent.y += (dy/dist)*ent.speed; }
+      }
+      function policeAI(p) {
+        if (p.moving) return;
+        const dirs = [[1,0],[-1,0],[0,1],[0,-1]].filter(([dc,dr]) => walkable(p.c+dc, p.r+dr));
+        if (!dirs.length) return;
+        const man = Math.abs(p.c - player.c) + Math.abs(p.r - player.r);
+        let choice;
+        if (man <= 6 && Math.random() < 0.72) {
+          dirs.sort((a,b) => {
+            const da = Math.abs(p.c+a[0]-player.c) + Math.abs(p.r+a[1]-player.r);
+            const db = Math.abs(p.c+b[0]-player.c) + Math.abs(p.r+b[1]-player.r);
+            return da - db;
+          });
+          choice = dirs[0];
+        } else { choice = dirs[Math.floor(Math.random()*dirs.length)]; }
+        tryMove(p, choice[0], choice[1]);
+      }
+
+      const keymap = { ArrowUp:[0,-1], ArrowDown:[0,1], ArrowLeft:[-1,0], ArrowRight:[1,0],
+        w:[0,-1], s:[0,1], a:[-1,0], d:[1,0], W:[0,-1], S:[0,1], A:[-1,0], D:[1,0] };
+      window.addEventListener('keydown', e => {
+        if (!active || state !== 'playing') return;
+        const mv = keymap[e.key];
+        if (mv) { e.preventDefault(); tryMove(player, mv[0], mv[1]); }
+      });
+      document.querySelectorAll('#prDpad button[data-dir]').forEach(b => {
+        b.addEventListener('click', () => {
+          if (state !== 'playing') return;
+          const mv = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] }[b.dataset.dir];
+          if (mv) tryMove(player, mv[0], mv[1]);
+        });
+      });
+
+      function checkDelivery() {
+        customers.forEach(c => {
+          if (!c.done && !player.moving && player.c === c.c && player.r === c.r) {
+            c.done = true; delivered++; updateHud();
+            if (delivered === customers.length) { state = 'won'; showOverlay('DELIVERED', 'Every reel dropped, nobody caught you. The street remembers a good runner.', 'Run it again'); }
+          }
+        });
+      }
+      function checkCaught() {
+        if (invuln > 0) return;
+        for (const p of police) {
+          if (Math.hypot(p.x - player.x, p.y - player.y) < TILE*0.6) {
+            lives--; updateHud();
+            if (lives <= 0) { state = 'lost'; showOverlay('BUSTED', 'The raid squad got you and the reels are confiscated. Lie low and try again.', 'Try again'); }
+            else { reset(false); }
+            return;
+          }
+        }
+      }
+
+      function draw() {
+        ctx.fillStyle = '#07120c'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++) {
+          const x=c*TILE, y=r*TILE;
+          if (MAP[r][c]==='#') {
+            ctx.fillStyle = '#0a4d2e'; ctx.fillRect(x+1,y+1,TILE-2,TILE-2);
+            ctx.strokeStyle = 'rgba(212,160,64,0.22)'; ctx.lineWidth = 1; ctx.strokeRect(x+2.5,y+2.5,TILE-5,TILE-5);
+          } else {
+            ctx.fillStyle = '#0f1a12'; ctx.fillRect(x,y,TILE,TILE);
+            ctx.fillStyle = 'rgba(212,160,64,0.06)'; ctx.fillRect(x+TILE/2-1,y+TILE/2-1,2,2);
+          }
+        }
+        const t = Date.now();
+        customers.forEach(cu => {
+          const ctr = center(cu);
+          if (cu.done) {
+            ctx.fillStyle = 'rgba(57,255,20,0.22)'; ctx.fillRect(ctr.x-9, ctr.y-9, 18, 18);
+            ctx.strokeStyle = '#39ff14'; ctx.lineWidth = 2; ctx.strokeRect(ctr.x-9, ctr.y-9, 18, 18);
+          } else {
+            const pulse = 6 + Math.sin(t/200)*2;
+            ctx.fillStyle = '#d4a040'; ctx.fillRect(ctr.x-10, ctr.y-7, 20, 14);
+            ctx.fillStyle = '#0d0c0a'; ctx.fillRect(ctr.x-6, ctr.y-3, 4, 4); ctx.fillRect(ctr.x+2, ctr.y-3, 4, 4);
+            ctx.strokeStyle = 'rgba(212,160,64,' + (0.4 + Math.sin(t/200)*0.3) + ')'; ctx.lineWidth = 2;
+            ctx.strokeRect(ctr.x-pulse-8, ctr.y-pulse-5, (pulse+8)*2, (pulse+5)*2);
+          }
+        });
+        police.forEach(p => {
+          ctx.fillStyle = '#d63384'; ctx.fillRect(p.x-9, p.y-11, 18, 22);
+          ctx.fillStyle = '#0d0c0a'; ctx.fillRect(p.x-9, p.y-11, 18, 5);
+          if (Math.floor(t/250)%2===0) { ctx.fillStyle = '#39ff14'; ctx.fillRect(p.x-3, p.y-15, 6, 4); }
+        });
+        const flicker = invuln > 0 && Math.floor(t/120)%2===0;
+        ctx.fillStyle = flicker ? '#8a857a' : '#ede5d3'; ctx.fillRect(player.x-9, player.y-11, 18, 22);
+        ctx.fillStyle = '#ff8c42'; ctx.fillRect(player.x-9, player.y-11, 18, 6);
+        ctx.fillStyle = '#0d0c0a'; ctx.fillRect(player.x-6, player.y+1, 12, 8);
+        ctx.fillStyle = '#d4a040'; ctx.fillRect(player.x-4, player.y+3, 3, 3); ctx.fillRect(player.x+1, player.y+3, 3, 3);
+      }
+
+      function updateHud() {
+        const lv = document.getElementById('prLives'), dv = document.getElementById('prDeliv');
+        if (lv) lv.textContent = Math.max(0, lives);
+        if (dv) dv.textContent = delivered + '/' + (customers ? customers.length : 4);
+      }
+
+      function loop() {
+        if (!active) return;
+        if (state === 'playing') {
+          stepEntity(player);
+          police.forEach(p => { policeAI(p); stepEntity(p); });
+          if (invuln > 0) invuln--;
+          checkDelivery();
+          checkCaught();
+        }
+        draw();
+        animId = requestAnimationFrame(loop);
+      }
+
+      const overlay = document.getElementById('prOverlay');
+      const ovTitle = document.getElementById('prOvTitle');
+      const ovText = document.getElementById('prOvText');
+      const ovBtn = document.getElementById('prOvBtn');
+      function showOverlay(title, text, btn) { ovTitle.textContent = title; ovText.textContent = text; ovBtn.textContent = btn; overlay.classList.remove('hidden'); }
+      function hideOverlay() { overlay.classList.add('hidden'); }
+      ovBtn.addEventListener('click', () => { reset(true); state = 'playing'; hideOverlay(); });
+
+      window.__pirateStart = function () { active = true; if (!player) reset(true); if (!animId) loop(); };
+      window.__pirateStop = function () { active = false; if (animId) { cancelAnimationFrame(animId); animId = null; } };
+
+      reset(true);
+      state = 'idle';
+    })();
+
+    // GAMES sub-switcher
+    (function () {
+      const btns = document.querySelectorAll('.game-switch button[data-game]');
+      const subs = document.querySelectorAll('.game-sub');
+      function showGame(name) {
+        btns.forEach(b => b.classList.toggle('active', b.dataset.game === name));
+        subs.forEach(s => s.classList.toggle('active', s.dataset.gameSub === name));
+        if (name === 'pirate') { if (window.__pirateStart) window.__pirateStart(); }
+        else { if (window.__pirateStop) window.__pirateStop(); }
+      }
+      btns.forEach(b => b.addEventListener('click', () => showGame(b.dataset.game)));
     })();
   </script>
 </body>
