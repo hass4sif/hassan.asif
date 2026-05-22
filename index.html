@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#0a4d2e" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&family=Noto+Nastaliq+Urdu:wght@400;700&family=Rakkas&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
   <style>
     :root {
@@ -462,6 +462,14 @@
 
     /* doc-tag restyled as a green permit sticker */
     .hero .doc-tag { background: var(--emerald-deep); border-color: var(--gold); color: var(--gold-light); }
+
+    /* techno-vernacular display face (bootleg cinema + naat poster lettering) — loud areas only */
+    .hero h1.name { font-family: 'Rakkas', 'Fraunces', Georgia, serif; font-variation-settings: normal; font-weight: 400; letter-spacing: 0; }
+    .hero h1.name .accent { font-style: normal; }
+    .hero h1.name .dot { font-style: normal; }
+    .panel.loud .panel-title { font-family: 'Rakkas', 'Fraunces', Georgia, serif; font-variation-settings: normal; letter-spacing: 0; }
+    .panel.loud .panel-title em { font-style: normal; }
+    .panel.loud .desk-h { font-family: 'Rakkas', 'Fraunces', Georgia, serif; font-style: normal; }
 
     footer { background: linear-gradient(180deg, var(--bg) 0%, var(--emerald-deep) 100%); padding: 56px 0; border-top: 1px solid var(--gold); position: relative; }
     footer::before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%23d4a040' stroke-width='0.5' opacity='0.08'><path d='M40 0 L48 16 L66 16 L52 28 L58 46 L40 36 L22 46 L28 28 L14 16 L32 16 Z'/></g></svg>"); background-size: 80px 80px; pointer-events: none; }
@@ -1308,6 +1316,10 @@
         try { await playNaat(); } catch (err) { console.error(err); }
         setTimeout(() => { playBtn.disabled = false; playBtn.textContent = '▶ Play again'; }, 5500);
       });
+      setupTray();
+      updateStats();
+    })();
+
     // MEHFIL DECOR: populate jhalar lights + flag bunting
     (function () {
       document.querySelectorAll('.mehfil-lights').forEach(el => {
