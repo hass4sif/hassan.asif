@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#0a4d2e" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..900,0..100;1,9..144,400..900,0..100&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
   <style>
     :root {
@@ -444,18 +444,6 @@
     /* naat poster (flex banner pinned to the wall) */
     .hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0; }
     @media (max-width: 920px) { .hero-right { align-items: flex-start; } }
-    .naat-poster { position: relative; width: 100%; max-width: 250px; margin: 0 0 -14px 0; transform: rotate(-2.5deg); z-index: 4; }
-    .np-frame { position: relative; background: linear-gradient(160deg, var(--emerald) 0%, var(--emerald-deep) 100%); border: 2px solid var(--gold); padding: 16px 14px 14px; text-align: center; overflow: hidden; box-shadow: 4px 6px 0 rgba(0,0,0,0.45); }
-    .np-frame::before { content: ""; position: absolute; inset: 5px; border: 1px solid var(--gold-deep); opacity: 0.7; pointer-events: none; }
-    .np-frame::after { content: ""; position: absolute; inset: 0; background-image: var(--grain); opacity: 0.22; mix-blend-mode: overlay; pointer-events: none; }
-    .np-dome { display: block; width: 46px; height: auto; margin: 0 auto 6px; position: relative; }
-    .np-top { font-family: 'Noto Nastaliq Urdu', serif; font-size: 13px; color: var(--gold-light); line-height: 2.1; margin-bottom: 2px; position: relative; }
-    .np-big { font-family: 'Noto Nastaliq Urdu', serif; font-size: 21px; color: var(--cream-warm); line-height: 2.3; position: relative; }
-    .np-rule { width: 60%; height: 1px; background: var(--gold-deep); margin: 8px auto 6px; opacity: 0.6; }
-    .np-sub { font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.22em; color: var(--gold-light); text-transform: uppercase; position: relative; }
-    .np-tape { position: absolute; width: 48px; height: 17px; background: rgba(232,196,102,0.22); border: 1px solid rgba(212,160,64,0.45); z-index: 5; }
-    .np-tape-1 { top: -8px; left: 22px; transform: rotate(-9deg); }
-    .np-tape-2 { bottom: -8px; right: 24px; transform: rotate(7deg); }
 
     /* cassette graphic (bootleg media object) */
     .cassette { display: inline-block; width: 100%; max-width: 200px; height: auto; }
@@ -558,30 +546,6 @@
       </div>
 
       <div class="hero-right">
-        <div class="naat-poster">
-          <span class="np-tape np-tape-1"></span>
-          <span class="np-tape np-tape-2"></span>
-          <div class="np-frame">
-            <svg class="np-dome" viewBox="0 0 60 60" aria-hidden="true">
-              <g fill="none" stroke="#e8c466" stroke-width="1.6">
-                <path d="M30 4 a4 4 0 1 0 3 7"/>
-                <line x1="30" y1="12" x2="30" y2="17"/>
-                <path d="M18 40 C 16 26, 24 18, 30 17 C 36 18, 44 26, 42 40 Z"/>
-                <rect x="16" y="40" width="28" height="14"/>
-                <line x1="8" y1="54" x2="52" y2="54"/>
-                <line x1="11" y1="30" x2="11" y2="54"/>
-                <line x1="49" y1="30" x2="49" y2="54"/>
-                <path d="M9 30 a2 2 0 0 1 4 0"/>
-                <path d="M47 30 a2 2 0 0 1 4 0"/>
-              </g>
-            </svg>
-            <div class="np-top" dir="rtl" lang="ur">محفلِ نعت</div>
-            <div class="np-big" dir="rtl" lang="ur">یا نبی سلام علیک</div>
-            <div class="np-rule"></div>
-            <div class="np-sub">LAHORE · KARACHI · ON CASSETTE</div>
-          </div>
-        </div>
-
         <div class="portrait-frame" id="portrait" style="--src:url('hassan_glitch_effects.gif');">
           <div class="ui-top">HASSAN.GIF</div>
           <div class="ui-rec">REC</div>
