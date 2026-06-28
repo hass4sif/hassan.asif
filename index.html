@@ -619,6 +619,83 @@
       .steps { gap: 2px; }
       .hero h1.name, h1.name { font-size: clamp(28px, 9vw, 48px) !important; }
     }
+    /* ===== NAV TABS: bold, distinct, obviously-clickable channel buttons ===== */
+    .tabs-inner { gap: 8px; padding-top: 9px; padding-bottom: 11px; align-items: stretch; }
+    .tab-btn {
+      position: relative;
+      background: var(--bg-card) !important;
+      border: 2px solid var(--rule-strong) !important;
+      border-radius: 7px !important;
+      padding: 11px 15px !important;
+      min-height: 50px;
+      display: inline-flex !important;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700 !important;
+      font-size: 13px !important;
+      letter-spacing: 0.06em !important;
+      text-transform: uppercase;
+      color: var(--cream) !important;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.55);
+      transition: transform .12s ease, box-shadow .12s ease, background .14s ease, color .14s ease;
+    }
+    .tab-btn::after { display: none !important; }
+    .tab-btn .ix { font-size: 9px !important; font-weight: 700; padding: 2px 4px; border-radius: 3px; background: rgba(0,0,0,0.35); letter-spacing: 0.04em; opacity: 1 !important; margin: 0 !important; }
+    .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 0 rgba(0,0,0,0.6); }
+    .tab-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+    .tab-btn:focus-visible { outline: 2px solid var(--cream) !important; outline-offset: 2px; }
+
+    /* per-tab identity: colour + font + variation */
+    [data-tab-btn="now"]        { border-color:#39ff14 !important; color:#39ff14 !important; font-family:'Space Mono',monospace !important; }
+    [data-tab-btn="now"] .ix    { color:#39ff14; }
+    [data-tab-btn="writing"]    { border-color:#e8c466 !important; color:#e8c466 !important; font-family:'JetBrains Mono',monospace !important; letter-spacing:0.12em !important; }
+    [data-tab-btn="writing"] .ix{ color:#e8c466; }
+    [data-tab-btn="teaching"]   { border-color:#d63384 !important; color:#ec5a9e !important; font-family:'Space Mono',monospace !important; font-style:italic; }
+    [data-tab-btn="teaching"] .ix{ color:#ec5a9e; }
+    [data-tab-btn="speaking"]   { border-color:#ff8c42 !important; color:#ff8c42 !important; font-family:'JetBrains Mono',monospace !important; }
+    [data-tab-btn="speaking"] .ix{ color:#ff8c42; }
+    [data-tab-btn="press"]      { border-color:#45d4d4 !important; color:#45d4d4 !important; font-family:'Space Mono',monospace !important; letter-spacing:0.14em !important; }
+    [data-tab-btn="press"] .ix  { color:#45d4d4; }
+    [data-tab-btn="cv"]         { border-color:#d4a040 !important; color:#d4a040 !important; font-family:'JetBrains Mono',monospace !important; }
+    [data-tab-btn="cv"] .ix     { color:#d4a040; }
+    [data-tab-btn="lab"]        { border-color:#b07cff !important; color:#c49cff !important; font-family:'Space Mono',monospace !important; }
+    [data-tab-btn="lab"] .ix    { color:#c49cff; }
+    [data-tab-btn="games"]      { border-color:#7CFF6B !important; color:#7CFF6B !important; font-family:'Press Start 2P',monospace !important; font-size:9px !important; letter-spacing:0 !important; padding:11px 13px !important; }
+    [data-tab-btn="games"] .ix  { font-family:'JetBrains Mono',monospace !important; font-size:8px !important; color:#7CFF6B; }
+    [data-tab-btn="juloos"]     { border-color:#e23b3b !important; color:#ff6b6b !important; font-family:'Space Mono',monospace !important; letter-spacing:0.1em !important; }
+    [data-tab-btn="juloos"] .ix { color:#ff6b6b; }
+    [data-tab-btn="elsewhere"]  { border-color:#ede5d3 !important; color:#ede5d3 !important; font-family:'JetBrains Mono',monospace !important; }
+    [data-tab-btn="elsewhere"] .ix{ color:#ede5d3; }
+
+    /* active = filled with its own colour, dark text, glowing */
+    .tab-btn.active { color:#0d0c0a !important; text-shadow:none !important; box-shadow:0 0 18px -2px currentColor, 0 3px 0 rgba(0,0,0,0.5) !important; }
+    [data-tab-btn="now"].active        { background:#39ff14 !important; }
+    [data-tab-btn="writing"].active    { background:#e8c466 !important; }
+    [data-tab-btn="teaching"].active   { background:#d63384 !important; color:#190210 !important; }
+    [data-tab-btn="speaking"].active   { background:#ff8c42 !important; }
+    [data-tab-btn="press"].active      { background:#45d4d4 !important; }
+    [data-tab-btn="cv"].active         { background:#d4a040 !important; }
+    [data-tab-btn="lab"].active        { background:#b07cff !important; color:#180226 !important; }
+    [data-tab-btn="games"].active      { background:#7CFF6B !important; }
+    [data-tab-btn="juloos"].active     { background:#e23b3b !important; color:#1c0303 !important; }
+    [data-tab-btn="elsewhere"].active  { background:#ede5d3 !important; }
+    .tab-btn.active .ix { background:rgba(0,0,0,0.30) !important; color:inherit !important; }
+
+    /* glitch: faint constant chromatic edge, stronger on hover; subtle attention flick on the active tab */
+    .tabs-inner .tab-btn:not(.active) { text-shadow: 0.6px 0 rgba(214,51,132,0.55), -0.6px 0 rgba(57,255,20,0.45); }
+    .tabs-inner .tab-btn:not(.active):hover { animation: tabGlitch 0.3s steps(2, end) infinite; }
+    @keyframes tabGlitch {
+      0%, 100% { text-shadow: 1px 0 var(--magenta), -1px 0 var(--led); transform: translate(0, -2px); }
+      33% { text-shadow: -2px 0 var(--magenta), 2px 0 var(--led); transform: translate(-1px, -3px); }
+      66% { text-shadow: 2px 0 var(--magenta), -2px 0 var(--led); transform: translate(1px, -2px); }
+    }
+    .tab-btn.active { animation: tabActiveGlitch 4.5s steps(1, end) infinite; }
+    @keyframes tabActiveGlitch {
+      0%, 92%, 100% { transform: translate(0, 0); filter: none; }
+      93% { transform: translate(-2px, 0); filter: saturate(1.5) brightness(1.1); }
+      95% { transform: translate(2px, 0); }
+      97% { transform: translate(-1px, 0); }
+    }
   </style>
 </head>
 <body>
