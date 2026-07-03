@@ -94,8 +94,9 @@
 
     main { min-height: 50vh; padding: 56px 0 80px; position: relative; }
     .panel { display: none; opacity: 0; }
-    .panel.active { display: block; animation: fadeIn .4s cubic-bezier(.7,0,.3,1) forwards; }
+    .panel.active { display: block; animation: panelFade .4s cubic-bezier(.7,0,.3,1) forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes panelFade { from { opacity: 0; } to { opacity: 1; } }
     .panel-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 40px; flex-wrap: wrap; }
     .panel-title { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500; font-size: clamp(32px, 5vw, 56px); line-height: 0.95; letter-spacing: -0.03em; color: var(--cream); }
     .panel-title em { color: var(--gold-light); font-style: italic; }
@@ -558,21 +559,7 @@
     @media (max-width: 420px) { .track { min-width: 480px; } }
     /* display headings set in Space Mono (placed last so it wins); body + interface stay JetBrains Mono */
     .panel-title, .panel.loud .panel-title, .desk-h, .panel.loud .desk-h, .foot-big, .press-image.cover .cover-name, .cv-sec-title { font-family: 'Space Mono', 'JetBrains Mono', monospace !important; letter-spacing: -0.01em; }
-    /* ===== procession map: launch card + full-screen pop-out ===== */
-    .map-launch { display: grid; grid-template-columns: 200px 1fr; gap: 0; border: 1px solid var(--rule-strong); border-radius: 10px; overflow: hidden; background: var(--bg-soft); }
-    .map-launch-art { position: relative; min-height: 200px; background: radial-gradient(120% 100% at 50% 0%, #5a342e 0%, #3a2422 38%, #1c1314 100%); border-right: 1px solid var(--rule-strong); overflow: hidden; }
-    .map-launch-art::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(212,160,64,0.10) 0 2px, transparent 2px 22px); }
-    .map-launch-art .mla-route { position: absolute; left: 14%; right: 14%; top: 50%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--saffron), transparent); box-shadow: 0 0 12px rgba(212,160,64,0.6); }
-    .map-launch-art .mla-route::before, .map-launch-art .mla-route::after { content: ""; position: absolute; top: 50%; width: 9px; height: 9px; border-radius: 50%; transform: translateY(-50%); background: var(--gold-light); box-shadow: 0 0 10px var(--gold); }
-    .map-launch-art .mla-route::before { left: -2px; }
-    .map-launch-art .mla-route::after { right: -2px; background: var(--led); box-shadow: 0 0 10px var(--led); }
-    .map-launch-body { padding: 26px 26px 28px; display: flex; flex-direction: column; align-items: flex-start; }
-    .map-launch-kicker { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--saffron); margin-bottom: 12px; }
-    .map-launch-h { font-family: 'Space Mono', monospace; font-weight: 700; font-size: clamp(20px, 2.4vw, 28px); color: var(--cream); margin: 0 0 10px; letter-spacing: -0.01em; }
-    .map-launch-p { font-size: 13px; line-height: 1.6; color: var(--ink-mid); margin: 0 0 20px; max-width: 52ch; }
-    .map-open-btn { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--gold); color: #1b1408; border: 1px solid var(--gold); border-radius: 8px; padding: 15px 26px; min-height: 50px; cursor: pointer; transition: all 0.16s ease; }
-    .map-open-btn:hover { background: var(--gold-light); border-color: var(--gold-light); }
-    @media (max-width: 640px) { .map-launch { grid-template-columns: 1fr; } .map-launch-art { min-height: 120px; } }
+    /* the map launcher now lives in the playground grid; the pop-out modal below is unchanged */
     .map-modal { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; background: rgba(5,4,4,0.97); }
     .map-modal[hidden] { display: none !important; }
     .map-modal-bar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; background: #0c0809; border-bottom: 1px solid var(--rule-strong); }
@@ -658,12 +645,8 @@
     [data-tab-btn="press"] .ix  { color:#45d4d4; }
     [data-tab-btn="cv"]         { border-color:#d4a040 !important; color:#d4a040 !important; font-family:'JetBrains Mono',monospace !important; }
     [data-tab-btn="cv"] .ix     { color:#d4a040; }
-    [data-tab-btn="lab"]        { border-color:#b07cff !important; color:#c49cff !important; font-family:'Space Mono',monospace !important; }
-    [data-tab-btn="lab"] .ix    { color:#c49cff; }
-    [data-tab-btn="games"]      { border-color:#7CFF6B !important; color:#7CFF6B !important; font-family:'Press Start 2P',monospace !important; font-size:9px !important; letter-spacing:0 !important; padding:11px 13px !important; }
-    [data-tab-btn="games"] .ix  { font-family:'JetBrains Mono',monospace !important; font-size:8px !important; color:#7CFF6B; }
-    [data-tab-btn="juloos"]     { border-color:#e23b3b !important; color:#ff6b6b !important; font-family:'Space Mono',monospace !important; letter-spacing:0.1em !important; }
-    [data-tab-btn="juloos"] .ix { color:#ff6b6b; }
+    [data-tab-btn="playground"]     { border-color:#7CFF6B !important; color:#7CFF6B !important; font-family:'Press Start 2P',monospace !important; font-size:9px !important; letter-spacing:0 !important; padding:11px 13px !important; }
+    [data-tab-btn="playground"] .ix { font-family:'JetBrains Mono',monospace !important; font-size:8px !important; color:#7CFF6B; }
     [data-tab-btn="elsewhere"]  { border-color:#ede5d3 !important; color:#ede5d3 !important; font-family:'JetBrains Mono',monospace !important; }
     [data-tab-btn="elsewhere"] .ix{ color:#ede5d3; }
 
@@ -675,9 +658,7 @@
     [data-tab-btn="speaking"].active   { background:#ff8c42 !important; }
     [data-tab-btn="press"].active      { background:#45d4d4 !important; }
     [data-tab-btn="cv"].active         { background:#d4a040 !important; }
-    [data-tab-btn="lab"].active        { background:#b07cff !important; color:#180226 !important; }
-    [data-tab-btn="games"].active      { background:#7CFF6B !important; }
-    [data-tab-btn="juloos"].active     { background:#e23b3b !important; color:#1c0303 !important; }
+    [data-tab-btn="playground"].active { background:#7CFF6B !important; }
     [data-tab-btn="elsewhere"].active  { background:#ede5d3 !important; }
     .tab-btn.active .ix { background:rgba(0,0,0,0.30) !important; color:inherit !important; }
 
@@ -696,6 +677,87 @@
       95% { transform: translate(2px, 0); }
       97% { transform: translate(-1px, 0); }
     }
+    /* ===== PLAYGROUND: launcher grid + in-tab sub-views ===== */
+    .pg-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    @media (max-width: 720px) { .pg-grid { grid-template-columns: 1fr; } }
+    .pg-grid.hidden { display: none !important; }
+    .pg-card { appearance: none; -webkit-appearance: none; text-align: left; font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--cream); background: var(--bg-card); border: 2px solid var(--rule-strong); border-radius: 10px; overflow: hidden; cursor: pointer; padding: 0; display: flex; flex-direction: column; box-shadow: 0 4px 0 rgba(0,0,0,0.55); transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease; }
+    .pg-card:hover { transform: translateY(-3px); box-shadow: 0 7px 0 rgba(0,0,0,0.6); }
+    .pg-card:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+    .pg-card:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+    .pg-thumb { position: relative; display: block; height: 150px; border-bottom: 2px solid var(--rule-strong); overflow: hidden; }
+    .pg-body { display: flex; flex-direction: column; gap: 7px; padding: 16px 18px 18px; }
+    .pg-kicker { display: block; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; }
+    .pg-name { display: block; font-size: 21px; font-weight: 700; line-height: 1.2; color: var(--cream); }
+    .pg-desc { display: block; font-size: 12px; line-height: 1.6; color: var(--ink-mid); }
+    .pg-open { display: inline-block; align-self: flex-start; margin-top: 7px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 6px; padding: 7px 12px; }
+    .pg-card:hover .pg-name { animation: pgGlitch 0.32s steps(2, end) infinite; }
+    @keyframes pgGlitch { 0%, 100% { text-shadow: 1px 0 var(--magenta), -1px 0 var(--led); } 50% { text-shadow: -2px 0 var(--magenta), 2px 0 var(--led); } }
+    .c-map { border-color: #e23b3b; } .c-map .pg-kicker, .c-map .pg-open { color: #ff6b6b; }
+    .c-map .pg-name { font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+    .c-lab { border-color: #b07cff; } .c-lab .pg-kicker, .c-lab .pg-open { color: #c49cff; }
+    .c-lab .pg-name { font-family: 'Space Mono', monospace; }
+    .c-mehfil { border-color: #d4a040; } .c-mehfil .pg-kicker, .c-mehfil .pg-open { color: #e8c466; }
+    .c-pirate { border-color: #7CFF6B; } .c-pirate .pg-kicker, .c-pirate .pg-open { color: #7CFF6B; }
+    .c-pirate .pg-name { font-family: 'Press Start 2P', monospace; font-size: 13px; line-height: 1.6; }
+    .pg-thumb.t-map { background: radial-gradient(120% 100% at 50% 0%, #5a342e 0%, #3a2422 45%, #1c1314 100%); }
+    .pg-thumb.t-map::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(212,160,64,0.10) 0 2px, transparent 2px 22px); }
+    .pg-thumb.t-map::after { content: ""; position: absolute; left: 14%; right: 14%; top: 52%; height: 2px; background: linear-gradient(90deg, transparent, #ff6b6b, #ffb36b, transparent); box-shadow: 0 0 14px rgba(226,59,59,0.8); }
+    .pg-thumb.t-lab { background: #131019; }
+    .pg-thumb.t-lab::before { content: ""; position: absolute; inset: 14px; background-image: repeating-linear-gradient(90deg, rgba(176,124,255,0.34) 0 14px, transparent 14px 22px), repeating-linear-gradient(0deg, rgba(19,16,25,0.9) 0 14px, transparent 14px 22px); }
+    .pg-thumb.t-lab::after { content: ""; position: absolute; top: 10px; bottom: 10px; width: 3px; left: 12%; background: #c49cff; box-shadow: 0 0 12px #b07cff; animation: pgHead 3.2s linear infinite; }
+    @keyframes pgHead { to { left: 86%; } }
+    .pg-thumb.t-mehfil { background: #171208; }
+    .pg-thumb.t-mehfil::before { content: ""; position: absolute; left: 12%; right: 12%; top: 50%; height: 2px; background: rgba(212,160,64,0.5); }
+    .pg-thumb.t-mehfil::after { content: ""; position: absolute; left: 12%; right: 12%; top: calc(50% - 12px); height: 24px; background: repeating-linear-gradient(90deg, #d4a040 0 24px, transparent 24px 48px); box-shadow: 0 0 16px rgba(212,160,64,0.3); }
+    .pg-thumb.t-pirate { background: #07120c; }
+    .pg-thumb.t-pirate::before { content: ""; position: absolute; inset: 12px; background-image: repeating-linear-gradient(0deg, rgba(10,77,46,0.95) 0 13px, transparent 13px 26px), repeating-linear-gradient(90deg, rgba(10,77,46,0.95) 0 13px, transparent 13px 26px); }
+    .pg-thumb.t-pirate::after { content: ""; position: absolute; width: 12px; height: 12px; top: calc(50% - 6px); left: 10%; background: #ede5d3; box-shadow: 26px 0 0 #d63384; animation: pgRun 3.8s steps(14) infinite; }
+    @keyframes pgRun { to { left: 82%; } }
+    .pg-sub { display: none; }
+    .pg-sub.open { display: block; animation: fadeIn .35s cubic-bezier(.7,0,.3,1); }
+    .pg-back { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream); background: var(--bg-card); border: 2px solid var(--rule-strong); border-radius: 7px; padding: 12px 16px; min-height: 46px; cursor: pointer; margin-bottom: 26px; box-shadow: 0 3px 0 rgba(0,0,0,0.55); transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, color .12s ease; }
+    .pg-back:hover { transform: translateY(-2px); box-shadow: 0 5px 0 rgba(0,0,0,0.6); border-color: var(--gold); color: var(--gold-light); }
+    .pg-sub .panel-title { font-size: clamp(24px, 3.4vw, 38px); }
+    .pg-sub .panel-head { margin-bottom: 28px; }
+    /* ===== playground game windows: app frame, no page scroll ===== */
+    body.game-open { overflow: hidden; }
+    body.game-open #siteFX { display: none; }
+    .pg-sub.open { position: fixed; inset: 0; height: 100vh; height: 100dvh; z-index: 9990; display: flex; flex-direction: column; background: radial-gradient(120% 90% at 50% 0%, #14110c 0%, var(--bg) 60%); overflow: hidden; overscroll-behavior: none; animation: panelFade .28s cubic-bezier(.7,0,.3,1); }
+    .pg-sub.open .pg-gamebar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(8px + env(safe-area-inset-top)) 14px 8px; background: #0c0809; border-bottom: 1px solid var(--rule-strong); }
+    .pg-gamebar-title { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pg-sub[data-pg-sub="lab"] .pg-gamebar-title { color: #c49cff; }
+    .pg-sub[data-pg-sub="mehfil"] .pg-gamebar-title { color: #e8c466; }
+    .pg-sub[data-pg-sub="pirate"] .pg-gamebar-title { color: #7CFF6B; font-family: 'Press Start 2P', monospace; font-size: 10px; }
+    .pg-sub .pg-back { margin: 0; background: var(--gold); border-color: var(--gold); color: #1b1408; box-shadow: none; min-height: 44px; padding: 10px 16px; }
+    .pg-sub .pg-back:hover { background: var(--gold-light); border-color: var(--gold-light); color: #1b1408; transform: none; box-shadow: none; }
+    .pg-stage { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; width: 100%; max-width: 1020px; margin: 0 auto; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); overflow: hidden; }
+    .pg-sub.open .panel-head { display: none; }
+    .pg-sub.open .panel-intro { display: none; }
+    @media (min-width: 900px) { .pg-sub.open .panel-intro { display: block; margin: 2px 0 12px; font-size: 13px; } }
+    .pg-sub.open .game-sub { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+    /* sequencer: the grid fills the middle, the console docks at the bottom */
+    .pg-sub[data-pg-sub="lab"].open .seq { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+    .pg-sub[data-pg-sub="lab"].open .seq-label { flex: 0 0 auto; margin-bottom: 8px; }
+    .pg-sub[data-pg-sub="lab"].open .transport { order: 99; flex: 0 0 auto; margin: 10px 0 0; padding: 12px 14px; gap: 12px; }
+    /* mehfil rig: chain and tray scroll inside, the check bar docks at the bottom */
+    .pg-sub[data-pg-sub="mehfil"].open .rig-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+    .pg-sub[data-pg-sub="mehfil"].open .stats { flex: 0 0 auto; margin-bottom: 10px; }
+    .pg-sub[data-pg-sub="mehfil"].open .result-bar { flex: 0 0 auto; margin: 10px 0 0; background: var(--bg-soft); border: 1px solid var(--rule-strong); padding: 12px 14px; }
+    /* pirate: the CRT fills the middle, the pad docks at the bottom */
+    .pg-sub[data-pg-sub="pirate"].open .pr-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+    .pg-sub[data-pg-sub="pirate"].open .pr-hud { flex: 0 0 auto; margin-bottom: 8px; }
+    .pg-sub[data-pg-sub="pirate"].open .pr-stage { flex: 1 1 auto; min-height: 140px; max-width: none; width: 100%; margin: 0; overflow: hidden; }
+    .pg-sub[data-pg-sub="pirate"].open .pr-stage canvas { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: auto; height: auto; max-width: 100%; }
+    .pg-sub[data-pg-sub="pirate"].open .pr-controls { flex: 0 0 auto; margin: 10px 0 0; justify-content: center; }
+    @media (max-width: 760px) { .pg-sub[data-pg-sub="pirate"].open .pr-hint { display: none; } }
+    @media (orientation: landscape) and (max-height: 560px) {
+      .pg-sub[data-pg-sub="pirate"].open .pr-wrap { flex-direction: row; flex-wrap: wrap; align-items: center; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-hud { flex: 1 1 100%; margin-bottom: 4px; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-stage { flex: 1 1 0; align-self: stretch; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-controls { margin: 0 0 0 12px; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-hint { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -706,9 +768,7 @@
       <a href="index.html" class="brand">h.asif</a>
       <ul>
         <li><a href="#cv" data-jump="cv">cv</a></li>
-        <li><a href="#lab" data-jump="lab">lab</a></li>
-        <li><a href="#games" data-jump="games">games</a></li>
-        <li><a href="#juloos" data-jump="juloos">juloos</a></li>
+        <li><a href="#playground" data-jump="playground">playground</a></li>
       </ul>
     </div>
   </nav>
@@ -759,10 +819,8 @@
       <button class="tab-btn" data-tab-btn="speaking"><span class="ix">04</span>speaking</button>
       <button class="tab-btn" data-tab-btn="press"><span class="ix">05</span>press</button>
       <button class="tab-btn" data-tab-btn="cv"><span class="ix">06</span>cv</button>
-      <button class="tab-btn special" data-tab-btn="lab"><span class="ix">07</span>lab</button>
-      <button class="tab-btn special" data-tab-btn="games"><span class="ix">08</span>games</button>
-      <button class="tab-btn special" data-tab-btn="juloos"><span class="ix">09</span>juloos</button>
-      <button class="tab-btn" data-tab-btn="elsewhere"><span class="ix">10</span>elsewhere</button>
+      <button class="tab-btn special" data-tab-btn="playground"><span class="ix">07</span>playground</button>
+      <button class="tab-btn" data-tab-btn="elsewhere"><span class="ix">08</span>elsewhere</button>
     </div>
   </nav>
 
@@ -1030,139 +1088,53 @@
         </div>
       </section>
 
-      <!-- LAB -->
-      <section class="panel" data-tab="lab">
+      <!-- PLAYGROUND -->
+      <section class="panel" data-tab="playground">
         <div class="panel-head">
-          <h2 class="panel-title"><em>Lab.</em></h2>
-          <div class="panel-note">16-step sequencer /<br/><span class="accent">audio interactive</span></div>
+          <h2 class="panel-title"><em>Playground.</em></h2>
+          <div class="panel-note">interactive works /<br/><span class="accent">sound &middot; games &middot; maps</span></div>
         </div>
-        <p class="panel-intro">Build a short loop. Four percussion tracks, sixteen steps, one tempo. <strong>Click the cells to switch them on, hit play, and adjust as it loops.</strong> Sounds are loosely modeled on the percussion you would hear at a <em>mehfil</em>. Try the presets at the top right. Headphones recommended.</p>
+        <p class="panel-intro">Research you can press. Four small machines from the dissertation years: a procession you can walk, a rhythm you can program, a studio chain you can wire, and an 8-bit cassette run. <strong>Each one opens full screen, like a small arcade cabinet, on phone and desktop alike.</strong> Sound on helps.</p>
 
-        <div class="transport">
-          <div class="play-group">
-            <button class="t-btn play" id="labPlayBtn">▶ Play</button>
-            <button class="t-btn" id="labClearBtn">Clear</button>
-          </div>
-          <div class="tempo">
-            <span>BPM</span><span class="val" id="labBpmVal">96</span>
-            <input type="range" id="labBpmSlider" min="50" max="180" value="96" />
-          </div>
-          <div class="preset-group">
-            <button class="preset" data-preset="dhamaal">Dhamaal</button>
-            <button class="preset" data-preset="qawwali">Qawwali</button>
-            <button class="preset" data-preset="hiphop">Hip-hop</button>
-          </div>
-        </div>
-
-        <div class="seq-label"><span>// SEQUENCER</span> <span class="line"></span> <span>16 STEPS · 4 TRACKS</span></div>
-        <div class="seq" id="labSeq">
-          <div class="track dum" data-track="dum"><div class="label"><div class="nm">Dum <em>(low)</em></div><div class="meta">Tabla · bass</div></div><div class="preview" data-preview="dum" title="Preview">▶</div><div class="steps" data-steps="dum"></div></div>
-          <div class="track tin" data-track="tin"><div class="label"><div class="nm">Tin <em>(high)</em></div><div class="meta">Tabla · treble</div></div><div class="preview" data-preview="tin" title="Preview">▶</div><div class="steps" data-steps="tin"></div></div>
-          <div class="track clap" data-track="clap"><div class="label"><div class="nm">Clap</div><div class="meta">Daf · hand</div></div><div class="preview" data-preview="clap" title="Preview">▶</div><div class="steps" data-steps="clap"></div></div>
-          <div class="track bell" data-track="bell"><div class="label"><div class="nm">Bell</div><div class="meta">Chime · accent</div></div><div class="preview" data-preview="bell" title="Preview">▶</div><div class="steps" data-steps="bell"></div></div>
-        </div>
-      </section>
-
-      <!-- GAMES -->
-      <section class="panel loud" data-tab="games">
-        <div class="panel-head">
-          <h2 class="panel-title"><em>Games.</em></h2>
-          <div class="panel-note">two playable toys /<br/><span class="accent">the studio + the street</span></div>
-        </div>
-
-        <div class="game-switch">
-          <button class="active" data-game="mehfil">Mehfil Rig</button>
-          <button data-game="pirate">Pirate Route</button>
-        </div>
-
-        <!-- MEHFIL RIG -->
-        <div class="game-sub active" data-game-sub="mehfil">
-          <p class="panel-intro">Drag each piece of audio gear into the slot where you think it belongs, or on a phone tap a piece to pick it up and tap a slot to drop it. The chain reads left to right. <strong>When all six slots are filled, press check to see if you got it right.</strong> If the chain is correct, you can play a synthesized <em>naat</em> through it.</p>
-
-          <div class="game-head">
-            <div class="stats">
-              <div class="stat"><span class="v" id="statFilled">0</span>of 6 placed</div>
-              <div class="stat"><span class="v green" id="statCorrect">0</span>in correct spot</div>
-              <div class="stat"><span class="v magenta" id="statAttempts">0</span>checks used</div>
-            </div>
-          </div>
-
-          <div class="chain-label"><span>// CHAIN</span> <span class="line"></span> <span>POS 01 → 06</span></div>
-          <div class="chain" id="chain">
-            <div class="slot" data-slot="0"><div class="pos">01</div><div class="pos-label">Where the voice<br/>starts</div></div>
-            <div class="slot" data-slot="1"><div class="pos">02</div><div class="pos-label">Boost the<br/>weak signal</div></div>
-            <div class="slot" data-slot="2"><div class="pos">03</div><div class="pos-label">Shape the<br/>tone</div></div>
-            <div class="slot" data-slot="3"><div class="pos">04</div><div class="pos-label">Even out<br/>the volume</div></div>
-            <div class="slot" data-slot="4"><div class="pos">05</div><div class="pos-label">Add room<br/>and weight</div></div>
-            <div class="slot" data-slot="5"><div class="pos">06</div><div class="pos-label">Where it<br/>finally lands</div></div>
-          </div>
-
-          <div class="tray-label"><span>// GEAR TRAY</span> <span class="line"></span> <span>DRAG ANY PIECE INTO A SLOT</span></div>
-          <div class="tray" id="tray"></div>
-
-          <div class="result-bar" id="resultBar">
-            <div class="result-msg" id="resultMsg">Fill all six slots, then check your chain.</div>
-            <div class="controls">
-              <button class="t-btn" id="gameResetBtn">Reset</button>
-              <button class="t-btn play" id="checkBtn" disabled>Check chain ✓</button>
-              <button class="t-btn play" id="gamePlayBtn" disabled style="display:none;">▶ Play through chain</button>
-            </div>
-          </div>
+        <div id="pgGrid" class="pg-grid">
+          <button id="mapOpenBtn" class="pg-card c-map" data-pg="map" type="button" aria-label="Open Juloos, the procession map, full screen">
+            <span class="pg-thumb t-map" aria-hidden="true"></span>
+            <span class="pg-body">
+              <span class="pg-kicker">interactive map &middot; full screen</span>
+              <span class="pg-name">Juloos</span>
+              <span class="pg-desc">Walk Karachi's Ashura route and hear the noha khwaans who shaped it, 1950 to now.</span>
+              <span class="pg-open">open &#9654;</span>
+            </span>
+          </button>
+          <button class="pg-card c-lab" data-pg="lab" type="button" aria-label="Open the sequencer">
+            <span class="pg-thumb t-lab" aria-hidden="true"></span>
+            <span class="pg-body">
+              <span class="pg-kicker">sound toy &middot; 16 steps</span>
+              <span class="pg-name">The sequencer</span>
+              <span class="pg-desc">Program dum, tin, clap, and bell into a mehfil loop. Three presets, your tempo.</span>
+              <span class="pg-open">open &#9654;</span>
+            </span>
+          </button>
+          <button class="pg-card c-mehfil" data-pg="mehfil" type="button" aria-label="Open Mehfil rig, the signal chain game">
+            <span class="pg-thumb t-mehfil" aria-hidden="true"></span>
+            <span class="pg-body">
+              <span class="pg-kicker">studio game &middot; drag or tap</span>
+              <span class="pg-name">Mehfil rig</span>
+              <span class="pg-desc">Wire the naat studio. Six units, one right order, then hear it play.</span>
+              <span class="pg-open">open &#9654;</span>
+            </span>
+          </button>
+          <button class="pg-card c-pirate" data-pg="pirate" type="button" aria-label="Open Pirate route, the 8-bit game">
+            <span class="pg-thumb t-pirate" aria-hidden="true"></span>
+            <span class="pg-body">
+              <span class="pg-kicker">8-bit arcade</span>
+              <span class="pg-name">Pirate route</span>
+              <span class="pg-desc">Run bootleg cassettes through the mohalla and dodge the raid squad.</span>
+              <span class="pg-open">insert coin &#9654;</span>
+            </span>
+          </button>
         </div>
 
-        <!-- PIRATE ROUTE -->
-        <div class="game-sub" data-game-sub="pirate">
-          <p class="panel-intro">An <strong>8-bit delivery run</strong> through Lahore's informal media economy. You carry a bootleg reel; four customers are waiting, and the raid squads are not. <strong>Arrow keys or WASD to move</strong>, or use the pad. Deliver all four without getting caught.</p>
-
-          <div class="pr-wrap">
-            <div class="pr-hud">
-              <div class="group">
-                <span><span class="lab">LIVES</span> <span class="val magenta" id="prLives">3</span></span>
-                <span><span class="lab">DROPPED</span> <span class="val gold" id="prDeliv">0/4</span></span>
-              </div>
-              <div class="group"><span class="lab">ROUTE</span> <span class="val">LAHORE</span></div>
-            </div>
-
-            <div class="pr-stage">
-              <canvas id="prCanvas" width="540" height="396"></canvas>
-              <div class="scanlines"></div>
-              <div class="pr-overlay" id="prOverlay">
-                <h4 id="prOvTitle">PIRATE ROUTE</h4>
-                <p id="prOvText">Deliver a bootleg reel to four customers across Lahore. Dodge the raid squads. Arrow keys or WASD to move, or use the pad below.</p>
-                <button class="pr-btn" id="prOvBtn">Start run</button>
-              </div>
-            </div>
-
-            <div class="pr-controls">
-              <div class="pr-dpad" id="prDpad">
-                <button class="up" data-dir="up" aria-label="up">▲</button>
-                <button class="left" data-dir="left" aria-label="left">◀</button>
-                <span class="mid"></span>
-                <button class="right" data-dir="right" aria-label="right">▶</button>
-                <button class="down" data-dir="down" aria-label="down">▼</button>
-              </div>
-              <div class="pr-hint">The squads chase when you get close. Lead them off, loop back, and drop the reel on a waiting customer.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- JULOOS (procession map) -->
-      <section class="panel" data-tab="juloos">
-        <div class="panel-head">
-          <h2 class="panel-title"><em>Juloos.</em></h2>
-          <div class="panel-note">interactive sound map /<br/><span class="accent">karachi noha procession</span></div>
-        </div>
-        <p class="panel-intro">A map of the noha reciters who shaped Karachi's Ashura procession, from 1950 to now. <strong>It opens full screen, with sound.</strong> Inside, click a station to hear the recitation, toggle the layers, and press walk to move through the procession in order.</p>
-        <div class="map-launch">
-          <div class="map-launch-art" aria-hidden="true"><span class="mla-route"></span></div>
-          <div class="map-launch-body">
-            <div class="map-launch-kicker">interactive · full screen · sound on</div>
-            <h3 class="map-launch-h">Walk the procession</h3>
-            <p class="map-launch-p">The map opens large in its own window so the stations, names, and recitations are easy to read and hear.</p>
-            <button id="mapOpenBtn" class="map-open-btn" type="button">&#9654; Open the procession map</button>
-          </div>
-        </div>
       </section>
 
       <!-- ELSEWHERE -->
@@ -1196,6 +1168,134 @@
     </div>
   </footer>
 
+  <!-- playground game windows: top-level overlays, anchored to the viewport like the map -->
+        <div class="pg-sub" data-pg-sub="lab" role="dialog" aria-modal="true" aria-label="The sequencer, game window">
+          <div class="pg-gamebar"><span class="pg-gamebar-title">The sequencer</span><button class="pg-back" type="button" aria-label="Close and return to playground">&#10005; close</button></div>
+          <div class="pg-stage">
+
+        <div class="panel-head">
+          <h2 class="panel-title"><em>The sequencer.</em></h2>
+          <div class="panel-note">16-step sequencer /<br/><span class="accent">audio interactive</span></div>
+        </div>
+        <p class="panel-intro">Build a short loop. Four percussion tracks, sixteen steps, one tempo. <strong>Click the cells to switch them on, hit play, and adjust as it loops.</strong> Sounds are loosely modeled on the percussion you would hear at a <em>mehfil</em>. Try the presets at the top right. Headphones recommended.</p>
+
+        <div class="transport">
+          <div class="play-group">
+            <button class="t-btn play" id="labPlayBtn">▶ Play</button>
+            <button class="t-btn" id="labClearBtn">Clear</button>
+          </div>
+          <div class="tempo">
+            <span>BPM</span><span class="val" id="labBpmVal">96</span>
+            <input type="range" id="labBpmSlider" min="50" max="180" value="96" />
+          </div>
+          <div class="preset-group">
+            <button class="preset" data-preset="dhamaal">Dhamaal</button>
+            <button class="preset" data-preset="qawwali">Qawwali</button>
+            <button class="preset" data-preset="hiphop">Hip-hop</button>
+          </div>
+        </div>
+
+        <div class="seq-label"><span>// SEQUENCER</span> <span class="line"></span> <span>16 STEPS · 4 TRACKS</span></div>
+        <div class="seq" id="labSeq">
+          <div class="track dum" data-track="dum"><div class="label"><div class="nm">Dum <em>(low)</em></div><div class="meta">Tabla · bass</div></div><div class="preview" data-preview="dum" title="Preview">▶</div><div class="steps" data-steps="dum"></div></div>
+          <div class="track tin" data-track="tin"><div class="label"><div class="nm">Tin <em>(high)</em></div><div class="meta">Tabla · treble</div></div><div class="preview" data-preview="tin" title="Preview">▶</div><div class="steps" data-steps="tin"></div></div>
+          <div class="track clap" data-track="clap"><div class="label"><div class="nm">Clap</div><div class="meta">Daf · hand</div></div><div class="preview" data-preview="clap" title="Preview">▶</div><div class="steps" data-steps="clap"></div></div>
+          <div class="track bell" data-track="bell"><div class="label"><div class="nm">Bell</div><div class="meta">Chime · accent</div></div><div class="preview" data-preview="bell" title="Preview">▶</div><div class="steps" data-steps="bell"></div></div>
+        </div>
+          </div>
+        </div>
+
+        <div class="pg-sub" data-pg-sub="mehfil" role="dialog" aria-modal="true" aria-label="Mehfil rig, game window">
+          <div class="pg-gamebar"><span class="pg-gamebar-title">Mehfil rig</span><button class="pg-back" type="button" aria-label="Close and return to playground">&#10005; close</button></div>
+          <div class="pg-stage">
+          <div class="panel-head">
+            <h2 class="panel-title"><em>Mehfil rig.</em></h2>
+            <div class="panel-note">studio game /<br/><span class="accent">order the signal chain</span></div>
+          </div>
+          <div class="game-sub active" data-game-sub="mehfil">
+          <p class="panel-intro">Drag each piece of audio gear into the slot where you think it belongs, or on a phone tap a piece to pick it up and tap a slot to drop it. The chain reads left to right. <strong>When all six slots are filled, press check to see if you got it right.</strong> If the chain is correct, you can play a synthesized <em>naat</em> through it.</p>
+
+          <div class="game-head">
+            <div class="stats">
+              <div class="stat"><span class="v" id="statFilled">0</span>of 6 placed</div>
+              <div class="stat"><span class="v green" id="statCorrect">0</span>in correct spot</div>
+              <div class="stat"><span class="v magenta" id="statAttempts">0</span>checks used</div>
+            </div>
+          </div>
+
+          <div class="rig-scroll">
+          <div class="chain-label"><span>// CHAIN</span> <span class="line"></span> <span>POS 01 → 06</span></div>
+          <div class="chain" id="chain">
+            <div class="slot" data-slot="0"><div class="pos">01</div><div class="pos-label">Where the voice<br/>starts</div></div>
+            <div class="slot" data-slot="1"><div class="pos">02</div><div class="pos-label">Boost the<br/>weak signal</div></div>
+            <div class="slot" data-slot="2"><div class="pos">03</div><div class="pos-label">Shape the<br/>tone</div></div>
+            <div class="slot" data-slot="3"><div class="pos">04</div><div class="pos-label">Even out<br/>the volume</div></div>
+            <div class="slot" data-slot="4"><div class="pos">05</div><div class="pos-label">Add room<br/>and weight</div></div>
+            <div class="slot" data-slot="5"><div class="pos">06</div><div class="pos-label">Where it<br/>finally lands</div></div>
+          </div>
+
+          <div class="tray-label"><span>// GEAR TRAY</span> <span class="line"></span> <span>DRAG ANY PIECE INTO A SLOT</span></div>
+          <div class="tray" id="tray"></div>
+
+          </div>
+          <div class="result-bar" id="resultBar">
+            <div class="result-msg" id="resultMsg">Fill all six slots, then check your chain.</div>
+            <div class="controls">
+              <button class="t-btn" id="gameResetBtn">Reset</button>
+              <button class="t-btn play" id="checkBtn" disabled>Check chain ✓</button>
+              <button class="t-btn play" id="gamePlayBtn" disabled style="display:none;">▶ Play through chain</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PIRATE ROUTE -->
+          </div>
+        </div>
+
+        <div class="pg-sub" data-pg-sub="pirate" role="dialog" aria-modal="true" aria-label="Pirate route, game window">
+          <div class="pg-gamebar"><span class="pg-gamebar-title">Pirate route</span><button class="pg-back" type="button" aria-label="Close and return to playground">&#10005; close</button></div>
+          <div class="pg-stage">
+          <div class="panel-head">
+            <h2 class="panel-title"><em>Pirate route.</em></h2>
+            <div class="panel-note">8-bit game /<br/><span class="accent">cassette delivery</span></div>
+          </div>
+          <div class="game-sub active" data-game-sub="pirate">
+          <p class="panel-intro">An <strong>8-bit delivery run</strong> through Lahore's informal media economy. You are the bootleg cassette itself, reels spinning; four customers are waiting, and the raid squads are not. <strong>Arrow keys or WASD to move</strong>, or use the pad. Deliver all four without getting caught.</p>
+
+          <div class="pr-wrap">
+            <div class="pr-hud">
+              <div class="group">
+                <span><span class="lab">LIVES</span> <span class="val magenta" id="prLives">3</span></span>
+                <span><span class="lab">DROPPED</span> <span class="val gold" id="prDeliv">0/4</span></span>
+              </div>
+              <div class="group"><span class="lab">ROUTE</span> <span class="val">LAHORE</span></div>
+            </div>
+
+            <div class="pr-stage">
+              <canvas id="prCanvas" width="540" height="396"></canvas>
+              <div class="scanlines"></div>
+              <div class="pr-overlay" id="prOverlay">
+                <h4 id="prOvTitle">PIRATE ROUTE</h4>
+                <p id="prOvText">Deliver a bootleg reel to four customers across Lahore. Dodge the raid squads. Arrow keys or WASD to move, or use the pad below.</p>
+                <button class="pr-btn" id="prOvBtn">Start run</button>
+              </div>
+            </div>
+
+            <div class="pr-controls">
+              <div class="pr-dpad" id="prDpad">
+                <button class="up" data-dir="up" aria-label="up">▲</button>
+                <button class="left" data-dir="left" aria-label="left">◀</button>
+                <span class="mid"></span>
+                <button class="right" data-dir="right" aria-label="right">▶</button>
+                <button class="down" data-dir="down" aria-label="down">▼</button>
+              </div>
+              <div class="pr-hint">The squads chase when you get close. Lead them off, loop back, and drop the reel on a waiting customer.</div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+
   <!-- procession map pop-out -->
   <div id="mapModal" class="map-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Procession map, full screen">
     <div class="map-modal-bar">
@@ -1216,11 +1316,10 @@
       tabs.forEach(t => t.classList.toggle('active', t.dataset.tabBtn === name));
       panels.forEach(p => p.classList.toggle('active', p.dataset.tab === name));
       try { if (history.replaceState) history.replaceState(null, '', '#' + name); } catch (e) {}
-      if (name !== 'lab' && window.__labStop) window.__labStop();
-      if (name !== 'games' && window.__pirateStop) window.__pirateStop();
-      if (name === 'games') {
-        const pSub = document.querySelector('.game-sub[data-game-sub="pirate"]');
-        if (pSub && pSub.classList.contains('active') && window.__pirateStart) window.__pirateStart();
+      if (name !== 'playground') {
+        if (window.__labStop) window.__labStop();
+        if (window.__pirateStop) window.__pirateStop();
+        if (window.__pgReset) window.__pgReset();
       }
       // the procession map opens in its own full-screen pop-out (mapModal), not inline
     }
@@ -1233,7 +1332,8 @@
       });
     });
     if (window.location.hash) {
-      const target = window.location.hash.slice(1);
+      let target = window.location.hash.slice(1);
+      if (target === 'lab' || target === 'games' || target === 'juloos' || target === 'atlas') target = 'playground';
       if (document.querySelector('[data-tab="' + target + '"]')) activateTab(target);
     }
 
@@ -1582,11 +1682,21 @@
       const SPEED = 3.4, POLICE_SPEED = 2.3;
 
       let player, police, customers, lives, delivered, state, invuln;
+      let particles = [], floats = [], reelAngle = 0, shakeT = 0, flashT = 0, wasMoving = false;
       let active = false, animId = null;
 
       function center(t) { return { x: t.c*TILE + TILE/2, y: t.r*TILE + TILE/2 }; }
       function mkEntity(t, speed) { const ctr = center(t); return { c:t.c, r:t.r, x:ctr.x, y:ctr.y, tc:t.c, tr:t.r, moving:false, speed }; }
 
+      function spawnBurst(x, y, color, n, spd) {
+        const f = spd || 1;
+        for (let i = 0; i < n; i++) {
+          const a = Math.random() * Math.PI * 2, sp = (1.2 + Math.random() * 2.4) * f;
+          particles.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.4, life: 24 + Math.random() * 16, color });
+        }
+      }
+      function spawnFloat(x, y, text, color) { floats.push({ x, y, text, color, life: 56 }); }
+      function buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
       function reset(full) {
         player = mkEntity(START, SPEED);
         police = POLICE_START.map(p => mkEntity(p, POLICE_SPEED));
@@ -1631,18 +1741,29 @@
         if (mv) { e.preventDefault(); tryMove(player, mv[0], mv[1]); }
       });
       document.querySelectorAll('#prDpad button[data-dir]').forEach(b => {
-        b.addEventListener('click', () => {
-          if (state !== 'playing') return;
-          const mv = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] }[b.dataset.dir];
-          if (mv) tryMove(player, mv[0], mv[1]);
-        });
+        const mv = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] }[b.dataset.dir];
+        let dpadTimer = null;
+        function step() { if (state === 'playing' && mv) tryMove(player, mv[0], mv[1]); }
+        function stopRepeat() { if (dpadTimer) { clearInterval(dpadTimer); dpadTimer = null; } }
+        b.addEventListener('pointerdown', e => { e.preventDefault(); step(); stopRepeat(); dpadTimer = setInterval(step, 150); });
+        ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, stopRepeat));
       });
 
       function checkDelivery() {
         customers.forEach(c => {
           if (!c.done && !player.moving && player.c === c.c && player.r === c.r) {
             c.done = true; delivered++; updateHud();
-            if (delivered === customers.length) { state = 'won'; showOverlay('DELIVERED', 'Every reel dropped, nobody caught you. The street remembers a good runner.', 'Run it again'); }
+            const ctr = center(c);
+            spawnBurst(ctr.x, ctr.y, '#39ff14', 22, 1.1);
+            spawnBurst(ctr.x, ctr.y, '#e8c466', 16, 0.9);
+            spawnFloat(ctr.x, ctr.y - 16, 'DROPPED', '#39ff14');
+            buzz(30);
+            if (delivered === customers.length) {
+              spawnBurst(player.x, player.y, '#39ff14', 44, 1.5);
+              spawnFloat(player.x, player.y - 26, 'ALL REELS OUT', '#e8c466');
+              buzz([40, 60, 40]);
+              state = 'won'; showOverlay('DELIVERED', 'Every reel dropped, nobody caught you. The street remembers a good runner.', 'Run it again');
+            }
           }
         });
       }
@@ -1651,6 +1772,11 @@
         for (const p of police) {
           if (Math.hypot(p.x - player.x, p.y - player.y) < TILE*0.6) {
             lives--; updateHud();
+            shakeT = 14; flashT = 10;
+            spawnBurst(player.x, player.y, '#d63384', 30, 1.3);
+            spawnBurst(player.x, player.y, '#ff8c42', 12, 1.0);
+            spawnFloat(player.x, player.y - 18, 'RAIDED', '#ff6b6b');
+            buzz([60, 40, 60]);
             if (lives <= 0) { state = 'lost'; showOverlay('BUSTED', 'The raid squad got you and the reels are confiscated. Lie low and try again.', 'Try again'); }
             else { reset(false); }
             return;
@@ -1660,6 +1786,9 @@
 
       function draw() {
         ctx.fillStyle = '#07120c'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        const shx = shakeT > 0 ? (Math.random() * 6 - 3) : 0;
+        const shy = shakeT > 0 ? (Math.random() * 6 - 3) : 0;
+        ctx.save(); ctx.translate(shx, shy);
         for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++) {
           const x=c*TILE, y=r*TILE;
           if (MAP[r][c]==='#') {
@@ -1689,11 +1818,60 @@
           ctx.fillStyle = '#0d0c0a'; ctx.fillRect(p.x-9, p.y-11, 18, 5);
           if (Math.floor(t/250)%2===0) { ctx.fillStyle = '#39ff14'; ctx.fillRect(p.x-3, p.y-15, 6, 4); }
         });
-        const flicker = invuln > 0 && Math.floor(t/120)%2===0;
-        ctx.fillStyle = flicker ? '#8a857a' : '#ede5d3'; ctx.fillRect(player.x-9, player.y-11, 18, 22);
-        ctx.fillStyle = '#ff8c42'; ctx.fillRect(player.x-9, player.y-11, 18, 6);
-        ctx.fillStyle = '#0d0c0a'; ctx.fillRect(player.x-6, player.y+1, 12, 8);
-        ctx.fillStyle = '#d4a040'; ctx.fillRect(player.x-4, player.y+3, 3, 3); ctx.fillRect(player.x+1, player.y+3, 3, 3);
+        if (player.moving) reelAngle += 0.35;
+        const bob = player.moving ? 0 : Math.sin(t / 240) * 1.5;
+        const px = player.x, py = player.y + bob;
+        const flicker = invuln > 0 && Math.floor(t / 120) % 2 === 0;
+        ctx.fillStyle = 'rgba(232,196,102,0.10)';
+        ctx.beginPath(); ctx.ellipse(px, py + 12, 16, 6, 0, 0, 6.283); ctx.fill();
+        ctx.save();
+        ctx.shadowColor = flicker ? 'rgba(138,133,122,0.9)' : 'rgba(232,196,102,0.95)';
+        ctx.shadowBlur = 14;
+        ctx.fillStyle = flicker ? '#8a857a' : '#e8c466';
+        ctx.fillRect(px - 15, py - 10, 30, 20);
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = '#fff7e6'; ctx.lineWidth = 2;
+        ctx.strokeRect(px - 15, py - 10, 30, 20);
+        ctx.fillStyle = '#0d0c0a'; ctx.fillRect(px - 11, py - 6, 22, 9);
+        for (const rx of [-6, 6]) {
+          ctx.fillStyle = '#e8c466';
+          ctx.beginPath(); ctx.arc(px + rx, py - 1.5, 3.6, 0, 6.283); ctx.fill();
+          ctx.strokeStyle = '#0d0c0a'; ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.moveTo(px + rx - Math.cos(reelAngle) * 3.2, py - 1.5 - Math.sin(reelAngle) * 3.2);
+          ctx.lineTo(px + rx + Math.cos(reelAngle) * 3.2, py - 1.5 + Math.sin(reelAngle) * 3.2);
+          ctx.stroke();
+        }
+        ctx.fillStyle = '#c41e26'; ctx.fillRect(px - 15, py + 6, 30, 4);
+        ctx.fillStyle = '#ede5d3'; ctx.fillRect(px - 9, py + 7, 18, 2);
+        ctx.restore();
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const q = particles[i];
+          q.x += q.vx; q.y += q.vy; q.vy += 0.05; q.life--;
+          if (q.life <= 0) { particles.splice(i, 1); continue; }
+          ctx.globalAlpha = Math.min(1, q.life / 24);
+          ctx.fillStyle = q.color;
+          ctx.fillRect(q.x - 1.5, q.y - 1.5, 3, 3);
+        }
+        ctx.globalAlpha = 1;
+        for (let i = floats.length - 1; i >= 0; i--) {
+          const fl = floats[i];
+          fl.y -= 0.45; fl.life--;
+          if (fl.life <= 0) { floats.splice(i, 1); continue; }
+          ctx.globalAlpha = Math.min(1, fl.life / 30);
+          ctx.fillStyle = fl.color;
+          ctx.font = '9px "Press Start 2P", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(fl.text, fl.x, fl.y);
+        }
+        ctx.globalAlpha = 1; ctx.textAlign = 'left';
+        ctx.restore();
+        if (flashT > 0) {
+          ctx.fillStyle = 'rgba(214,51,132,' + (flashT / 10 * 0.32).toFixed(3) + ')';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        if (shakeT > 0) shakeT--;
+        if (flashT > 0) flashT--;
       }
 
       function updateHud() {
@@ -1706,6 +1884,8 @@
         if (!active) return;
         if (state === 'playing') {
           stepEntity(player);
+          if (wasMoving && !player.moving) spawnBurst(player.x, player.y + 9, '#8a857a', 2, 0.5);
+          wasMoving = player.moving;
           police.forEach(p => { policeAI(p); stepEntity(p); });
           if (invuln > 0) invuln--;
           checkDelivery();
@@ -1723,24 +1903,58 @@
       function hideOverlay() { overlay.classList.add('hidden'); }
       ovBtn.addEventListener('click', () => { reset(true); state = 'playing'; hideOverlay(); });
 
-      window.__pirateStart = function () { active = true; if (!player) reset(true); if (!animId) loop(); };
+      function fitCanvas() {
+        const st = canvas.parentElement;
+        if (!st) return;
+        const availW = st.clientWidth - 8;
+        const availH = st.clientHeight - 8;
+        if (availW < 60 || availH < 60) return;
+        const scale = Math.min(availW / canvas.width, availH / canvas.height);
+        canvas.style.width = Math.floor(canvas.width * scale) + 'px';
+        canvas.style.height = Math.floor(canvas.height * scale) + 'px';
+      }
+      window.addEventListener('resize', fitCanvas);
+      window.addEventListener('orientationchange', function () { setTimeout(fitCanvas, 80); });
+      window.__pirateStart = function () { active = true; if (!player) reset(true); if (!animId) loop(); setTimeout(fitCanvas, 0); setTimeout(fitCanvas, 180); };
       window.__pirateStop = function () { active = false; if (animId) { cancelAnimationFrame(animId); animId = null; } };
 
       reset(true);
       state = 'idle';
     })();
 
-    // GAMES sub-switcher
+    // PLAYGROUND launcher
     (function () {
-      const btns = document.querySelectorAll('.game-switch button[data-game]');
-      const subs = document.querySelectorAll('.game-sub');
-      function showGame(name) {
-        btns.forEach(b => b.classList.toggle('active', b.dataset.game === name));
-        subs.forEach(s => s.classList.toggle('active', s.dataset.gameSub === name));
-        if (name === 'pirate') { if (window.__pirateStart) window.__pirateStart(); }
-        else { if (window.__pirateStop) window.__pirateStop(); }
+      const grid = document.getElementById('pgGrid');
+      if (!grid) return;
+      const subs = document.querySelectorAll('.pg-sub');
+      function stopAll() {
+        if (window.__labStop) window.__labStop();
+        if (window.__pirateStop) window.__pirateStop();
       }
-      btns.forEach(b => b.addEventListener('click', () => showGame(b.dataset.game)));
+      function showGrid() {
+        stopAll();
+        subs.forEach(s => s.classList.remove('open'));
+        grid.classList.remove('hidden');
+        document.body.classList.remove('game-open');
+      }
+      function openSub(name) {
+        stopAll();
+        grid.classList.add('hidden');
+        subs.forEach(s => s.classList.toggle('open', s.dataset.pgSub === name));
+        document.body.classList.add('game-open');
+        const openEl = document.querySelector('.pg-sub.open');
+        if (openEl) openEl.scrollTop = 0;
+        if (name === 'pirate' && window.__pirateStart) window.__pirateStart();
+      }
+      grid.querySelectorAll('.pg-card').forEach(c => {
+        if (c.dataset.pg === 'map') return;
+        c.addEventListener('click', () => openSub(c.dataset.pg));
+      });
+      document.querySelectorAll('.pg-back').forEach(b => b.addEventListener('click', showGrid));
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && document.querySelector('.pg-sub.open')) showGrid();
+      });
+      window.__pgReset = showGrid;
     })();
   </script>
   <script>
