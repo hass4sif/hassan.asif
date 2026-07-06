@@ -758,6 +758,20 @@
       .pg-sub[data-pg-sub="pirate"].open .pr-controls { margin: 0 0 0 12px; }
       .pg-sub[data-pg-sub="pirate"].open .pr-hint { display: none; }
     }
+    /* ===== wide-screen responsiveness ===== */
+    @media (min-width: 1180px) { .pg-grid { grid-template-columns: repeat(4, 1fr); } }
+    .pg-sub[data-pg-sub="pirate"].open .pg-stage { max-width: none; }
+    @media (min-width: 1000px) and (min-height: 561px) {
+      .pg-sub[data-pg-sub="pirate"].open .pr-wrap { flex-direction: row; align-items: stretch; gap: 26px; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-stage { order: 1; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-hud { order: 2; flex: 0 0 190px; margin: 0; display: flex; flex-direction: column; justify-content: flex-start; gap: 14px; border-left: 1px solid var(--rule-strong); padding-left: 18px; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-hud .group { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-controls { order: 3; flex: 0 0 auto; align-self: center; margin: 0; flex-direction: column; gap: 12px; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-controls .pr-hint { max-width: 210px; text-align: center; }
+    }
+    @media (min-width: 1000px) {
+      .pg-sub[data-pg-sub="lab"].open .pg-stage, .pg-sub[data-pg-sub="mehfil"].open .pg-stage { max-width: 1120px; }
+    }
   </style>
 </head>
 <body>
@@ -1913,9 +1927,20 @@
         canvas.style.width = Math.floor(canvas.width * scale) + 'px';
         canvas.style.height = Math.floor(canvas.height * scale) + 'px';
       }
+      function fitCanvasSoon() {
+        let tries = 0;
+        (function attempt() {
+          fitCanvas();
+          tries++;
+          if (tries < 12) requestAnimationFrame(attempt);
+        })();
+      }
       window.addEventListener('resize', fitCanvas);
       window.addEventListener('orientationchange', function () { setTimeout(fitCanvas, 80); });
-      window.__pirateStart = function () { active = true; if (!player) reset(true); if (!animId) loop(); setTimeout(fitCanvas, 0); setTimeout(fitCanvas, 180); };
+      if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
+        new ResizeObserver(function () { fitCanvas(); }).observe(canvas.parentElement);
+      }
+      window.__pirateStart = function () { active = true; if (!player) reset(true); if (!animId) loop(); fitCanvasSoon(); };
       window.__pirateStop = function () { active = false; if (animId) { cancelAnimationFrame(animId); animId = null; } };
 
       reset(true);
