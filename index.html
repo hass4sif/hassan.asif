@@ -721,7 +721,7 @@
     .pg-sub .panel-title { font-size: clamp(24px, 3.4vw, 38px); }
     .pg-sub .panel-head { margin-bottom: 28px; }
     /* ===== playground game windows: app frame, no page scroll ===== */
-    body.game-open { overflow: hidden; }
+    html.game-open, body.game-open, body.map-open { overflow: hidden; }
     body.game-open #siteFX { display: none; }
     .pg-sub.open { position: fixed; inset: 0; height: 100vh; height: 100dvh; z-index: 9990; display: flex; flex-direction: column; background: radial-gradient(120% 90% at 50% 0%, #14110c 0%, var(--bg) 60%); overflow: hidden; overscroll-behavior: none; animation: panelFade .28s cubic-bezier(.7,0,.3,1); }
     .pg-sub.open .pg-gamebar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(8px + env(safe-area-inset-top)) 14px 8px; background: #0c0809; border-bottom: 1px solid var(--rule-strong); }
@@ -762,7 +762,7 @@
     @media (min-width: 1180px) { .pg-grid { grid-template-columns: repeat(4, 1fr); } }
     .pg-sub[data-pg-sub="pirate"].open .pg-stage { max-width: none; }
     @media (min-width: 1000px) and (min-height: 561px) {
-      .pg-sub[data-pg-sub="pirate"].open .pr-wrap { flex-direction: row; align-items: stretch; gap: 26px; }
+      .pg-sub[data-pg-sub="pirate"].open .pr-wrap { flex-direction: row; align-items: stretch; justify-content: center; gap: 26px; }
       .pg-sub[data-pg-sub="pirate"].open .pr-stage { order: 1; }
       .pg-sub[data-pg-sub="pirate"].open .pr-hud { order: 2; flex: 0 0 190px; margin: 0; display: flex; flex-direction: column; justify-content: flex-start; gap: 14px; border-left: 1px solid var(--rule-strong); padding-left: 18px; }
       .pg-sub[data-pg-sub="pirate"].open .pr-hud .group { flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -1919,13 +1919,37 @@
 
       function fitCanvas() {
         const st = canvas.parentElement;
-        if (!st) return;
-        const availW = st.clientWidth - 8;
-        const availH = st.clientHeight - 8;
+        const sub = canvas.closest('.pg-sub');
+        if (!st || !sub || !sub.classList.contains('open')) return;
+        const wrap = st.parentElement;
+        if (!wrap) return;
+        const ctr = sub.querySelector('.pr-controls');
+        const subRect = sub.getBoundingClientRect();
+        const stRect = st.getBoundingClientRect();
+        const wrapRect = wrap.getBoundingClientRect();
+        const dir = (getComputedStyle(wrap).flexDirection || 'column');
+        const row = dir.indexOf('row') === 0;
+        let availW = wrapRect.width - 10;
+        if (row) {
+          let side = 0;
+          Array.from(wrap.children).forEach(function (ch) {
+            if (ch !== st) side += ch.getBoundingClientRect().width + 26;
+          });
+          availW = wrapRect.width - side - 10;
+        }
+        const aboveH = stRect.top - subRect.top;
+        const belowH = row ? 26 : ((ctr ? ctr.offsetHeight : 0) + 30);
+        const availH = subRect.height - aboveH - belowH - 8;
         if (availW < 60 || availH < 60) return;
         const scale = Math.min(availW / canvas.width, availH / canvas.height);
-        canvas.style.width = Math.floor(canvas.width * scale) + 'px';
-        canvas.style.height = Math.floor(canvas.height * scale) + 'px';
+        const cw = Math.floor(canvas.width * scale);
+        const chh = Math.floor(canvas.height * scale);
+        canvas.style.width = cw + 'px';
+        canvas.style.height = chh + 'px';
+        st.style.flex = '0 0 auto';
+        st.style.width = (cw + 10) + 'px';
+        st.style.height = (chh + 10) + 'px';
+        st.style.margin = row ? '0' : '0 auto';
       }
       function fitCanvasSoon() {
         let tries = 0;
@@ -1938,7 +1962,7 @@
       window.addEventListener('resize', fitCanvas);
       window.addEventListener('orientationchange', function () { setTimeout(fitCanvas, 80); });
       if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
-        new ResizeObserver(function () { fitCanvas(); }).observe(canvas.parentElement);
+        new ResizeObserver(function () { fitCanvas(); }).observe(canvas.closest('.pg-sub') || canvas.parentElement);
       }
       window.__pirateStart = function () { active = true; if (!player) reset(true); if (!animId) loop(); fitCanvasSoon(); };
       window.__pirateStop = function () { active = false; if (animId) { cancelAnimationFrame(animId); animId = null; } };
@@ -1961,12 +1985,14 @@
         subs.forEach(s => s.classList.remove('open'));
         grid.classList.remove('hidden');
         document.body.classList.remove('game-open');
+        document.documentElement.classList.remove('game-open');
       }
       function openSub(name) {
         stopAll();
         grid.classList.add('hidden');
         subs.forEach(s => s.classList.toggle('open', s.dataset.pgSub === name));
         document.body.classList.add('game-open');
+        document.documentElement.classList.add('game-open');
         const openEl = document.querySelector('.pg-sub.open');
         if (openEl) openEl.scrollTop = 0;
         if (name === 'pirate' && window.__pirateStart) window.__pirateStart();
@@ -2002,10 +2028,12 @@
       }
       modal.hidden = false; modal.setAttribute('aria-hidden', 'false');
       document.body.classList.add('map-open');
+      document.documentElement.classList.add('game-open');
     }
     function closeMap() {
       modal.hidden = true; modal.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('map-open');
+      document.documentElement.classList.remove('game-open');
       frame.removeAttribute('data-loaded'); frame.removeAttribute('srcdoc'); frame.src = 'about:blank';
     }
     openBtn.addEventListener('click', openMap);
