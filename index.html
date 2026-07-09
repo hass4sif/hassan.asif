@@ -1142,7 +1142,7 @@
             <span class="pg-body">
               <span class="pg-kicker">8-bit arcade</span>
               <span class="pg-name">Pirate route</span>
-              <span class="pg-desc">Run bootleg cassettes through the mohalla and dodge the raid squad.</span>
+              <span class="pg-desc">Four routes through Lahore, from Hall Road to an Urs night. Drop the reel, dodge the raid squad.</span>
               <span class="pg-open">insert coin &#9654;</span>
             </span>
           </button>
@@ -1273,15 +1273,16 @@
             <div class="panel-note">8-bit game /<br/><span class="accent">cassette delivery</span></div>
           </div>
           <div class="game-sub active" data-game-sub="pirate">
-          <p class="panel-intro">An <strong>8-bit delivery run</strong> through Lahore's informal media economy. You are the bootleg cassette itself, reels spinning; four customers are waiting, and the raid squads are not. <strong>Arrow keys or WASD to move</strong>, or use the pad. Deliver all four without getting caught.</p>
+          <p class="panel-intro">An <strong>8-bit delivery run</strong> through Lahore's informal media economy. You are the bootleg cassette itself, reels spinning. Four routes across Lahore, from Hall Road to an Urs night, each one tighter than the last. Drop the reel at every mehfil, masjid, madrasa, shop, dhaba, and mazar. <strong>Arrow keys or WASD to move</strong>, or use the pad. Deliver all four without getting caught.</p>
 
           <div class="pr-wrap">
             <div class="pr-hud">
               <div class="group">
                 <span><span class="lab">LIVES</span> <span class="val magenta" id="prLives">3</span></span>
-                <span><span class="lab">DROPPED</span> <span class="val gold" id="prDeliv">0/4</span></span>
+                <span><span class="lab">DROPPED</span> <span class="val gold" id="prDeliv">0/3</span></span>
+                <span><span class="lab">LEVEL</span> <span class="val led" id="prLevel">1/4</span></span>
               </div>
-              <div class="group"><span class="lab">ROUTE</span> <span class="val">LAHORE</span></div>
+              <div class="group"><span class="lab">ROUTE</span> <span class="val" id="prArea">HALL ROAD</span></div>
             </div>
 
             <div class="pr-stage">
@@ -1289,7 +1290,7 @@
               <div class="scanlines"></div>
               <div class="pr-overlay" id="prOverlay">
                 <h4 id="prOvTitle">PIRATE ROUTE</h4>
-                <p id="prOvText">Deliver a bootleg reel to four customers across Lahore. Dodge the raid squads. Arrow keys or WASD to move, or use the pad below.</p>
+                <p id="prOvText">Four routes across Lahore, each tighter than the last. Drop the reel at every mehfil, masjid, madrasa, shop, dhaba, and mazar on the list. Dodge the raid squads. Arrow keys or WASD to move, or use the pad below.</p>
                 <button class="pr-btn" id="prOvBtn">Start run</button>
               </div>
             </div>
@@ -1674,25 +1675,53 @@
       canvas.width = COLS * TILE;
       canvas.height = ROWS * TILE;
 
-      const MAP = [
-        "###############",
-        "#.............#",
-        "#.##.##.##.##.#",
-        "#.............#",
-        "#.##.##.##.##.#",
-        "#.............#",
-        "#.##.##.##.##.#",
-        "#.............#",
-        "#.##.##.##.##.#",
-        "#.............#",
-        "###############"
+      // Four routes through Lahore's media geography. Hall Road is the city's real
+      // electronics and cassette bazaar; the rest are the ordinary places a reel travels.
+      const LEVELS = [
+        { name: 'HALL ROAD', blurb: 'The cassette bazaar. Two squads, three drops. Learn the lanes.',
+          policeSpeed: 2.0,
+          map: [
+            "###############","#.............#","#.###.....###.#","#.............#",
+            "#.....###.....#","#.............#","#.....###.....#","#.............#",
+            "#.###.....###.#","#.............#","###############"],
+          start: { c:1, r:9 },
+          customers: [ {c:13,r:1,type:'shop',name:'SHOP'}, {c:7,r:5,type:'mehfil',name:'MEHFIL'}, {c:1,r:3,type:'dhaba',name:'DHABA'} ],
+          police: [ {c:7,r:1}, {c:13,r:7} ] },
+        { name: 'BHATI GATE', blurb: 'Inside the walled city. Three squads, four drops.',
+          policeSpeed: 2.3,
+          map: [
+            "###############","#.............#","#.##.##.##.##.#","#.............#",
+            "#.##.##.##.##.#","#.............#","#.##.##.##.##.#","#.............#",
+            "#.##.##.##.##.#","#.............#","###############"],
+          start: { c:1, r:9 },
+          customers: [ {c:1,r:1,type:'shop',name:'SHOP'}, {c:13,r:1,type:'madrasa',name:'MADRASA'}, {c:7,r:5,type:'masjid',name:'MASJID'}, {c:13,r:9,type:'mehfil',name:'MEHFIL'} ],
+          police: [ {c:7,r:3}, {c:1,r:7}, {c:13,r:7} ] },
+        { name: 'ANARKALI', blurb: 'Narrow corridors, four squads, five drops. Keep moving.',
+          policeSpeed: 2.6,
+          map: [
+            "###############","#......#......#","#.####.#.####.#","#......#......#",
+            "#.#.#####.#.#.#","#.#.......#.#.#","#.#.#####.#.#.#","#......#......#",
+            "#.####.#.####.#","#......#......#","###############"],
+          start: { c:1, r:9 },
+          customers: [ {c:1,r:1,type:'mazar',name:'MAZAR'}, {c:13,r:1,type:'madrasa',name:'MADRASA'}, {c:13,r:9,type:'shop',name:'SHOP'}, {c:5,r:5,type:'mehfil',name:'MEHFIL'}, {c:8,r:3,type:'dhaba',name:'DHABA'} ],
+          police: [ {c:3,r:1}, {c:11,r:1}, {c:3,r:9}, {c:11,r:9} ] },
+        { name: 'URS NIGHT', blurb: 'The whole quarter is awake. Five squads, six drops. Good luck.',
+          policeSpeed: 2.9,
+          map: [
+            "###############","#.....#.#.....#","#.###.#.#.###.#","#.#...........#",
+            "#.#.###.###.#.#","#...#.....#...#","#.#.###.###.#.#","#.#...........#",
+            "#.###.#.#.###.#","#.....#.#.....#","###############"],
+          start: { c:1, r:9 },
+          customers: [ {c:1,r:1,type:'shop',name:'SHOP'}, {c:7,r:1,type:'masjid',name:'MASJID'}, {c:13,r:1,type:'madrasa',name:'MADRASA'}, {c:7,r:5,type:'mehfil',name:'MEHFIL'}, {c:13,r:9,type:'mazar',name:'MAZAR'}, {c:7,r:9,type:'dhaba',name:'DHABA'} ],
+          police: [ {c:5,r:3}, {c:9,r:3}, {c:5,r:7}, {c:9,r:7}, {c:11,r:5} ] }
       ];
+      let levelIndex = 0;
+      let MAP = LEVELS[0].map;
+      let START = LEVELS[0].start;
+      let POLICE_START = LEVELS[0].police;
+      let POLICE_SPEED = LEVELS[0].policeSpeed;
+      const SPEED = 3.4;
       function walkable(c, r) { return r >= 0 && r < ROWS && c >= 0 && c < COLS && MAP[r][c] !== '#'; }
-
-      const START = { c: 1, r: 9 };
-      const CUSTOMERS = [ {c:1,r:1}, {c:13,r:1}, {c:13,r:9}, {c:7,r:5} ];
-      const POLICE_START = [ {c:7,r:1}, {c:1,r:7}, {c:13,r:7} ];
-      const SPEED = 3.4, POLICE_SPEED = 2.3;
 
       let player, police, customers, lives, delivered, state, invuln;
       let particles = [], floats = [], reelAngle = 0, shakeT = 0, flashT = 0, wasMoving = false;
@@ -1710,13 +1739,23 @@
       }
       function spawnFloat(x, y, text, color) { floats.push({ x, y, text, color, life: 56 }); }
       function buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
-      function reset(full) {
+      function respawn() {
         player = mkEntity(START, SPEED);
         police = POLICE_START.map(p => mkEntity(p, POLICE_SPEED));
-        if (full) { customers = CUSTOMERS.map(c => ({ ...c, done:false })); delivered = 0; lives = 3; }
         invuln = 70;
         updateHud();
       }
+      function startLevel(i, keepLives) {
+        levelIndex = Math.max(0, Math.min(i, LEVELS.length - 1));
+        const L = LEVELS[levelIndex];
+        MAP = L.map; START = L.start; POLICE_START = L.police; POLICE_SPEED = L.policeSpeed;
+        customers = L.customers.map(c => ({ ...c, done: false }));
+        delivered = 0;
+        if (!keepLives) lives = 3;
+        particles = []; floats = [];
+        respawn();
+      }
+      function reset(full) { if (full) startLevel(0, false); else respawn(); }
       function tryMove(ent, dc, dr) {
         if (ent.moving) return;
         const nc = ent.c + dc, nr = ent.r + dr;
@@ -1769,13 +1808,23 @@
             const ctr = center(c);
             spawnBurst(ctr.x, ctr.y, '#39ff14', 22, 1.1);
             spawnBurst(ctr.x, ctr.y, '#e8c466', 16, 0.9);
-            spawnFloat(ctr.x, ctr.y - 16, 'DROPPED', '#39ff14');
+            spawnFloat(ctr.x, ctr.y - 16, c.name, '#39ff14');
             buzz(30);
             if (delivered === customers.length) {
               spawnBurst(player.x, player.y, '#39ff14', 44, 1.5);
-              spawnFloat(player.x, player.y - 26, 'ALL REELS OUT', '#e8c466');
               buzz([40, 60, 40]);
-              state = 'won'; showOverlay('DELIVERED', 'Every reel dropped, nobody caught you. The street remembers a good runner.', 'Run it again');
+              if (levelIndex < LEVELS.length - 1) {
+                const nxt = LEVELS[levelIndex + 1];
+                spawnFloat(player.x, player.y - 26, 'ROUTE CLEAR', '#e8c466');
+                state = 'levelclear';
+                ovAction = function () { startLevel(levelIndex + 1, true); state = 'playing'; };
+                showOverlay('ROUTE CLEAR: ' + LEVELS[levelIndex].name, nxt.blurb + ' You keep the lives you have left.', 'Next route: ' + nxt.name);
+              } else {
+                spawnFloat(player.x, player.y - 26, 'ALL ROUTES RUN', '#e8c466');
+                state = 'won';
+                ovAction = function () { startLevel(0, false); state = 'playing'; };
+                showOverlay('ALL ROUTES RUN', 'Every reel dropped across all four routes, nobody caught you. The street remembers a good runner.', 'Run it again');
+              }
             }
           }
         });
@@ -1790,10 +1839,79 @@
             spawnBurst(player.x, player.y, '#ff8c42', 12, 1.0);
             spawnFloat(player.x, player.y - 18, 'RAIDED', '#ff6b6b');
             buzz([60, 40, 60]);
-            if (lives <= 0) { state = 'lost'; showOverlay('BUSTED', 'The raid squad got you and the reels are confiscated. Lie low and try again.', 'Try again'); }
-            else { reset(false); }
+            if (lives <= 0) {
+              state = 'lost';
+              ovAction = function () { startLevel(levelIndex, false); state = 'playing'; };
+              showOverlay('BUSTED', 'The raid squad got you on ' + LEVELS[levelIndex].name + ' and the reels are confiscated. Lie low and run this route again.', 'Retry ' + LEVELS[levelIndex].name);
+            }
+            else { respawn(); }
             return;
           }
+        }
+      }
+
+      function drawDrop(cu, x, y, t) {
+        const g = cu.done ? '#39ff14' : '#d4a040';
+        if (!cu.done) {
+          const pulse = 5 + Math.sin(t / 200) * 2;
+          ctx.strokeStyle = 'rgba(212,160,64,' + (0.35 + Math.sin(t / 200) * 0.25) + ')';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x - pulse - 9, y - pulse - 8, (pulse + 9) * 2, (pulse + 8) * 2);
+        }
+        ctx.fillStyle = cu.done ? 'rgba(57,255,20,0.20)' : '#0d0c0a';
+        ctx.fillRect(x - 10, y - 9, 20, 18);
+        ctx.fillStyle = g; ctx.strokeStyle = g; ctx.lineWidth = 1.6;
+        const T = cu.type;
+        if (T === 'masjid') {
+          ctx.beginPath(); ctx.arc(x, y + 1, 6, Math.PI, 0); ctx.fill();
+          ctx.fillRect(x - 7, y + 1, 14, 6);
+          ctx.fillRect(x - 9, y - 4, 2, 11); ctx.fillRect(x + 7, y - 4, 2, 11);
+          ctx.beginPath(); ctx.arc(x, y - 7, 2.4, 0.5, 5.4); ctx.stroke();
+        } else if (T === 'mazar') {
+          ctx.beginPath(); ctx.arc(x, y + 2, 6.5, Math.PI, 0); ctx.fill();
+          ctx.fillRect(x - 7, y + 2, 14, 5);
+          ctx.fillRect(x - 1, y - 11, 1.6, 6);
+          ctx.beginPath(); ctx.moveTo(x + 0.6, y - 11); ctx.lineTo(x + 6, y - 9); ctx.lineTo(x + 0.6, y - 7); ctx.closePath(); ctx.fill();
+        } else if (T === 'madrasa') {
+          ctx.fillRect(x - 8, y - 5, 16, 12);
+          ctx.fillStyle = '#0d0c0a';
+          ctx.fillRect(x - 6, y - 1, 5, 6); ctx.fillRect(x + 1, y - 1, 5, 6);
+          ctx.fillStyle = g; ctx.fillRect(x - 0.8, y - 1, 1.6, 6);
+          ctx.fillRect(x - 9, y - 8, 18, 2);
+        } else if (T === 'shop') {
+          ctx.fillRect(x - 9, y - 7, 18, 4);
+          ctx.fillStyle = '#0d0c0a';
+          for (let i = 0; i < 4; i++) ctx.fillRect(x - 8 + i * 4.6, y - 7, 2.2, 4);
+          ctx.fillStyle = g; ctx.fillRect(x - 7, y - 1, 14, 8);
+          ctx.fillStyle = '#0d0c0a'; ctx.fillRect(x - 4, y + 1, 8, 4);
+          ctx.fillStyle = g; ctx.fillRect(x - 2.5, y + 2.4, 1.4, 1.4); ctx.fillRect(x + 1.1, y + 2.4, 1.4, 1.4);
+        } else if (T === 'dhaba') {
+          ctx.fillRect(x - 6, y - 1, 11, 8);
+          ctx.beginPath(); ctx.arc(x + 6, y + 3, 3, 1.6, 4.7, true); ctx.stroke();
+          ctx.fillRect(x - 8, y + 7, 15, 1.8);
+          ctx.beginPath();
+          ctx.moveTo(x - 3, y - 4); ctx.quadraticCurveTo(x - 1, y - 7, x - 3, y - 10);
+          ctx.moveTo(x + 1, y - 4); ctx.quadraticCurveTo(x + 3, y - 7, x + 1, y - 10);
+          ctx.stroke();
+        } else { // mehfil
+          ctx.fillRect(x - 8, y - 6, 8, 13);
+          ctx.fillStyle = '#0d0c0a';
+          ctx.beginPath(); ctx.arc(x - 4, y + 0.5, 2.6, 0, 6.283); ctx.fill();
+          ctx.fillStyle = g;
+          for (let i = 1; i <= 3; i++) {
+            ctx.globalAlpha = cu.done ? 0.5 : (0.35 + 0.3 * Math.sin(t / 180 + i));
+            ctx.beginPath(); ctx.arc(x + 1, y + 0.5, i * 3.4, -0.9, 0.9); ctx.stroke();
+          }
+          ctx.globalAlpha = 1;
+        }
+        ctx.fillStyle = cu.done ? 'rgba(57,255,20,0.85)' : 'rgba(232,196,102,0.9)';
+        ctx.font = '6px "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(cu.name, x, y + 16);
+        ctx.textAlign = 'left';
+        if (cu.done) {
+          ctx.strokeStyle = '#39ff14'; ctx.lineWidth = 1.8;
+          ctx.beginPath(); ctx.moveTo(x - 5, y + 1); ctx.lineTo(x - 1, y + 5); ctx.lineTo(x + 6, y - 4); ctx.stroke();
         }
       }
 
@@ -1815,16 +1933,7 @@
         const t = Date.now();
         customers.forEach(cu => {
           const ctr = center(cu);
-          if (cu.done) {
-            ctx.fillStyle = 'rgba(57,255,20,0.22)'; ctx.fillRect(ctr.x-9, ctr.y-9, 18, 18);
-            ctx.strokeStyle = '#39ff14'; ctx.lineWidth = 2; ctx.strokeRect(ctr.x-9, ctr.y-9, 18, 18);
-          } else {
-            const pulse = 6 + Math.sin(t/200)*2;
-            ctx.fillStyle = '#d4a040'; ctx.fillRect(ctr.x-10, ctr.y-7, 20, 14);
-            ctx.fillStyle = '#0d0c0a'; ctx.fillRect(ctr.x-6, ctr.y-3, 4, 4); ctx.fillRect(ctr.x+2, ctr.y-3, 4, 4);
-            ctx.strokeStyle = 'rgba(212,160,64,' + (0.4 + Math.sin(t/200)*0.3) + ')'; ctx.lineWidth = 2;
-            ctx.strokeRect(ctr.x-pulse-8, ctr.y-pulse-5, (pulse+8)*2, (pulse+5)*2);
-          }
+          drawDrop(cu, ctr.x, ctr.y, t);
         });
         police.forEach(p => {
           ctx.fillStyle = '#d63384'; ctx.fillRect(p.x-9, p.y-11, 18, 22);
@@ -1889,8 +1998,11 @@
 
       function updateHud() {
         const lv = document.getElementById('prLives'), dv = document.getElementById('prDeliv');
+        const lvl = document.getElementById('prLevel'), ar = document.getElementById('prArea');
         if (lv) lv.textContent = Math.max(0, lives);
-        if (dv) dv.textContent = delivered + '/' + (customers ? customers.length : 4);
+        if (dv) dv.textContent = delivered + '/' + (customers ? customers.length : 0);
+        if (lvl) lvl.textContent = (levelIndex + 1) + '/' + LEVELS.length;
+        if (ar) ar.textContent = LEVELS[levelIndex].name;
       }
 
       function loop() {
@@ -1908,13 +2020,15 @@
         animId = requestAnimationFrame(loop);
       }
 
+      let ovAction;
       const overlay = document.getElementById('prOverlay');
       const ovTitle = document.getElementById('prOvTitle');
       const ovText = document.getElementById('prOvText');
       const ovBtn = document.getElementById('prOvBtn');
       function showOverlay(title, text, btn) { ovTitle.textContent = title; ovText.textContent = text; ovBtn.textContent = btn; overlay.classList.remove('hidden'); }
       function hideOverlay() { overlay.classList.add('hidden'); }
-      ovBtn.addEventListener('click', () => { reset(true); state = 'playing'; hideOverlay(); });
+      ovAction = function () { startLevel(0, false); state = 'playing'; };
+      ovBtn.addEventListener('click', () => { ovAction(); hideOverlay(); fitCanvas(); });
 
       function fitCanvas() {
         const st = canvas.parentElement;
