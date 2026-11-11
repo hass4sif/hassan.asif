@@ -4,7 +4,7 @@ Knot shows what comes back in your material: the words a text returns to, the sp
 
 It runs in the browser, on a phone or a computer. Your files stay on your device.
 
-**Open Knot:** https://hassanasif.net/knot/
+**Open Knot:** https://www.hassanasif.net/knot/
 
 ## What Knot shows
 
@@ -53,7 +53,7 @@ Knot reads your files inside your browser, and they stay on your device. It keep
 
 ## Cite
 
-Asif, Hassan. 2026. *Knot*. Software, version 1.0. https://hassanasif.net/knot/
+Asif, Hassan. 2026. *Knot*. Software, version 1.0. https://www.hassanasif.net/knot/
 
 ## Sources
 
