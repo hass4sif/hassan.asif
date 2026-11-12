@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use Knot in your work, please cite it as below."
+title: "Knot"
+type: software
+authors:
+  - family-names: "Asif"
+    given-names: "Hassan"
+version: "6.0"
+date-released: "2026-11-11"
+license: MIT
+url: "https://www.hassanasif.net/knot/"
+abstract: "Knot shows what comes back in a text, a picture or a recording, weighs each result against chance where it can, and joins each person's reading into a shared girih in a room. It runs in the browser."
+keywords:
+  - repetition
+  - pattern
+  - text
+  - image
+  - sound
+  - girih
+  - collective
