@@ -220,6 +220,10 @@ a.pill.xs{cursor:pointer}
 .machine .kicker{display:block;margin-bottom:8px}
 .machine .mname{display:block;margin:0 0 8px;font-family:var(--f-disp);font-weight:600;font-size:clamp(32px,2.6vw,40px);line-height:.92;color:var(--a1);-webkit-text-stroke:.055em var(--k1);paint-order:stroke fill;text-transform:uppercase}
 .machine .desc{display:block;font-size:15px;line-height:1.5;margin-bottom:14px}
+a.machine{text-decoration:none}
+.machine .mtext{display:flex;flex-direction:column;flex:1 1 auto;min-width:0}
+.machine.wide{grid-column:1/-1}
+@media (min-width:601px){.machine.wide{flex-direction:row;align-items:center;gap:clamp(18px,2.6vw,40px)}.machine.wide .card-art{flex:0 0 clamp(240px,34%,420px);margin:0}.machine.wide .mtext{align-self:stretch}.machine.wide .desc{max-width:60ch}}
 
 svg.doodle{overflow:visible}
 
@@ -650,7 +654,7 @@ html.cab-open,body.cab-open{overflow:hidden}
       <div class="head-art"><svg class="doodle icon" data-doodle="joystick" viewBox="0 0 220 150" aria-hidden="true"></svg><svg class="stk" data-stk="dhol"></svg></div>
     </header>
     <div class="prose sec-intro">
-      <p>Research you can press. Four small machines from the dissertation years: a procession you can walk, a rhythm you can program, a studio chain you can wire, and an 8-bit cassette run. Each one opens full screen, on phone and desktop alike. Sound on helps.</p>
+      <p>Research you can press. Four small machines from the dissertation years: a procession you can walk, a rhythm you can program, a studio chain you can wire, and an 8-bit cassette run. Each one opens full screen, on phone and desktop alike. Sound on helps. Below them sits Knot, a newer instrument: give it a text, a picture or a recording, and it shows what comes back.</p>
     </div>
     <div class="machines">
       <button class="card machine cw-D" type="button" id="mapOpenBtn" data-open="map" aria-label="Open Juloos, the procession map, full screen">
@@ -685,6 +689,16 @@ html.cab-open,body.cab-open{overflow:hidden}
         <span class="desc">Four routes through Lahore, from Hall Road to an Urs night. Drop the reel, dodge the raid squad.</span>
         <span class="card-foot"><span class="pill sm alt">Insert coin <span class="ar" aria-hidden="true">&#9654;</span></span></span>
       </button>
+      <a class="card machine wide cw-A" href="/knot/" aria-label="Open Knot, an instrument for texts, pictures and sounds">
+        <canvas class="wash" aria-hidden="true"></canvas>
+        <span class="card-art"><svg class="doodle" data-doodle="knot" viewBox="0 0 260 150" aria-hidden="true"></svg></span>
+        <span class="mtext">
+          <span class="kicker">instrument for text, picture and sound</span>
+          <span class="mname">Knot</span>
+          <span class="desc">Paste a text, or choose a picture or a recording, and Knot shows what comes back: the words, rhythms, stars and passages it repeats. Each reading becomes a tile, and a room of tiles becomes one girih.</span>
+          <span class="card-foot"><span class="pill sm alt">Open <span class="ar" aria-hidden="true">&#9654;</span></span></span>
+        </span>
+      </a>
     </div>
   </div>
 </section>
@@ -1189,6 +1203,19 @@ D.maze=function(svg,rc,seed,pal){var sd=mk(seed);var g=ROOT(svg);
   walls.forEach(function(w){S(rc,g,'path',[rr(w[0],w[1],w[2],w[3],3)],{fill:'#98f8b0',hc:'#6fd88c',hg:4,sw:1.8,seed:sd()});});
   S(rc,g,'path',[rr(38,62,34,24,4)],{fill:'#f6d36b',sw:2,seed:sd()});S(rc,g,'circle',[48,72,7],{fill:BLK,hatch:false,sw:1,seed:sd()});S(rc,g,'circle',[62,72,7],{fill:BLK,hatch:false,sw:1,seed:sd()});
   [[186,64],[130,112]].forEach(function(p){S(rc,g,'path',[rr(p[0]-10,p[1]-12,20,24,4)],{fill:'#f88888',sw:2,seed:sd()});});};
+
+D.knot=function(svg,rc,seed,pal){var sd=mk(seed);var g=ROOT(svg);
+  var cx=70,cy=75,R=50,ri=R*.73,st=[],i;
+  for(i=0;i<20;i++){S(rc,g,'circle',[cx+(R+14)*Math.cos(i*Math.PI/10),cy+(R+14)*Math.sin(i*Math.PI/10),8],{fill:pal.dot,hatch:false,stroke:'none',seed:sd()});}
+  for(i=0;i<20;i++){var a=-Math.PI/2+i*Math.PI/10,r=i%2?ri:R;st.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}
+  S(rc,g,'polygon',[st],{fill:pal.a1,hc:shade(pal.a1,-.2),sw:3.2,stroke:pal.k1,seed:sd()});
+  var ox=184,oy=60,cr=36,pt=[];
+  for(i=0;i<9;i++){var t=-Math.PI/2+i*2*Math.PI/9;pt.push([ox+cr*Math.cos(t),oy+cr*Math.sin(t)]);}
+  L(rc,g,'circle',[ox,oy,cr*2],{sw:2.4,seed:sd()});
+  [[0,4],[1,6],[2,7],[3,8],[0,5],[4,8]].forEach(function(p){L(rc,g,'line',[pt[p[0]][0],pt[p[0]][1],pt[p[1]][0],pt[p[1]][1]],{sw:2,stroke:pal.conn,seed:sd()});});
+  pt.forEach(function(p){S(rc,g,'circle',[p[0],p[1],12],{fill:'#ffffff',hatch:false,sw:1.8,seed:sd()});});
+  L(rc,g,'curve',[[[142,126],[158,112],[174,138],[190,112],[206,138],[222,112],[238,126]]],{sw:3,stroke:pal.k1,seed:sd()});
+  sparks(rc,g,sd,[[246,20,11]]);};
 
 window.DOODLES=D;
 window.DOODLE_KIT={G:G,ROOT:ROOT,mk:mk,S:S,L:L,rr:rr,spark:spark,sparks:sparks,shade:shade,assign:assign};
