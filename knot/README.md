@@ -10,14 +10,14 @@ It runs in the browser, on a phone or a computer. Your files stay on your device
 ## How to use it
 
 1. **Choose.** Pick Text, Picture or Sound. Add your own material, or try an example.
-2. **Read.** Knot shows what repeats. Each result says what Knot found. Read more shows what it does, why, and what it misses.
-3. **Undo.** Use the repeats as clues. Write down three steps you think made your material.
+2. **Read.** Knot takes your material apart with a few plain questions, the kind a maker would ask. Each answer says what Knot found and how it checked.
+3. **Undo.** Use the answers as clues. Write down three steps you think made your material. Then compare them with Knot’s three steps.
 4. **Redo.** Give your three steps to a partner. Can they make your material again from the steps alone?
-5. **Check.** Send your tile to the room. The tiles join into one pattern on the screen, and the group compares them.
+5. **Check.** Send your tile to the room. Open the Room tab: the group’s tiles join into one girih, there and on the screen at the front.
 
 ## What Knot shows
 
-Each result comes as a card. It says what Knot found on your material. Read more adds four parts: what it does, why, what it misses, and its place in the activity, with the details behind it. A short line at the top of each tab, "In short", puts the results together.
+Each result answers one question. The card gives Knot’s answer, what it means, how Knot checks it in one sentence, an Undo clue (what the answer suggests about the making) and a Redo step (one step you could write down). More adds why it matters, what it misses, what it does to your tile, and the settings. Under "In short", Knot offers its own guess at three steps, folded away so that people write theirs first.
 
 ### Text
 
@@ -36,11 +36,11 @@ Each sentence, or each line of a poem, a song or a list, becomes a dot on a circ
 
 ### Picture
 
-- **Stripe map:** the picture's Fourier power spectrum, the same kind of map that X-rays through a crystal draw. Each pair of spots is one set of stripes. It has no time axis and no place axis. Each spot has a twin across the centre.
-- **Strongest stripes and directions:** how many stripes fit across the square, which way they run, and the set of directions, so that "ten directions" reads as lines running five ways, 36 degrees apart (Lu and Steinhardt 2007).
-- **Line rose:** which way the edges run, weighted by contrast (after Freeman and Roth 1995).
-- **Repeat unit:** two slides that land the picture on itself, drawn as arrows, with a see-through copy that slides along them (Liu, Collins and Tsin 2004).
-- **Star:** how well the picture matches itself turned around one point, from a half to a sixteenth, and whether mirrors pass through that point (after Lee, Collins and Liu 2008).
+- **How close are the stripes? (stripe map):** the picture's Fourier power spectrum, the same kind of map that X-rays through a crystal draw. Each pair of dots is one set of stripes; dots far from the middle mean stripes close together. It has no time axis and no place axis.
+- **Which ways do the lines run?** The line rose counts which way the edges run, weighted by contrast (after Freeman and Roth 1995); the stripe map adds the set of directions in which the stripes repeat, so that ten spokes read as lines running five ways, 36 degrees apart (Lu and Steinhardt 2007).
+- **Strongest stripes:** how many stripes fit across the square and which way they run: the size of the repeated piece.
+- **Does it repeat? (repeat unit):** two slides that land the picture on itself, drawn as arrows, with a see-through copy that slides along them (Liu, Collins and Tsin 2004).
+- **Is there a star? (star test):** how well the picture matches itself turned around one point, from a half turn to a sixteenth, and whether mirrors pass through that point (after Lee, Collins and Liu 2008).
 - **Colours:** the main colours by area, by median cut (Heckbert 1982).
 
 ### Sound
@@ -56,7 +56,7 @@ Knot does not name a maqām, check tajwīd, identify a reciter or judge a recita
 
 Each result makes a girih tile. Its colour names the kind of material, its line weight says how much comes back, and a filled centre marks a strong repeat. The phone repeats the tile into a small girih of 21 tiles, which you can save.
 
-In a session, the room page shows a QR code and a six-letter room code. A phone that joins can send its tile. Knot shows, before sending, exactly what leaves the phone: the medium, three small numbers, a few words about the result, a name and an optional word. No file, text, picture or sound leaves. The tile travels through ntfy.sh, a public message service that needs no account, locked with AES-GCM, with the room code as the secret; ntfy.sh deletes messages after 12 hours. People with the room code can read the tiles. If the network fails, the phone shows its tile as a QR code and a short typed code, which the room reads through a camera or a keyboard.
+In a session, the room page shows a QR code and a six-letter room code. A phone that joins can send its tile. Knot shows, before sending, exactly what leaves the phone: the medium, three small numbers, a few words about the result, a name and an optional word. No file, text, picture or sound leaves. The tile travels through ntfy.sh, a public message service that needs no account, locked with AES-GCM, with the room code as the secret; ntfy.sh deletes messages after 12 hours. People with the room code can read the tiles. If the network fails, the phone shows its tile as a QR code and a short typed code, which the room reads through a camera or a keyboard. Each phone has a Room tab that shows the same girih as the room page: both read the room's log on ntfy.sh in the same order, so tiles sent before a screen opened still show for twelve hours. New round on the room page sends a marker that clears the pattern on each screen. Tiles added by camera or typed code go out on the network too.
 
 The room places tiles ring by ring from a central decagon, one each 600 milliseconds. Tiles meet at the middle of their edges at 54 degrees, Hankin's "polygons in contact" method (Kaplan 2005; Kaplan and Salesin 2004), so the lines run on from tile to tile. The room offers five views: tiles and lines; girih, with the tiles hidden; tiles alone; collation, where each tile takes its own angle from its numbers and the lines bend where neighbours differ; and strands, which follow each line through the room. The layout is a modern reconstruction. The room saves itself after each tile and exports SVG, PNG and JSON.
 
@@ -70,7 +70,7 @@ Knot reads your files inside your browser, and they stay on your device. It keep
 
 ## Cite
 
-Asif, Hassan. 2026. *Knot*. Software, version 6.1. https://www.hassanasif.net/knot/
+Asif, Hassan. 2026. *Knot*. Software, version 6.2. https://www.hassanasif.net/knot/
 
 ## Sources
 

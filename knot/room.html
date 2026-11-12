@@ -455,8 +455,60 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
           function (e) { clearTimeout(tm); throw e; });
     });
   }
+  /* Follow a room: replay what ntfy.sh still keeps (twelve hours), then listen. The room page and the Room tab on a
+     phone both read the same log in the same order, so both draw the same girih. A WebSocket carries new messages;
+     after three failed tries Knot asks every nine seconds instead. Messages are opened one at a time, in order, because
+     a "new round" marker clears the tiles that came before it. o.since() gives the starting point, o.item(obj, msg)
+     takes each opened message, o.status(kind) hears 'live', 'again', 'slow', 'slow-ok' or 'down'. */
+  function follow(code, o) {
+    var ws = null, tries = 0, pollT = 0, stopped = false, seen = {}, chain = Promise.resolve(), topic = '', gen = 0;
+    function take(m) {
+      if (!m || m.event !== 'message' || seen[m.id]) return;
+      seen[m.id] = 1;
+      var g = gen;
+      chain = chain.then(function () {
+        return unlock(code, m.message).then(function (obj) { if (!stopped && g === gen) return o.item(obj, m); }, function () {});
+      }).catch(function () {});
+    }
+    function shut() { if (ws) { try { ws.onclose = null; ws.onmessage = null; ws.close(); } catch (e) {} ws = null; } }
+    function connect() {
+      if (stopped) return;
+      clearTimeout(pollT);
+      topicFor(code).then(function (tp) {
+        if (stopped) return;
+        topic = tp;
+        try { ws = new WebSocket(RELAY.replace(/^http/, 'ws') + '/' + topic + '/ws?since=' + encodeURIComponent(o.since())); } catch (e) { ws = null; poll(); return; }
+        var opened = false, me = ws;
+        ws.onopen = function () { opened = true; tries = 0; o.status('live'); };
+        ws.onmessage = function (ev) { try { take(JSON.parse(ev.data)); } catch (e) {} };
+        ws.onclose = function () {
+          if (stopped || me !== ws) return;
+          o.status('again'); tries++;
+          if (tries >= 3) { poll(); return; }
+          setTimeout(connect, Math.min(20000, 2000 * Math.pow(2, tries)));
+        };
+        ws.onerror = function () {};
+      });
+    }
+    function poll() {
+      if (stopped) return;
+      clearTimeout(pollT);
+      o.status('slow');
+      fetch(RELAY + '/' + topic + '/json?poll=1&since=' + encodeURIComponent(o.since()), { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (body) {
+        o.status('slow-ok');
+        body.split('\n').forEach(function (line) { if (line.trim()) { try { take(JSON.parse(line)); } catch (e) {} } });
+      }).catch(function () { o.status('down'); }).then(function () {
+        if (!stopped) pollT = setTimeout(function () { tries = 0; connect(); }, 9000);
+      });
+    }
+    connect();
+    return {
+      stop: function () { stopped = true; clearTimeout(pollT); shut(); },
+      restart: function () { clearTimeout(pollT); shut(); tries = 0; seen = {}; gen++; chain = Promise.resolve(); connect(); }
+    };
+  }
   var api = { RELAY: RELAY, newCode: newCode, normCode: normCode, topicFor: topicFor, lock: lock, unlock: unlock, check: check,
-    qrText: qrText, fromQR: fromQR, typedCode: typedCode, fromTyped: fromTyped, send: send };
+    qrText: qrText, fromQR: fromQR, typedCode: typedCode, fromTyped: fromTyped, send: send, follow: follow };
   root.KnotRelay = api;
 })(this);
 
@@ -12882,10 +12934,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 
   /* ---------------------------------------------------------------- state, saved after each change */
   var st = null, view = 'both', paused = false, queue = [], waiting = [];
-  function key(c) { return 'knot-room-' + c; }
-  function save() { try { localStorage.setItem(key(st.code), JSON.stringify(st)); localStorage.setItem('knot-room-last', st.code); } catch (e) {} }
-  function load(c) { try { var s = JSON.parse(localStorage.getItem(key(c)) || 'null'); if (s && s.code === c && now() - s.round < 7 * 86400) return s; } catch (e) {} return null; }
-  function fresh(c) { return { code: c, round: now(), lastId: '', tiles: [], nextNo: 1 }; }
+  function key(c) { return 'knot62-room-' + c; }
+  function save() { st.saved = now(); try { localStorage.setItem(key(st.code), JSON.stringify(st)); localStorage.setItem('knot-room-last', st.code); } catch (e) {} }
+  function load(c) { try { var s = JSON.parse(localStorage.getItem(key(c)) || 'null'); if (s && s.code === c && now() - (s.saved || 0) < 7 * 86400) return s; } catch (e) {} return null; }
+  /* round 0: a fresh room page replays the tiles ntfy.sh still keeps, so tiles sent before the page opened still show */
+  function fresh(c) { return { code: c, round: 0, lastId: '', tiles: [], nextNo: 1, saved: now() }; }
   (function start() {
     var m = /(?:^|[#&])code=([A-Za-z0-9]{6})/.exec(location.hash || ''), c = m ? R.normCode(m[1]) : '';
     if (!c) { try { c = R.normCode(localStorage.getItem('knot-room-last') || ''); } catch (e) {} }
@@ -12992,6 +13045,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     st.tiles.forEach(function (x) { if (x.id === t.id) had = x; });
     if (had) {
       ['m', 'w', 'b', 's', 'n', 'x', 'd'].forEach(function (k) { had[k] = t[k]; });
+      if (via === 'network' && (had.via === 'camera' || had.via === 'typed')) via = had.via;
       had.via = via; had.at = now();
       save(); drawOne(had.slot, true); paintMargin(); paintTogether(); paintCount();
       announce(had, 'updated');
@@ -13010,7 +13064,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       var q = queue.shift();
       if (!q) { pumping = false; return; }
       place(q.t, q.via);
-      setTimeout(next, 600);
+      setTimeout(next, queue.length > 6 ? 150 : 600);
     })();
   }
   function freeSlot() { var used = {}; st.tiles.forEach(function (t) { if (t.slot >= 0) used[t.slot] = 1; }); for (var k = 0; k < N; k++) if (!used[k]) return k; return -1; }
@@ -13067,45 +13121,36 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   });
 
   /* ---------------------------------------------------------------- the network: ntfy.sh, a WebSocket, polling as a fallback */
-  var topic = '', ws = null, tries = 0, pollT = 0, seen = {};
+  var follower = null;
+  var LINK = { live: ['Live', true], again: ['Trying again…', false], slow: ['Slow link', false], 'slow-ok': ['Slow link', true], down: ['No connection: the camera and typed codes still add tiles', false] };
   function setLink(t, ok) { var el = $('#link'); el.textContent = t; el.classList.toggle('ok', !!ok); }
-  function onMsg(m) {
-    if (!m || m.event !== 'message' || seen[m.id]) return;
-    seen[m.id] = 1; st.lastId = m.id; save();
-    R.unlock(st.code, m.message).then(function (obj) {
-      if (!obj || obj.v !== 6 || (obj.r && obj.r !== st.code)) return;
-      addTile(R.check(obj), 'network');
-    }, function () {});
+  /* each message, in the order ntfy.sh keeps them: a new-round marker clears the tiles before it */
+  function onItem(obj, m) {
+    if (!obj || obj.v !== 6 || (obj.r && obj.r !== st.code)) return;
+    if (m.time < st.round) { st.lastId = m.id; return; }
+    if (obj.round) {
+      st.lastId = m.id;
+      if (m.time > st.round) { clearRound(m.time); say('A new round started. The pattern is empty.'); }
+      save();
+      return;
+    }
+    st.lastId = m.id; save();
+    addTile(R.check(obj), 'network');
   }
   function connect() {
-    clearTimeout(pollT);
+    if (follower) follower.stop();
     if (!window.crypto || !crypto.subtle) { setLink('Offline: use the camera or typed codes'); return; }
-    R.topicFor(st.code).then(function (tp) {
-      topic = tp;
-      var since = st.lastId || String(st.round);
-      try { ws = new WebSocket(R.RELAY.replace(/^http/, 'ws') + '/' + topic + '/ws?since=' + encodeURIComponent(since)); } catch (e) { ws = null; poll(); return; }
-      var opened = false;
-      ws.onopen = function () { opened = true; tries = 0; setLink('Live', true); };
-      ws.onmessage = function (ev) { try { onMsg(JSON.parse(ev.data)); } catch (e) {} };
-      ws.onclose = function () {
-        setLink(opened ? 'Reconnecting…' : 'Trying again…');
-        tries++;
-        if (tries >= 3) { poll(); return; }
-        setTimeout(connect, Math.min(20000, 2000 * Math.pow(2, tries)));
-      };
-      ws.onerror = function () {};
+    follower = R.follow(st.code, {
+      since: function () { return st.lastId || (st.round ? String(st.round) : '12h'); },
+      item: onItem,
+      status: function (k) { var L = LINK[k] || ['', false]; setLink(L[0], L[1]); }
     });
   }
-  function poll() {
-    clearTimeout(pollT);
-    setLink('Slow link');
-    var since = st.lastId || String(st.round);
-    fetch(R.RELAY + '/' + topic + '/json?poll=1&since=' + encodeURIComponent(since), { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (body) {
-      setLink('Slow link', true);
-      body.split('\n').forEach(function (line) { if (line.trim()) { try { onMsg(JSON.parse(line)); } catch (e) {} } });
-    }).catch(function () { setLink('No connection: the camera and typed codes still add tiles'); }).then(function () {
-      pollT = setTimeout(function () { tries = 0; connect(); }, 9000);
-    });
+  /* a tile added by camera or typed code also goes out on the network, so the Room tab on each phone shows it too */
+  function share(t) {
+    if (!t || !window.crypto || !crypto.subtle || navigator.onLine === false) return;
+    var o = { v: 6, r: st.code, id: t.id, m: t.m, w: t.w, b: t.b, s: t.s, n: t.n, x: t.x || '', d: t.d || [] };
+    R.send(st.code, o, 8000).catch(function () {});
   }
 
   /* ---------------------------------------------------------------- camera and typed codes */
@@ -13151,14 +13196,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     var q = R.fromQR(text);
     if (!q || !q.tile) { $('#scanStat').textContent = 'That code is not a Knot tile.'; return; }
     if (q.room && q.room !== st.code) { $('#scanStat').textContent = 'That tile belongs to room ' + q.room + '.'; return; }
-    addTile(q.tile, 'camera');
+    addTile(q.tile, 'camera'); share(q.tile);
     $('#scanStat').textContent = 'Read ' + q.tile.n + '. Next phone.';
   }
   $('#typedForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var t = R.fromTyped($('#typedIn').value);
     if (!t) { say('A typed code looks like P21-417. The letter is T for text, P for picture or S for sound. Then come the line weight, 1 to 3, and the centre, 0 for open or 1 for filled. The last part is the number in the name.'); return; }
-    addTile(t, 'typed'); $('#typedIn').value = ''; say('Added ' + t.n + '.');
+    addTile(t, 'typed'); share(t); $('#typedIn').value = ''; say('Added ' + t.n + '.');
   });
 
   /* ---------------------------------------------------------------- a tile's card */
@@ -13237,6 +13282,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   });
 
   /* ---------------------------------------------------------------- rounds, rooms and the projector */
+  function clearRound(t) {
+    st.round = t; st.tiles = []; st.nextNo = 1; queue = []; waiting = [];
+    save(); drawAll();
+  }
   function armed(btn, label, fn) {
     if (btn.dataset.armed) { delete btn.dataset.armed; btn.textContent = label; fn(); return; }
     btn.dataset.armed = '1'; btn.textContent = 'Press again to confirm';
@@ -13244,17 +13293,21 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   }
   $('#newRound').addEventListener('click', function () {
     armed(this, 'New round', function () {
-      st.round = now(); st.lastId = ''; st.tiles = []; st.nextNo = 1; queue = []; waiting = []; seen = {};
-      save(); drawAll(); say('A new round: the pattern is empty and the code stays the same.');
-      if (ws) { try { ws.onclose = null; ws.close(); } catch (e) {} } tries = 0; connect();
+      clearRound(now());
+      say('A new round: the pattern is empty and the code stays the same.');
+      if (!window.crypto || !crypto.subtle) return;
+      R.send(st.code, { v: 6, r: st.code, id: 'round', round: 1 }, 8000).then(function (res) {
+        if (res && res.time) { st.round = res.time; st.lastId = res.id || ''; save(); }
+        if (follower) follower.restart();
+      }, function () { say('A new round here. The phones still show the old tiles until the network returns.'); });
     });
   });
   $('#newRoom').addEventListener('click', function () {
     armed(this, 'New room code', function () {
-      var c = R.newCode(); st = fresh(c); queue = []; waiting = []; seen = {};
+      var c = R.newCode(); st = fresh(c); queue = []; waiting = [];
       history.replaceState(null, '', location.pathname + location.search + '#code=' + c);
       save(); paintJoin(); build(); say('A new room: ' + c + '. Phones need the new code.');
-      if (ws) { try { ws.onclose = null; ws.close(); } catch (e) {} } tries = 0; connect();
+      connect();
     });
   });
   $('#presentBtn').addEventListener('click', function () {

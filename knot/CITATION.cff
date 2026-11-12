@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: "Asif"
     given-names: "Hassan"
-version: "6.1"
+version: "6.2"
 date-released: "2026-11-12"
 license: MIT
 url: "https://www.hassanasif.net/knot/"
