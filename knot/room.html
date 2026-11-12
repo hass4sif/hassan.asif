@@ -13052,7 +13052,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       var f = (t.d || []).join(' ');
       if (/five directions|tenfold|fivefold/.test(f)) { five++; if (t.m === 'p') fivePics++; }
     });
-    var h = '<p class="tg">' + (p.length ? esc(p.length + ' tiles: ' + mixText(mix) + '. ' + filled + ' with a filled centre; ' + heavy + ' at the heaviest weight.') : 'No tiles yet. The dotted outlines show the empty places.') + '</p>';
+    var h = '<p class="tg">' + (p.length ? esc((p.length === 1 ? '1 tile: ' : p.length + ' tiles: ') + mixText(mix) + '. ' + filled + ' with a filled centre; ' + heavy + ' at the heaviest weight.') : 'No tiles yet. The dotted outlines show the empty places.') + '</p>';
     if (five) h += '<p class="tg">' + esc(five === 1 ? 'One tile shows fivefold or tenfold order' + (fivePics ? ': a picture.' : '.') : five + ' tiles show fivefold or tenfold order' + (fivePics === five ? ', each of them a picture.' : ', ' + fivePics + ' of them pictures.')) + '</p>';
     h += '<ul class="qs"><li>Which tiles look alike? Compare the steps their makers wrote down.</li><li>Where do the texts sit, and where do the sounds?</li><li>Do the tenfold stars come from pictures, or from texts and sounds too?</li><li>Which tiles show no repeat, and what made them?</li><li>What is missing from the room?</li></ul>';
     $('#together').innerHTML = h;
