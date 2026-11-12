@@ -1,6 +1,6 @@
 # Knot
 
-Knot shows what repeats in a text, a picture or a recording. Repeats are clues to how a thing was made. Each result becomes a tile, and a room of tiles becomes one girih.
+Knot shows what repeats in a text, a picture or a recording. Repeats are clues to how a thing was made. Each result becomes a piece cut from the material and a girih tile, and a room gathers them into one collage and one girih.
 
 It runs in the browser, on a phone or a computer. Your files stay on your device.
 
@@ -13,7 +13,7 @@ It runs in the browser, on a phone or a computer. Your files stay on your device
 2. **Read.** Knot takes your material apart with a few plain questions, the kind a maker would ask. Each answer says what Knot found and how it checked.
 3. **Undo.** Use the answers as clues. Write down three steps you think made your material. Then compare them with Knot’s three steps.
 4. **Redo.** Give your three steps to a partner. Can they make your material again from the steps alone?
-5. **Check.** Send your tile to the room. Open the Room tab: the group’s tiles join into one girih, there and on the screen at the front.
+5. **Check.** Send your tile to the room. Open the Room tab: the group’s pieces gather into one collage, there and on the screen at the front.
 
 ## What Knot shows
 
@@ -54,11 +54,17 @@ Knot does not name a maqām, check tajwīd, identify a reciter or judge a recita
 
 ## Your tile and the room
 
-Each result makes a girih tile. Its colour names the kind of material, its line weight says how much comes back, and a filled centre marks a strong repeat. The phone repeats the tile into a small girih of 21 tiles, which you can save.
+Each result makes a piece and a girih tile.
 
-In a session, the room page shows a QR code and a six-letter room code. A phone that joins can send its tile. Knot shows, before sending, exactly what leaves the phone: the medium, three small numbers, a few words about the result, a name and an optional word. No file, text, picture or sound leaves. The tile travels through ntfy.sh, a public message service that needs no account, locked with AES-GCM, with the room code as the secret; ntfy.sh deletes messages after 12 hours. People with the room code can read the tiles. If the network fails, the phone shows its tile as a QR code and a short typed code, which the room reads through a camera or a keyboard. Each phone has a Room tab that shows the same girih as the room page: both read the room's log on ntfy.sh in the same order, so tiles sent before a screen opened still show for twelve hours. New round on the room page sends a marker that clears the pattern on each screen. Tiles added by camera or typed code go out on the network too.
+The piece is cut from your material, in a shape that comes from what Knot found. A picture gives two by two of its repeating tile, or the disc of its star with as many points, or a cut whose sides follow its line directions; its pixels stay square, like the small stones of a mosaic. A text gives its own knot: one corner for each sentence or line, set out by its length, printed with the opening of the text, with the ties as chords and the most shared words around the edge. A sound gives its pitch line wrapped into a ring, which swells when the voice goes up and dips at each pause, filled with a small sound picture in orange, dark where the sound is loud; a violet line joins a part and its return. Small cuts lie around each piece: shards of the picture or the sound picture in the five girih shapes (Lu and Steinhardt 2007), a few lines cut from the text, and the pitch line bent like a wire. The same tile gives the same cuts on each screen.
 
-The room places tiles ring by ring from a central decagon, one each 600 milliseconds. Tiles meet at the middle of their edges at 54 degrees, Hankin's "polygons in contact" method (Kaplan 2005; Kaplan and Salesin 2004), so the lines run on from tile to tile. The room offers five views: tiles and lines; girih, with the tiles hidden; tiles alone; collation, where each tile takes its own angle from its numbers and the lines bend where neighbours differ; and strands, which follow each line through the room. The layout is a modern reconstruction. The room saves itself after each tile and exports SVG, PNG and JSON.
+The girih tile shows the same result in the session's girih. Its colour names the kind of material, its line weight says how much comes back, and a filled centre marks a strong repeat. The phone repeats the tile into a small girih of 21 tiles, which you can save.
+
+In a session, the room page shows a QR code and a six-letter room code. A phone that joins can send its tile. Knot shows, before sending, exactly what leaves the phone: the medium, three small numbers, a few words about the result, a name, an optional word and, if you tick the box, the piece. For a picture, the piece carries a thumbnail of at most 64 by 64 pixels, cut as above. For a sound, it carries a grey sound picture of at most 96 by 48 pixels, which makes no sound, and the pitch line as 48 numbers. For a text, it carries the opening of the text, up to 160 characters, its six most shared words and its repeated phrase. Untick the box to send the numbers and words alone; the room then shows a plain shape. Your file itself stays on the phone. The tile travels through ntfy.sh, a public message service that needs no account, locked with AES-GCM, with the room code as the secret; it stays under the 4,096 bytes that ntfy.sh keeps as one message, and ntfy.sh deletes messages after 12 hours. People with the room code can read the tiles. If the network fails, the phone shows its tile as a QR code and a short typed code, which the room reads through a camera or a keyboard; these carry the numbers and words, without the piece. Each phone has a Room tab that shows the same collage and girih as the room page: both read the room's log on ntfy.sh in the same order, so tiles sent before a screen opened still show for twelve hours. New round on the room page sends a marker that clears the pattern on each screen. Tiles added by camera or typed code go out on the network too.
+
+The room opens on the collage. Pieces take their places along a sunflower spiral, the arrangement of seeds in a sunflower head (Vogel 1979), in the order they came, packed close so that they overlap a little; each new piece lands on top, with its cuts. Dashed threads run over the pieces like stitches and join pieces that share something: two texts with a shared word, two pictures with the same star or both with lines in five directions, two sounds that both come back.
+
+The room also places tiles ring by ring from a central decagon, one each 600 milliseconds. Tiles meet at the middle of their edges at 54 degrees, Hankin's "polygons in contact" method (Kaplan 2005; Kaplan and Salesin 2004), so the lines run on from tile to tile. Besides the collage, the room offers five views: tiles and lines; girih, with the tiles hidden; tiles alone; collation, where each tile takes its own angle from its numbers and the lines bend where neighbours differ; and strands, which follow each line through the room. The layout is a modern reconstruction. The room saves itself after each tile and exports SVG, PNG and JSON.
 
 ## Own window
 
@@ -66,11 +72,11 @@ Add Knot to the Home Screen, or install it from the browser's menu, and it opens
 
 ## Privacy
 
-Knot reads your files inside your browser, and they stay on your device. It keeps a draft of your text in your browser's own storage. It loads its fonts from this folder, so opening Knot tells no third party. A tile leaves the phone when you press Send, and not before.
+Knot reads your files inside your browser, and they stay on your device. It keeps a draft of your text in your browser's own storage. It loads its fonts from this folder, so opening Knot tells no third party. A tile leaves the phone when you press Send, and not before. With the box ticked, the small piece described above goes with it.
 
 ## Cite
 
-Asif, Hassan. 2026. *Knot*. Software, version 6.2. https://www.hassanasif.net/knot/
+Asif, Hassan. 2026. *Knot*. Software, version 6.3. https://www.hassanasif.net/knot/
 
 ## Sources
 
@@ -100,6 +106,7 @@ Asif, Hassan. 2026. *Knot*. Software, version 6.2. https://www.hassanasif.net/kn
 - Polyak, M., and O. Viro. 1994. "Gauss Diagram Formulas for Vassiliev Invariants." *International Mathematics Research Notices*.
 - Senechal, M. 1995. *Quasicrystals and Geometry*. Cambridge: Cambridge University Press.
 - Shechtman, D., I. Blech, D. Gratias and J. W. Cahn. 1984. "Metallic Phase with Long-Range Orientational Order and No Translational Symmetry." *Physical Review Letters* 53 (20): 1951 to 1953.
+- Vogel, H. 1979. "A Better Way to Construct the Sunflower Head." *Mathematical Biosciences* 44 (3 to 4): 179 to 189.
 - Wattenberg, M. 2002. "Arc Diagrams: Visualizing Structure in Strings." IEEE InfoVis.
 - Wichmann, B. 2008. "Islamic Tilings by Symmetry Group."
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Knot room</title>
-<meta name="description" content="The Knot room: each person's result becomes a tile, and the tiles join into one girih on the screen.">
+<meta name="description" content="The Knot room: each person’s result becomes a piece cut from their material, and the pieces gather into one collage on the screen.">
 <meta name="theme-color" content="#dbe7e7">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -84,7 +84,17 @@ body.present .side .panel{display:none}
 body.present .rbar .views,body.present #presentBtn{opacity:.25}
 body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
 @media (max-width:900px){body{overflow:auto}.rmain{grid-template-columns:1fr}.stagebox{height:78vh}.side{border-left:0}.tcard{right:12px}}
-@media (prefers-reduced-motion:reduce){.pattern .slot.arriving{animation:none}.strand{transition:none !important}}
+@media (prefers-reduced-motion:reduce){.pattern .slot.arriving,.pattern .kp-at.arriving .kp-pop{animation:none}.strand{transition:none !important}}
+
+/* the collage */
+.pattern svg.collage{width:100%;height:100%;display:block}
+.pattern .kp-at{cursor:pointer;outline:none}
+.pattern .kp-at:focus-visible .kp-edge{stroke:#2b2424;stroke-width:.09}
+.pattern .kp-at.arriving .kp-pop{animation:kpin 1.4s cubic-bezier(.2,1.4,.4,1)}
+@keyframes kpin{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-c{display:none}
+.legend .thr{display:inline-block;width:26px;height:0;border-top:2px dashed #2b2424;opacity:.6;vertical-align:middle;margin-right:7px}
+.tcard dd.tcp svg{width:120px;height:120px;display:block}
 </style>
 </head>
 <body>
@@ -94,7 +104,8 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
   <span class="rpill link" id="link">Connecting…</span>
   <span class="rfill"></span>
   <div class="views" role="group" aria-label="View">
-    <button class="rpill v" type="button" data-view="both" aria-pressed="true">Tiles and lines</button>
+    <button class="rpill v" type="button" data-view="collage" aria-pressed="true">Collage</button>
+    <button class="rpill v" type="button" data-view="both" aria-pressed="false">Tiles and lines</button>
     <button class="rpill v" type="button" data-view="lines" aria-pressed="false">Girih</button>
     <button class="rpill v" type="button" data-view="tiles" aria-pressed="false">Tiles</button>
     <button class="rpill v" type="button" data-view="collate" aria-pressed="false">Collation</button>
@@ -107,13 +118,14 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
   <section class="stagebox" aria-label="The room's girih">
     <div class="pattern" id="pattern"></div>
     <p class="arrive" id="arrive" aria-live="polite"></p>
-    <p class="rcap" id="rcap">Each tile is one person’s result. The layout gives the shapes; the results give the lines. Tiles meet at the middle of their edges, at 54°.</p>
+    <p class="rcap" id="rcap">Collage: each piece is one person’s material, cut into a shape that comes from what Knot found. Small cuts of the same material lie around it, and new pieces land on top. Dashed threads join pieces that share a word, a star or a return. Tap a piece to read its card.</p>
     <div class="legend">
       <span><i class="lt" style="background:#e3e8fd;border-color:#4f6cf0"></i>text</span>
       <span><i class="lt" style="background:#d6eff3;border-color:#2a9fb2"></i>picture</span>
       <span><i class="lt" style="background:#fbe7d7;border-color:#e0843f"></i>sound</span>
       <span><b class="lw w1"></b><b class="lw w2"></b><b class="lw w3"></b>line weight: how much comes back</span>
-      <span><i class="lt fig"></i>filled centre: a strong repeat</span>
+      <span class="lg-g"><i class="lt fig"></i>filled centre: a strong repeat</span>
+      <span class="lg-c"><b class="thr"></b>thread: something shared</span>
     </div>
   </section>
 
@@ -131,9 +143,9 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
       <summary>How to use the room</summary>
       <ol class="steps">
         <li>Scan the QR code, or open the address and type the room code.</li>
-        <li>Read a text, a picture or a sound in Knot. Each result makes a tile.</li>
-        <li>Press Send. The tile takes the next free place in the pattern.</li>
-        <li>Compare the tiles together. This is the Check: where do they agree, and where do they differ?</li>
+        <li>Read a text, a picture or a sound in Knot. Each result makes a piece from the material.</li>
+        <li>Press Send. The piece joins the collage, and its tile takes the next free place in the girih.</li>
+        <li>Compare the pieces together. This is the Check: where do they agree, and where do they differ?</li>
       </ol>
     </details>
 
@@ -367,6 +379,580 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
 
 </script>
 <script>
+/* Knot pieces. Each reading becomes a piece made from the material itself, in a shape that comes from what Knot
+   found in it. A picture piece is cut from the photo: two by two of its repeating tile, or the disc of its star, or a
+   band along its line directions. A text piece is the text's own knot: a corner for each sentence, set out by the
+   sentence's length, printed with the text's opening lines, with the ties as chords and the shared words around the
+   edge. A sound piece is the pitch line wrapped into a ring, dipping at each pause, filled with the sound's own sound
+   picture. Small cuts lie around each piece: shards of the picture or the sound picture in the five girih shapes,
+   lines cut from the text, and the pitch line bent like a wire. In the room the pieces gather into one collage, laid
+   down in the order they came, and threads tie the pieces that share a word, a star or a return. */
+(function (root) {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var MED = { t: { hue: '#4f6cf0', tint: '#e3e8fd' }, p: { hue: '#2a9fb2', tint: '#d6eff3' }, s: { hue: '#e0843f', tint: '#fbe7d7' } };
+  var INK = '#2b2424', VIOLET = '#7a4fd0', PAPER = '#fffdf8', BUDGET = 2700;
+  var FOLDW = ['', '', 'twofold', 'threefold', 'fourfold', 'fivefold', 'sixfold', 'sevenfold', 'eightfold', 'ninefold', 'tenfold', 'elevenfold', 'twelvefold', 'thirteenfold', 'fourteenfold', 'fifteenfold', 'sixteenfold'];
+  function el(name, attrs) { var e = document.createElementNS(NS, name); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function f(v) { return (Math.round(v * 1000) / 1000).toString(); }
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function hash(s) { var h = 2166136261; s = String(s); for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(seed) { var a = seed >>> 0 || 1; return function () { a = (a + 0x6D2B79F5) >>> 0; var t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function txt(s, n) { return String(s == null ? '' : s).replace(/[\u0000-\u001F\u007F<>|~]/g, '').replace(/\s+/g, ' ').trim().slice(0, n); }
+  function int(v, a, b) { v = Math.round(+v); return isFinite(v) && v >= a && v <= b ? v : null; }
+
+  /* ---------------------------------------------------------------- cutting pieces from the material (on the phone) */
+  function snap(cv, sx, sy, sw, sh, w, h, q) {
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(cv, sx, sy, sw, sh, 0, 0, w, h);
+    var u = '';
+    try { u = c.toDataURL('image/webp', q); } catch (e) {}
+    if (u.indexOf('data:image/webp') !== 0) { try { u = c.toDataURL('image/jpeg', q); } catch (e) { u = ''; } }
+    return u;
+  }
+  /* a square cut, kept inside the canvas */
+  function square(S, cx, cy, side) {
+    side = clamp(side, 24, S);
+    var x = clamp(cx - side / 2, 0, S - side), y = clamp(cy - side / 2, 0, S - side);
+    return { x: x, y: y, side: side };
+  }
+  /* pic: Knot's picture reading; cv: the 512 px square of the photo */
+  function fromPicture(pic, cv) {
+    if (!pic || !cv) return null;
+    var S = cv.width, u = pic.unit, s = pic.star, r = pic.rep || {}, rose = pic.rose || {}, k = { sh: 'blob' }, box;
+    var five = (rose.k === 5 && rose.even) || r.order === 10;
+    var dirs = rose.k && rose.peaks ? rose.peaks.map(function (p) { return Math.round(((p.a % 180) + 180) % 180); }) : [];
+    if (!dirs.length && r.order) { for (var i = 0; i < r.order / 2; i++) dirs.push(Math.round(i * 360 / r.order)); }
+    k.dir = dirs.slice(0, 8);
+    k.five = five ? 1 : 0;
+    if (u) {
+      /* two by two of the repeating tile, so the piece shows the repeat itself */
+      var o = s && s.n ? [s.x, s.y] : [S / 2, S / 2], A = [u.a[0] * 4, u.a[1] * 4], B = [u.b[0] * 4, u.b[1] * 4];
+      var xs = [0, A[0], B[0], A[0] + B[0]], ys = [0, A[1], B[1], A[1] + B[1]];
+      var w = Math.max.apply(null, xs) - Math.min.apply(null, xs), h = Math.max.apply(null, ys) - Math.min.apply(null, ys);
+      if (Math.max(w, h) > S) { A = [u.a[0] * 2, u.a[1] * 2]; B = [u.b[0] * 2, u.b[1] * 2]; w /= 2; h /= 2; }
+      var side = Math.max(w, h) * 1.02;
+      box = square(S, o[0] + (A[0] + B[0]) / 2, o[1] + (A[1] + B[1]) / 2, side);
+      var hs = box.side / 2;
+      k.sh = 'unit';
+      k.u = [A[0] / hs, A[1] / hs, B[0] / hs, B[1] / hs].map(function (v) { return clamp(Math.round(v * 100), -200, 200); });
+      if (s && s.n) k.n = s.n;
+    } else if (s && s.n) {
+      box = square(S, s.x, s.y, 2 * s.r1);
+      k.sh = 'star'; k.n = s.n; k.mi = s.mirror >= 0.6 ? 1 : 0;
+      var ph = Math.atan2(s.Ci && s.Ci[s.n] || 0, s.Cr && s.Cr[s.n] || 0);
+      k.ro = Math.round(((-ph / s.n) * 180 / Math.PI % 360 + 360) % 360);
+    } else if (dirs.length) {
+      box = square(S, S / 2, S / 2, S * 0.62);
+      k.sh = dirs.length === 1 ? 'band' : 'dir';
+    } else {
+      box = square(S, S / 2, S / 2, S * 0.7);
+      k.sh = 'blob';
+    }
+    k.box = box;
+    k.cv = cv;
+    return k;
+  }
+  /* a: Knot's text reading */
+  function fromText(a) {
+    if (!a || a.n < 3) return null;
+    var n = Math.min(a.n, 24), map = function (i) { return Math.min(n - 1, Math.floor(i * n / a.n)); };
+    var lens = [], cnt = [], i;
+    for (i = 0; i < n; i++) { lens.push(0); cnt.push(0); }
+    (a.len || []).forEach(function (L, j) { var m = map(j); lens[m] += L; cnt[m]++; });
+    var mx = 1; for (i = 0; i < n; i++) { lens[i] = cnt[i] ? lens[i] / cnt[i] : 0; mx = Math.max(mx, lens[i]); }
+    var rr = lens.map(function (L) { return 55 + Math.round(45 * L / mx); });
+    var seen = {}, ch = [];
+    a.words.forEach(function (w) {
+      for (var x = 1; x < w.idx.length && ch.length < 40; x++) {
+        var p = map(w.idx[x - 1]), q = map(w.idx[x]);
+        if (p === q) continue;
+        var key = Math.min(p, q) + ':' + Math.max(p, q);
+        if (seen[key]) continue;
+        seen[key] = 1; ch.push([Math.min(p, q), Math.max(p, q)]);
+      }
+    });
+    var ph = a.form && a.form.refrain ? a.form.refrain.show : a.phrase ? a.phrase.show : '';
+    /* the opening of the text, up to 160 characters, cut at a space; lines keep a slash between them */
+    var tx = (a.units || []).map(function (s) { return txt(s, 400); }).filter(Boolean).join(a.mode === 'lines' ? ' / ' : ' ');
+    if (tx.length > 160) { tx = tx.slice(0, 160); var sp = tx.lastIndexOf(' '); if (sp > 100) tx = tx.slice(0, sp); }
+    return { n: n, r: rr, ch: ch, wd: a.words.slice(0, 6).map(function (w) { return txt(w.show, 20); }), ph: txt(ph, 56), tx: tx };
+  }
+  /* A clean sound picture for the piece: the loudest level in each small block of time and pitch, stretched so the
+     quietest fifth turns pale and the loudest parts turn dark. Time runs left to right and pitch runs up. */
+  function soundPic(sn) {
+    var W = 160, H = 80, cols = sn.cols, ROWS = sn.ROWS, v = new Float32Array(W * H), x, y;
+    for (x = 0; x < W; x++) {
+      var c0 = Math.floor(x * cols / W), c1 = Math.max(c0 + 1, Math.floor((x + 1) * cols / W));
+      for (y = 0; y < H; y++) {
+        var r0 = Math.floor(y * ROWS / H), r1 = Math.max(r0 + 1, Math.floor((y + 1) * ROWS / H)), m = -1e9;
+        for (var c = c0; c < c1; c++) for (var q = r0; q < r1; q++) { var d = sn.db[c * ROWS + q]; if (d > m) m = d; }
+        v[y * W + x] = isFinite(m) ? m : -200;
+      }
+    }
+    var s = Array.prototype.slice.call(v).sort(function (a, b) { return a - b; });
+    var hi = s[Math.floor(s.length * 0.995)], lo = Math.max(s[Math.floor(s.length * 0.2)], hi - 55);
+    if (!(hi > lo)) hi = lo + 1;
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var g = cv.getContext('2d'), im = g.createImageData(W, H);
+    for (var i = 0; i < W * H; i++) {
+      var gr = Math.round(255 * (1 - Math.pow(clamp((v[i] - lo) / (hi - lo), 0, 1), 1.2)));
+      im.data[4 * i] = gr; im.data[4 * i + 1] = gr; im.data[4 * i + 2] = gr; im.data[4 * i + 3] = 255;
+    }
+    g.putImageData(im, 0, 0);
+    return cv;
+  }
+  /* sn: Knot's sound reading; cv: the sound picture canvas, used when the levels are missing */
+  function fromSound(sn, cv) {
+    if (!sn) return null;
+    var B = 48, cols = sn.cols, home = sn.pitch ? sn.pitch.home : 0, pc = [], en = [], b, c;
+    var floor = sn.top - 60;
+    for (b = 0; b < B; b++) {
+      var c0 = Math.floor(b * cols / B), c1 = Math.max(c0 + 1, Math.floor((b + 1) * cols / B)), v = [], lv = -1e9;
+      for (c = c0; c < c1; c++) {
+        if (home && sn.voiced[c] && sn.f0[c] > 0) v.push(1200 * Math.log(sn.f0[c] / home) / Math.LN2);
+        for (var q = 0; q < sn.ROWS; q++) lv = Math.max(lv, sn.db[c * sn.ROWS + q]);
+      }
+      v.sort(function (x, y) { return x - y; });
+      pc.push(v.length ? clamp(Math.round(v[v.length >> 1] / 10), -120, 120) : null);
+      en.push(clamp(Math.round(9 * (lv - floor) / 60), 0, 9));
+    }
+    var ps = [], ph = sn.phrases || [];
+    for (b = 1; b < ph.length && ps.length < 12; b++) ps.push(clamp(Math.round(50 * (ph[b - 1][1] + ph[b][0]) / sn.dur), 0, 100));
+    var k = { pc: home ? pc : null, en: en, ps: ps, rt: sn.ret && sn.ret.strong ? [clamp(Math.round(100 * sn.ret.t1 / sn.dur), 0, 100), clamp(Math.round(100 * sn.ret.t2 / sn.dur), 0, 100)] : null };
+    var pic = null;
+    try { if (sn.db && sn.cols && sn.ROWS) pic = soundPic(sn); } catch (e) { pic = null; }
+    if (pic) cv = pic;
+    if (cv) { k.box = { x: 0, y: 0, w: cv.width, h: cv.height }; k.cv = cv; }
+    return k;
+  }
+  /* The piece that travels: the cut picture becomes a small image, and the whole tile stays under about 2.7 kB, so the
+     locked message stays under ntfy.sh's 4,096 byte limit for a message. */
+  var SIZES = { p: [[64, 64, 0.6], [56, 56, 0.6], [48, 48, 0.55], [40, 40, 0.5], [32, 32, 0.45]], s: [[96, 48, 0.55], [80, 40, 0.55], [64, 32, 0.5], [48, 24, 0.45]] };
+  var enc = typeof TextEncoder !== 'undefined' ? new TextEncoder() : null;
+  function bytes(o) { var s = JSON.stringify(o); return enc ? enc.encode(s).length : s.length * 3; }
+  /* t: the tile as it will travel, without its piece; k: the piece as Knot cut it */
+  function pack(t, k) {
+    if (!k) return null;
+    var out = {}, key;
+    for (key in k) if (key !== 'cv' && key !== 'box') out[key] = k[key];
+    var steps = SIZES[t.m] || [], base = bytes(t);
+    if (k.cv && k.box) {
+      for (var i = 0; i < steps.length; i++) {
+        var z = steps[i], bx = k.box;
+        out.img = t.m === 'p' ? snap(k.cv, bx.x, bx.y, bx.side, bx.side, z[0], z[1], z[2]) : snap(k.cv, bx.x, bx.y, bx.w, bx.h, z[0], z[1], z[2]);
+        if (out.img && base + bytes(out) + 8 <= BUDGET) return out;
+      }
+      delete out.img;
+    }
+    if (base + bytes(out) + 8 > BUDGET) { delete out.ch; delete out.en; }
+    return base + bytes(out) + 8 <= BUDGET ? out : null;
+  }
+
+  /* ---------------------------------------------------------------- checking a piece that arrives */
+  var IMG = /^data:image\/(jpeg|webp|png);base64,[A-Za-z0-9+/]+={0,2}$/;
+  function ints(a, n, lo, hi, nullable) {
+    if (!Array.isArray(a) || a.length > n) return null;
+    var out = [];
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] === null && nullable) { out.push(null); continue; }
+      var v = int(a[i], lo, hi); if (v === null) return null; out.push(v);
+    }
+    return out;
+  }
+  function check(k, m) {
+    if (!k || typeof k !== 'object') return null;
+    var o = {};
+    if (typeof k.img === 'string' && k.img.length <= 3400 && IMG.test(k.img)) o.img = k.img;
+    if (m === 'p') {
+      o.sh = ['star', 'unit', 'dir', 'band', 'blob'].indexOf(k.sh) >= 0 ? k.sh : 'blob';
+      if (k.n != null) { var n = int(k.n, 2, 16); if (n) o.n = n; }
+      o.mi = k.mi ? 1 : 0; o.five = k.five ? 1 : 0;
+      if (k.ro != null) o.ro = int(k.ro, 0, 359) || 0;
+      if (k.u) { o.u = ints(k.u, 4, -200, 200); if (!o.u || o.u.length !== 4) delete o.u; }
+      o.dir = ints(k.dir || [], 8, 0, 179) || [];
+      if (o.sh === 'unit' && !o.u) o.sh = 'blob';
+      if (o.sh === 'star' && !o.n) o.sh = 'blob';
+      return o;
+    }
+    if (m === 't') {
+      var tn = int(k.n, 3, 24); if (!tn) return null;
+      o.n = tn;
+      o.r = ints(k.r, 24, 0, 100);
+      if (!o.r || o.r.length !== tn) o.r = null;
+      o.ch = [];
+      (Array.isArray(k.ch) ? k.ch.slice(0, 40) : []).forEach(function (p) { if (Array.isArray(p) && p.length === 2) { var x = int(p[0], 0, tn - 1), y = int(p[1], 0, tn - 1); if (x !== null && y !== null && x !== y) o.ch.push([x, y]); } });
+      o.wd = (Array.isArray(k.wd) ? k.wd.slice(0, 6) : []).map(function (w) { return txt(w, 20); }).filter(Boolean);
+      o.ph = txt(k.ph, 56);
+      o.tx = txt(k.tx, 160);
+      return o;
+    }
+    if (m === 's') {
+      if (k.pc) { o.pc = ints(k.pc, 48, -120, 120, true); if (!o.pc) delete o.pc; }
+      o.en = ints(k.en || [], 48, 0, 9) || [];
+      o.ps = ints(k.ps || [], 12, 0, 100) || [];
+      if (k.rt) { o.rt = ints(k.rt, 2, 0, 100); if (!o.rt || o.rt.length !== 2) delete o.rt; }
+      if (!o.pc && !o.en.length) return null;
+      return o;
+    }
+    return null;
+  }
+
+  /* ---------------------------------------------------------------- drawing a piece, centred on 0,0, about 1 across */
+  var uid = 0;
+  function starPts(n, mi, ro) {
+    var pts = [], a0 = -Math.PI / 2 + (ro || 0) * Math.PI / 180, inner = n <= 4 ? 0.48 : n <= 6 ? 0.56 : 0.66, tw = mi ? 0 : 0.42;
+    for (var i = 0; i < 2 * n; i++) {
+      var r = i % 2 ? inner : 1, a = a0 + Math.PI * i / n + (i % 2 ? tw * Math.PI / n : 0);
+      pts.push([r * Math.cos(a), r * Math.sin(a)]);
+    }
+    return pts;
+  }
+  function blobPts(seed, n, amp) {
+    var R = rng(seed), pts = [];
+    for (var i = 0; i < n; i++) { var a = 2 * Math.PI * i / n + (R() - 0.5) * 0.4, r = 1 - amp * R(); pts.push([r * Math.cos(a), r * Math.sin(a)]); }
+    return pts;
+  }
+  function poly(pts) { return 'M' + pts.map(function (p) { return f(p[0]) + ' ' + f(p[1]); }).join('L') + 'Z'; }
+  /* a smooth closed curve through the points (Catmull-Rom) */
+  function smooth(pts) {
+    var n = pts.length, d = 'M' + f(pts[0][0]) + ' ' + f(pts[0][1]);
+    for (var i = 0; i < n; i++) {
+      var p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+      d += 'C' + f(p1[0] + (p2[0] - p0[0]) / 6) + ' ' + f(p1[1] + (p2[1] - p0[1]) / 6) + ' ' + f(p2[0] - (p3[0] - p1[0]) / 6) + ' ' + f(p2[1] - (p3[1] - p1[1]) / 6) + ' ' + f(p2[0]) + ' ' + f(p2[1]);
+    }
+    return d + 'Z';
+  }
+  /* The five girih shapes (Lu and Steinhardt 2007), each with equal sides, given by its corner angles: the decagon,
+     the pentagon, the long hexagon, the bow tie and the rhombus. Shards take these shapes. */
+  var GIRIH = (function () {
+    var A = { dec: [144, 144, 144, 144, 144, 144, 144, 144, 144, 144], pen: [108, 108, 108, 108, 108], hex: [72, 144, 144, 72, 144, 144], bow: [72, 72, 216, 72, 72, 216], rho: [72, 108, 72, 108] }, out = {};
+    Object.keys(A).forEach(function (nm) {
+      var ang = A[nm], x = 0, y = 0, h = 0, pts = [], cx = 0, cy = 0, m = 0;
+      for (var i = 0; i < ang.length; i++) { pts.push([x, y]); x += Math.cos(h); y += Math.sin(h); h += Math.PI - ang[(i + 1) % ang.length] * Math.PI / 180; }
+      pts.forEach(function (p) { cx += p[0] / pts.length; cy += p[1] / pts.length; });
+      pts.forEach(function (p) { m = Math.max(m, Math.hypot(p[0] - cx, p[1] - cy)); });
+      out[nm] = pts.map(function (p) { return [(p[0] - cx) / m, (p[1] - cy) / m]; });
+    });
+    return out;
+  })();
+  var GN = ['pen', 'hex', 'bow', 'rho', 'dec', 'hex', 'rho'];
+  function shapeOf(t) {
+    var k = t.k || {}, seed = hash(t.id || t.n || 'x');
+    if (t.m === 'p') {
+      if (k.sh === 'star' && k.n >= 3) return { d: poly(starPts(k.n, k.mi, k.ro)) };
+      if (k.sh === 'star' && k.n === 2) return { d: 'M-1 0Q0 -0.9 1 0Q0 0.9 -1 0Z' };
+      if (k.sh === 'unit' && k.u) {
+        var A = [k.u[0] / 100, k.u[1] / 100], B = [k.u[2] / 100, k.u[3] / 100];
+        var c = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+        return { d: poly([[-c[0], -c[1]], [A[0] - c[0], A[1] - c[1]], [A[0] + B[0] - c[0], A[1] + B[1] - c[1]], [B[0] - c[0], B[1] - c[1]]]) };
+      }
+      if ((k.sh === 'dir' || k.sh === 'band') && k.dir && k.dir.length) {
+        if (k.dir.length === 1) {
+          var th = k.dir[0] * Math.PI / 180, cs = Math.cos(th), sn = Math.sin(th);
+          return { d: poly([[-1, -0.42], [1, -0.42], [1, 0.42], [-1, 0.42]].map(function (p) { return [p[0] * cs - p[1] * sn, -(p[0] * sn + p[1] * cs)]; })) };
+        }
+        var angs = [];
+        k.dir.forEach(function (a) { angs.push((a + 90) % 360, (a + 270) % 360); });
+        angs.sort(function (x, y) { return x - y; });
+        return { d: poly(angs.map(function (a) { var r = a * Math.PI / 180; return [Math.cos(r), -Math.sin(r)]; })) };
+      }
+      return { d: smooth(blobPts(seed, 9, 0.35)) };
+    }
+    if (t.m === 't') {
+      var n = k.n || 6, pts = [];
+      for (var i = 0; i < n; i++) { var a = -Math.PI / 2 + 2 * Math.PI * i / n, rr = k.r ? k.r[i] / 100 : 0.85; pts.push([rr * Math.cos(a), rr * Math.sin(a)]); }
+      return { d: poly(pts), pts: pts };
+    }
+    if (t.m === 's') {
+      var src = k.pc || k.en || [], N = src.length || 24, ring = [], Rw = rng(seed);
+      for (var j = 0; j < N; j++) {
+        var th2 = -Math.PI / 2 + 2 * Math.PI * j / N, r2;
+        if (k.pc) r2 = k.pc[j] == null ? 0.5 : 0.7 + 0.28 * clamp(k.pc[j] / 70, -1, 1);
+        else if (k.en && k.en.length) r2 = 0.5 + 0.45 * (k.en[j] / 9);
+        else r2 = 0.74 + 0.14 * (Rw() - 0.5);
+        if (k.en && k.en.length === N) r2 += 0.06 * (k.en[j] / 9 - 0.5);
+        ring.push([r2 * Math.cos(th2), r2 * Math.sin(th2)]);
+      }
+      return { d: smooth(ring), ring: ring };
+    }
+    return { d: smooth(blobPts(seed, 7, 0.3)) };
+  }
+  /* the shared defs of one drawing: a shadow for pieces, a lighter one for shards, and the duotone that turns the
+     grey sound picture into the sound's own orange, dark where the sound is loud */
+  function defs(pre) {
+    var d = el('defs', {});
+    var a = el('filter', { id: pre + 'sh', x: '-30%', y: '-30%', width: '160%', height: '160%' });
+    a.appendChild(el('feDropShadow', { dx: '0', dy: '.04', stdDeviation: '.05', 'flood-color': INK, 'flood-opacity': '.3' }));
+    var b = el('filter', { id: pre + 'sl', x: '-30%', y: '-30%', width: '160%', height: '160%' });
+    b.appendChild(el('feDropShadow', { dx: '0', dy: '.025', stdDeviation: '.03', 'flood-color': INK, 'flood-opacity': '.26' }));
+    var c = el('filter', { id: pre + 'duo', x: '0', y: '0', width: '1', height: '1', 'color-interpolation-filters': 'sRGB' });
+    c.appendChild(el('feColorMatrix', { type: 'matrix', values: '.2126 .7152 .0722 0 0 .2126 .7152 .0722 0 0 .2126 .7152 .0722 0 0 0 0 0 1 0' }));
+    var ct = el('feComponentTransfer', {});
+    ct.appendChild(el('feFuncR', { type: 'table', tableValues: '.33 .88 1' }));
+    ct.appendChild(el('feFuncG', { type: 'table', tableValues: '.13 .52 .96' }));
+    ct.appendChild(el('feFuncB', { type: 'table', tableValues: '.06 .25 .91' }));
+    c.appendChild(ct);
+    d.appendChild(a); d.appendChild(b); d.appendChild(c);
+    return d;
+  }
+  /* the material inside a cut: a picture keeps its pixels square, like the small stones of a mosaic */
+  function imgEl(t, href, x, y, w, pre) {
+    var im = el('image', { x: f(x), y: f(y), width: f(w), height: f(w), preserveAspectRatio: t.m === 's' ? 'none' : 'xMidYMid slice' });
+    im.setAttribute('href', href);
+    if (t.m === 'p') im.setAttribute('style', 'image-rendering:pixelated');
+    if (t.m === 's') im.setAttribute('filter', 'url(#' + pre + 'duo)');
+    return im;
+  }
+  /* the opening of a text, set again and again in small lines, as the paper a text piece is cut from */
+  function textFill(body, tx, M) {
+    var words = tx.split(' ').filter(Boolean), lines = [], cur = '', i = 0, guard = 0;
+    if (!words.length) return;
+    while (lines.length < 15 && guard++ < 600) {
+      var w = words[i % words.length]; i++;
+      if ((cur + ' ' + w).trim().length > 34 && cur) { lines.push(cur); cur = w; } else cur = (cur + ' ' + w).trim();
+    }
+    lines.forEach(function (L, j) {
+      var te = el('text', { x: 0, y: f(-0.91 + j * 0.13), 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '.1', 'font-family': 'Grenze, Georgia, serif', 'font-weight': '600', fill: M.hue, 'fill-opacity': '.5', 'class': 'kp-tx' });
+      te.textContent = L; body.appendChild(te);
+    });
+  }
+  /* the piece as an SVG group; opt.prefix names the defs of the drawing it sits in */
+  function draw(t, opt) {
+    opt = opt || {};
+    var M = MED[t.m] || MED.t, k = t.k || {}, sh = shapeOf(t), pre = opt.prefix || 'kp', id = pre + 'c' + (++uid);
+    var g = el('g', { 'class': 'kpiece m-' + t.m });
+    var clip = el('clipPath', { id: id }); clip.appendChild(el('path', { d: sh.d })); g.appendChild(clip);
+    var body = el('g', { 'clip-path': 'url(#' + id + ')' });
+    body.appendChild(el('rect', { x: -1.3, y: -1.3, width: 2.6, height: 2.6, fill: M.tint }));
+    if (k.img) body.appendChild(imgEl(t, k.img, -1.02, -1.02, 2.04, pre));
+    if (t.m === 't' && k.tx) textFill(body, k.tx, M);
+    if (t.m === 't' && sh.pts) {
+      (k.ch || []).forEach(function (p) { var a = sh.pts[p[0]], b = sh.pts[p[1]]; if (a && b) body.appendChild(el('line', { x1: f(a[0]), y1: f(a[1]), x2: f(b[0]), y2: f(b[1]), stroke: M.hue, 'stroke-opacity': '.7', 'stroke-width': '.024' })); });
+    }
+    g.appendChild(body);
+    g.appendChild(el('path', { d: sh.d, fill: 'none', stroke: M.hue, 'stroke-width': f(0.03 + 0.018 * (t.w || 1)), 'stroke-linejoin': 'round', 'class': 'kp-edge' }));
+    if (t.m === 't' && sh.pts) {
+      sh.pts.forEach(function (p) { g.appendChild(el('circle', { cx: f(p[0]), cy: f(p[1]), r: '.035', fill: INK })); });
+      var wd = k.wd || [];
+      wd.forEach(function (w, i2) {
+        var a = -Math.PI / 2 + 2 * Math.PI * (i2 + 0.5) / wd.length, x = 1.14 * Math.cos(a), y = 1.14 * Math.sin(a), deg = a * 180 / Math.PI + 90;
+        if (deg > 90 && deg < 270) deg -= 180;
+        var te = el('text', { x: f(x), y: f(y), transform: 'rotate(' + f(deg) + ' ' + f(x) + ' ' + f(y) + ')', 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '.15', 'font-family': 'Archivo, system-ui, sans-serif', 'font-weight': '700', fill: INK, 'paint-order': 'stroke', stroke: PAPER, 'stroke-width': '.05', 'stroke-linejoin': 'round', 'class': 'kp-word' });
+        te.textContent = w; g.appendChild(te);
+      });
+      if (k.ph) {
+        var words = k.ph.split(' '), lines = [''];
+        words.forEach(function (w) { if ((lines[lines.length - 1] + ' ' + w).trim().length > 16 && lines[lines.length - 1]) lines.push(w); else lines[lines.length - 1] = (lines[lines.length - 1] + ' ' + w).trim(); });
+        lines = lines.slice(0, 3);
+        lines.forEach(function (L, j) {
+          var te2 = el('text', { x: 0, y: f((j - (lines.length - 1) / 2) * 0.17), 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '.14', 'font-family': 'Grenze, Georgia, serif', 'font-style': 'italic', 'font-weight': '700', fill: INK, 'paint-order': 'stroke', stroke: PAPER, 'stroke-width': '.06', 'stroke-linejoin': 'round', 'class': 'kp-phrase' });
+          te2.textContent = L; g.appendChild(te2);
+        });
+      }
+    }
+    if (t.m === 's' && sh.ring) {
+      var N = sh.ring.length;
+      (k.ps || []).forEach(function (p) {
+        var a = -Math.PI / 2 + 2 * Math.PI * p / 100;
+        g.appendChild(el('line', { x1: f(0.38 * Math.cos(a)), y1: f(0.38 * Math.sin(a)), x2: f(0.56 * Math.cos(a)), y2: f(0.56 * Math.sin(a)), stroke: INK, 'stroke-width': '.03', 'stroke-linecap': 'round' }));
+      });
+      if (k.rt) {
+        var pa = sh.ring[Math.min(N - 1, Math.round(k.rt[0] * N / 100))], pb = sh.ring[Math.min(N - 1, Math.round(k.rt[1] * N / 100))];
+        g.appendChild(el('path', { d: 'M' + f(pa[0]) + ' ' + f(pa[1]) + 'Q0 0 ' + f(pb[0]) + ' ' + f(pb[1]), fill: 'none', stroke: VIOLET, 'stroke-width': '.045', 'stroke-linecap': 'round' }));
+        [pa, pb].forEach(function (p) { g.appendChild(el('circle', { cx: f(p[0]), cy: f(p[1]), r: '.05', fill: VIOLET })); });
+      }
+    }
+    if (!t.k) {
+      var gl = el('text', { x: 0, y: 0, 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '.2', 'font-family': 'Archivo, system-ui, sans-serif', fill: INK, 'fill-opacity': '.7' });
+      gl.textContent = (t.d && t.d[0]) || ''; g.appendChild(gl);
+    }
+    return g;
+  }
+  /* The small cuts around a piece, in the piece's own units: shards of a picture or a sound picture in girih shapes,
+     a few lines cut from a text, and a sound's pitch line bent like a wire. Each comes with its place around the
+     piece (x, y), a turn and a size. The same tile gives the same cuts on each screen. */
+  function shards(t, pre) {
+    var k = t.k || {}, M = MED[t.m] || MED.t, R = rng(hash((t.id || t.n || 'x') + '|cuts')), out = [];
+    if (!t.k) return out;
+    if (k.img) {
+      for (var i = 0; i < (t.m === 'p' ? 3 : 2); i++) {
+        var shp = GIRIH[GN[Math.floor(R() * GN.length)]], z = 1.5 + 1.1 * R(), W = 2.04 * z, ix = -1.02 - R() * (W - 2.04), iy = -1.02 - R() * (W - 2.04);
+        var id = pre + 'g' + (++uid), g = el('g', { 'class': 'kp-cut' });
+        var clip = el('clipPath', { id: id }); clip.appendChild(el('path', { d: poly(shp) })); g.appendChild(clip);
+        var body = el('g', { 'clip-path': 'url(#' + id + ')' });
+        body.appendChild(el('rect', { x: -1.1, y: -1.1, width: 2.2, height: 2.2, fill: M.tint }));
+        body.appendChild(imgEl(t, k.img, ix, iy, W, pre));
+        g.appendChild(body);
+        g.appendChild(el('path', { d: poly(shp), fill: 'none', stroke: PAPER, 'stroke-width': '.1', 'stroke-linejoin': 'round' }));
+        out.push({ g: g, d: 1 + 0.3 * R(), rot: 36 * Math.floor(R() * 10), sc: 0.22 + 0.12 * R(), r: 0.35 });
+      }
+    }
+    if (t.m === 't' && k.tx) {
+      var ws = k.tx.replace(/ \/ /g, ' ').split(' ').filter(Boolean), m = Math.min(3, Math.max(1, Math.floor(ws.length / 3)));
+      for (var j = 0; j < m; j++) {
+        var st = Math.floor(j * ws.length / m), frag = ws.slice(st, st + 2 + Math.floor(R() * 2)).join(' ');
+        if (frag.length > 18) { frag = frag.slice(0, 18); var sp = frag.lastIndexOf(' '); if (sp > 6) frag = frag.slice(0, sp); }
+        var te = el('text', { x: 0, y: 0, 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '.19', 'font-family': 'Grenze, Georgia, serif', 'font-style': 'italic', 'font-weight': '700', fill: INK, stroke: PAPER, 'stroke-width': '.13', 'stroke-linejoin': 'round', 'paint-order': 'stroke', 'class': 'kp-cut kp-line' });
+        te.textContent = frag;
+        out.push({ g: te, d: 1.55 + 0.2 * R(), tan: 1, rot: (R() - 0.5) * 24, sc: 1, r: 0.8 });
+      }
+    }
+    if (t.m === 's' && k.pc) {
+      var segs = [], cur = [], L = k.pc.length;
+      k.pc.forEach(function (v, j2) {
+        if (v == null) { if (cur.length > 1) segs.push(cur); cur = []; return; }
+        cur.push([-1 + 2 * j2 / Math.max(1, L - 1), -clamp(v / 90, -1, 1) * 0.45]);
+      });
+      if (cur.length > 1) segs.push(cur);
+      if (segs.length) {
+        var dd = segs.map(function (s) { return 'M' + s.map(function (p) { return f(p[0]) + ' ' + f(p[1]); }).join('L'); }).join('');
+        var wire = el('g', { 'class': 'kp-cut kp-wire' });
+        wire.appendChild(el('path', { d: dd, fill: 'none', stroke: PAPER, 'stroke-width': '.17', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        wire.appendChild(el('path', { d: dd, fill: 'none', stroke: M.hue, 'stroke-width': '.075', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        out.push({ g: wire, d: 1.3 + 0.2 * R(), rot: (R() - 0.5) * 70, sc: 0.72, r: 0.75 });
+      }
+    }
+    /* spread the cuts around the piece, each at its own angle */
+    var a0 = R() * 2 * Math.PI, n = out.length;
+    out.forEach(function (q, i3) {
+      var a = a0 + 2 * Math.PI * (i3 + 0.2 + 0.6 * R()) / n;
+      q.x = q.d * Math.cos(a); q.y = q.d * Math.sin(a);
+      if (q.tan) { var deg = a * 180 / Math.PI + 90 + q.rot; deg = ((deg % 360) + 360) % 360; if (deg > 90 && deg < 270) deg -= 180; q.rot = deg; }
+    });
+    return out;
+  }
+  /* the pieces sent and shown in the phone's list of what leaves */
+  function describe(t, k) {
+    if (!k) return '';
+    if (t.m === 'p') return 'a small cut of your picture' + (k.sh === 'unit' ? ' (two by two of its repeating tile)' : k.sh === 'star' ? ' (the disc of its star)' : '') + ', about ' + (k.img ? Math.round(k.img.length * 0.75 / 100) / 10 + ' kB' : 'no image');
+    if (t.m === 't') return 'the opening of your text' + (k.tx ? ' (“' + (k.tx.length > 60 ? k.tx.slice(0, 60) + '…' : k.tx) + '”)' : '') + '; these words: ' + (k.wd || []).join(', ') + (k.ph ? '; the phrase “' + k.ph + '”' : '') + '; and the shape of your text’s knot';
+    if (t.m === 's') return 'your sound’s pitch line and a small, silent copy of its sound picture';
+    return '';
+  }
+
+  /* ---------------------------------------------------------------- the collage */
+  /* a piece's size grows with its line weight; a cut of a repeating tile reaches out to its corners, so it is drawn a
+     little smaller to match the others */
+  function sizeOf(t) {
+    var s = 0.8 + 0.22 * (t.w || 1), k = t.k || {};
+    if (t.m === 'p' && k.sh === 'unit' && k.u) {
+      var m = Math.max(Math.hypot(k.u[0] + k.u[2], k.u[1] + k.u[3]), Math.hypot(k.u[0] - k.u[2], k.u[1] - k.u[3])) / 200;
+      if (m > 1.05) s *= 1.05 / m;
+    }
+    return s;
+  }
+  /* how far a piece reaches: a text piece wears its words around it */
+  function reachOf(t, s) { return s * (t.m === 't' ? 1.22 : t.m === 's' ? 0.86 : 0.96); }
+  /* tiles: in the order they came in. Places follow a sunflower spiral, packed close so the pieces overlap a little,
+     with a turn and a nudge from each tile's own id, so each screen draws the same collage. */
+  function layout(tiles) {
+    var P = tiles.map(function (t, i) {
+      var R = rng(hash(t.id || i)), a = i * 2.39996 + (R() - 0.5) * 0.6, rad = 1.32 * Math.sqrt(i + 0.3), s = sizeOf(t);
+      return { t: t, x: rad * Math.cos(a) + (R() - 0.5) * 0.4, y: rad * Math.sin(a) + (R() - 0.5) * 0.4, s: s, cr: reachOf(t, s), rot: t.m === 't' ? (R() - 0.5) * 20 : (R() - 0.5) * 70, tx: 0, ty: 0 };
+    });
+    P.forEach(function (p) { p.tx = p.x; p.ty = p.y; });
+    for (var it = 0; it < 80; it++) {
+      for (var i = 0; i < P.length; i++) for (var j = i + 1; j < P.length; j++) {
+        var a = P[i], b = P[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1e-6, need = (a.cr + b.cr) * 0.8;
+        if (d < need) { var push = (need - d) / 2, ux = dx / d, uy = dy / d; a.x -= ux * push; a.y -= uy * push; b.x += ux * push; b.y += uy * push; }
+      }
+      P.forEach(function (p) { p.x += (p.tx - p.x) * 0.03; p.y += (p.ty - p.y) * 0.03; });
+    }
+    return P;
+  }
+  /* threads: two texts that share a word, two pictures with the same star or both in five directions, two sounds that
+     both come back */
+  function threads(P) {
+    var out = [], deg = P.map(function () { return 0; });
+    var pairs = [];
+    for (var i = 0; i < P.length; i++) for (var j = i + 1; j < P.length; j++) {
+      var a = P[i].t, b = P[j].t, ka = a.k || {}, kb = b.k || {}, label = '';
+      if (a.m === 't' && b.m === 't' && ka.wd && kb.wd) {
+        var lb = kb.wd.map(function (w) { return w.toLowerCase(); });
+        for (var x = 0; x < ka.wd.length && !label; x++) if (lb.indexOf(ka.wd[x].toLowerCase()) >= 0) label = ka.wd[x];
+      } else if (a.m === 'p' && b.m === 'p') {
+        if (ka.n && ka.n === kb.n) label = FOLDW[ka.n] + ' star';
+        else if (ka.five && kb.five) label = 'five directions';
+      } else if (a.m === 's' && b.m === 's' && ka.rt && kb.rt) label = 'comes back';
+      if (label) pairs.push({ i: i, j: j, label: label, d: Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) });
+    }
+    pairs.sort(function (p, q) { return p.d - q.d; });
+    var most = P.length > 16 ? 2 : 3;
+    pairs.forEach(function (p) { if (deg[p.i] < most && deg[p.j] < most && out.length < 32) { out.push(p); deg[p.i]++; deg[p.j]++; } });
+    return out;
+  }
+  /* one tile laid down: its cuts first, then the piece on top, all in one group so the tile arrives as one */
+  function lay(p, pre, box) {
+    var pop = el('g', { 'class': 'kp-pop' });
+    shards(p.t, pre).forEach(function (q) {
+      var x = q.x * p.s, y = q.y * p.s;
+      var sg = el('g', { transform: 'translate(' + f(x) + ' ' + f(y) + ') rotate(' + f(q.rot) + ')', filter: 'url(#' + pre + 'sl)', 'pointer-events': 'none' });
+      var ss = el('g', { transform: 'scale(' + f(q.sc * p.s) + ')' }); ss.appendChild(q.g); sg.appendChild(ss); pop.appendChild(sg);
+      if (box) box(p.x + x, p.y + y, (q.r + 0.1) * p.s);
+    });
+    var inner = el('g', { transform: 'rotate(' + f(p.rot) + ') scale(' + f(p.s) + ')', filter: 'url(#' + pre + 'sh)' });
+    inner.appendChild(draw(p.t, { prefix: pre }));
+    pop.appendChild(inner);
+    if (box) box(p.x, p.y, p.s * (p.t.m === 't' ? 1.38 : 1.06));
+    return pop;
+  }
+  /* an SVG collage of the tiles; opt.names shows each maker's name, opt.mine marks one id, opt.slotOf gives the slot
+     number used to open a tile's card */
+  function collage(tiles, opt) {
+    opt = opt || {};
+    var P = layout(tiles), pre = 'kc' + (++uid) + '_', B = [-2, -2, 2, 2];
+    function box(x, y, r) { B[0] = Math.min(B[0], x - r); B[1] = Math.min(B[1], y - r); B[2] = Math.max(B[2], x + r); B[3] = Math.max(B[3], y + r); }
+    var svg = el('svg', { xmlns: NS, role: 'img', 'class': 'collage' });
+    svg.appendChild(defs(pre));
+    var pcs = el('g', { 'class': 'pieces' }), thr = el('g', { 'class': 'threads' }), top = el('g', { 'class': 'labels' });
+    P.forEach(function (p) {
+      var isMine = opt.mine && p.t.id === opt.mine;
+      var wrap = el('g', { transform: 'translate(' + f(p.x) + ' ' + f(p.y) + ')', 'class': 'kp-at' + (isMine ? ' mine' : ''), 'data-id': p.t.id || '' });
+      if (opt.slotOf) { var sl = opt.slotOf(p.t); if (sl != null) wrap.setAttribute('data-i', sl); }
+      wrap.appendChild(lay(p, pre, box));
+      pcs.appendChild(wrap);
+      if (isMine) top.appendChild(el('circle', { cx: f(p.x), cy: f(p.y), r: f(p.s * 1.16), fill: 'none', stroke: INK, 'stroke-width': '.045', 'stroke-dasharray': '.02 .09', 'stroke-linecap': 'round', 'class': 'kp-mine' }));
+      if (opt.names) {
+        /* the name sits on the lower half of its own piece, so it stays with the piece when others overlap it */
+        var ny = p.y + p.s * 0.58;
+        var nm = el('text', { x: f(p.x), y: f(ny), 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '.17', 'font-family': 'Archivo, system-ui, sans-serif', 'font-weight': '600', fill: INK, 'paint-order': 'stroke', stroke: PAPER, 'stroke-width': '.07', 'stroke-linejoin': 'round', 'class': 'kp-name' });
+        nm.textContent = p.t.n || ''; top.appendChild(nm);
+        box(p.x, ny, 0.25);
+      }
+    });
+    /* threads run over the pieces, like stitches; a label is left out when the same words sit close by */
+    var said = [];
+    threads(P).forEach(function (q) {
+      var a = P[q.i], b = P[q.j], mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2, dx = b.x - a.x, dy = b.y - a.y, L = Math.hypot(dx, dy) || 1;
+      var cx = mx - dy / L * 0.25 * L, cy = my + dx / L * 0.25 * L, d = 'M' + f(a.x) + ' ' + f(a.y) + 'Q' + f(cx) + ' ' + f(cy) + ' ' + f(b.x) + ' ' + f(b.y);
+      thr.appendChild(el('path', { d: d, fill: 'none', stroke: PAPER, 'stroke-opacity': '.85', 'stroke-width': '.07', 'stroke-linecap': 'round' }));
+      thr.appendChild(el('path', { d: d, fill: 'none', stroke: INK, 'stroke-opacity': '.75', 'stroke-width': '.035', 'stroke-dasharray': '.1 .08', 'stroke-linecap': 'round' }));
+      var lx = (mx + cx) / 2, ly = (my + cy) / 2, te = el('text', { x: f(lx), y: f(ly), 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '.16', 'font-family': 'Archivo, system-ui, sans-serif', 'font-weight': '700', fill: INK, 'paint-order': 'stroke', stroke: PAPER, 'stroke-width': '.07', 'stroke-linejoin': 'round', 'class': 'thread-label' });
+      te.textContent = q.label;
+      if (!said.some(function (z) { return z.l === q.label && Math.hypot(z.x - lx, z.y - ly) < 1.4; })) { top.appendChild(te); said.push({ l: q.label, x: lx, y: ly }); }
+    });
+    svg.appendChild(pcs); svg.appendChild(thr); svg.appendChild(top);
+    var pad = 0.15;
+    svg.setAttribute('viewBox', [B[0] - pad, B[1] - pad, B[2] - B[0] + 2 * pad, B[3] - B[1] + 2 * pad].map(f).join(' '));
+    return svg;
+  }
+  /* one piece on its own with its cuts, in an SVG */
+  function solo(t) {
+    var pre = 'ks' + (++uid) + '_', B = [-1.2, -1.2, 1.2, 1.2];
+    function box(x, y, r) { B[0] = Math.min(B[0], x - r); B[1] = Math.min(B[1], y - r); B[2] = Math.max(B[2], x + r); B[3] = Math.max(B[3], y + r); }
+    var svg = el('svg', { xmlns: NS, role: 'img', 'class': 'kp-solo' });
+    svg.appendChild(defs(pre));
+    svg.appendChild(lay({ t: t, x: 0, y: 0, s: sizeOf(t) / (0.8 + 0.22 * (t.w || 1)), rot: 0 }, pre, box));
+    var pad = 0.1;
+    svg.setAttribute('viewBox', [B[0] - pad, B[1] - pad, B[2] - B[0] + 2 * pad, B[3] - B[1] + 2 * pad].map(f).join(' '));
+    return svg;
+  }
+  root.KnotPiece = { fromPicture: fromPicture, fromText: fromText, fromSound: fromSound, pack: pack, check: check, draw: draw, solo: solo, collage: collage, describe: describe, layout: layout, shards: shards, GIRIH: GIRIH, BUDGET: BUDGET };
+})(this);
+
+</script>
+<script>
 /* Knot's room link, shared by the phone and the room page.
    A tile travels through ntfy.sh, a public message service that needs no account, over ordinary HTTPS. Before it
    leaves the phone, Knot locks it with AES-GCM, using a key made from the room code, so the service and anyone
@@ -425,7 +1011,10 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
     var m = String(t.m), w = +t.w, b = +t.b, s = +t.s;
     if (!/^[tps]$/.test(m) || [1, 2, 3].indexOf(w) < 0 || (b !== 0 && b !== 1) || !(s >= 0 && s <= 1)) return null;
     var d = Array.isArray(t.d) ? t.d.slice(0, 3).map(function (x) { return txt(x, 40); }).filter(Boolean) : [];
-    return { id: id, m: m, w: w, b: b, s: Math.round(s * 100) / 100, n: txt(t.n, 24) || 'Knot', x: txt(t.x, 24), d: d };
+    var out = { id: id, m: m, w: w, b: b, s: Math.round(s * 100) / 100, n: txt(t.n, 24) || 'Knot', x: txt(t.x, 24), d: d };
+    /* the piece cut from the material, checked field by field in piece.js */
+    if (t.k && root.KnotPiece) { var k = root.KnotPiece.check(t.k, m); if (k) out.k = k; }
+    return out;
   }
   /* the QR text: K6|room|id|medium|weight|centre|score|name|word|facts, with the words written in URL encoding so the
      code stays plain ASCII for any camera */
@@ -12933,7 +13522,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   var MEDN = { t: 'text', p: 'picture', s: 'sound' };
 
   /* ---------------------------------------------------------------- state, saved after each change */
-  var st = null, view = 'both', paused = false, queue = [], waiting = [];
+  var st = null, view = 'collage', paused = false, queue = [], waiting = [];
+  var P = window.KnotPiece;
   function key(c) { return 'knot62-room-' + c; }
   function save() { st.saved = now(); try { localStorage.setItem(key(st.code), JSON.stringify(st)); localStorage.setItem('knot-room-last', st.code); } catch (e) {} }
   function load(c) { try { var s = JSON.parse(localStorage.getItem(key(c)) || 'null'); if (s && s.code === c && now() - (s.saved || 0) < 7 * 86400) return s; } catch (e) {} return null; }
@@ -12957,13 +13547,13 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   }
 
   /* ---------------------------------------------------------------- the pattern */
-  var svg = null, layer = null, strandLayer = null;
+  var svg = null, gsvg = null, layer = null, strandLayer = null;
   function tileAt(slot) { for (var k = 0; k < st.tiles.length; k++) { var t = st.tiles[k]; if (t.slot === slot && !t.hidden) return t; } return null; }
   function build() {
     var box = $('#pattern');
     box.innerHTML = '';
     var b = G.bbox(ALL), pad = 0.35;
-    svg = G.el('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: [b[0] - pad, b[1] - pad, b[2] + 2 * pad, b[3] + 2 * pad].map(function (v) { return v.toFixed(3); }).join(' '), role: 'img' });
+    svg = gsvg = G.el('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: [b[0] - pad, b[1] - pad, b[2] + 2 * pad, b[3] + 2 * pad].map(function (v) { return v.toFixed(3); }).join(' '), role: 'img' });
     svg.appendChild(G.el('title', {})).textContent = 'Knot room ' + st.code;
     layer = G.el('g', { 'class': 'tiles' }); svg.appendChild(layer);
     strandLayer = G.el('g', { 'class': 'strands' }); svg.appendChild(strandLayer);
@@ -12971,7 +13561,27 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     drawAll();
   }
   function opts() { return { view: view === 'strands' ? 'tiles' : view === 'collate' ? 'both' : view, collate: view === 'collate' }; }
+  /* the collage: each piece made from a person's material, gathered in the order they came */
+  function drawCollage(arriving) {
+    var box = $('#pattern'), list = placed().slice().sort(function (a, b) { return a.no - b.no; });
+    if (!P) return;
+    svg = P.collage(list, { names: true, slotOf: function (t) { var r = null; st.tiles.forEach(function (x) { if (x.id === t.id) r = x.slot; }); return r; } });
+    svg.setAttribute('aria-label', 'The room’s collage: ' + list.length + (list.length === 1 ? ' piece' : ' pieces'));
+    if (!list.length) {
+      var hint = G.el('text', { x: 0, y: 0, 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '.2', 'font-family': 'Archivo, system-ui, sans-serif', fill: '#2b2424', 'fill-opacity': '.6' });
+      hint.textContent = 'The collage starts with the first piece.';
+      svg.appendChild(hint);
+    }
+    svg.querySelectorAll('.kp-at').forEach(function (g) {
+      g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button');
+      if (arriving != null && g.getAttribute('data-i') === String(arriving)) { g.classList.add('arriving'); setTimeout(function () { g.classList.remove('arriving'); }, 1600); }
+    });
+    box.innerHTML = ''; box.appendChild(svg);
+  }
   function drawAll() {
+    if (view === 'collage') { drawCollage(); paintCount(); paintMargin(); paintTogether(); return; }
+    if (gsvg && gsvg.parentNode !== $('#pattern')) { $('#pattern').innerHTML = ''; $('#pattern').appendChild(gsvg); }
+    svg = gsvg;
     layer.innerHTML = ''; strandLayer.innerHTML = '';
     ALL.forEach(function (i2) { drawOne(i2); });
     if (view === 'strands') drawStrands();
@@ -12979,6 +13589,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     paintCount(); paintMargin(); paintTogether();
   }
   function drawOne(slot, arriving) {
+    if (view === 'collage') { drawCollage(arriving ? slot : null); return null; }
     var old = layer.querySelector('[data-i="' + slot + '"]'), t = tileAt(slot);
     var tmp = G.el('g', {}), g = G.drawSlot(tmp, slot, t, opts());
     if (old) layer.replaceChild(g, old); else layer.appendChild(g);
@@ -13013,15 +13624,18 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     return parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0] || 'no tiles';
   }
   var CAPS = {
+    collage: 'Collage: each piece is one person’s material, cut into a shape that comes from what Knot found. Small cuts of the same material lie around it, and new pieces land on top. Dashed threads join pieces that share a word, a star or a return. Tap a piece to read its card.',
     both: 'Each tile is one person’s result. The layout gives the shapes; the results give the lines. Tiles meet at the middle of their edges, at 54°.',
     lines: 'Girih: the tiles hidden, as on a finished wall. The lines keep their colours, so you can still see who made what.',
     tiles: 'The tiles alone: the layout under the lines, which a finished wall hides.',
     collate: 'Collation: each tile takes its own angle, from 36° when little comes back to 72° when much does. The lines still meet at each midpoint, and bend where neighbours differ.',
     strands: 'Strands: each colour is one line, followed through the room. At each midpoint it runs straight on into the next tile.'
   };
+  document.body.setAttribute('data-rv', view);
   document.querySelectorAll('[data-view]').forEach(function (b) {
     b.addEventListener('click', function () {
       view = b.dataset.view;
+      document.body.setAttribute('data-rv', view);
       document.querySelectorAll('[data-view]').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
       $('#rcap').textContent = CAPS[view];
       if (view !== 'strands') $('#arrive').textContent = '';
@@ -13044,7 +13658,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     var had = null;
     st.tiles.forEach(function (x) { if (x.id === t.id) had = x; });
     if (had) {
-      ['m', 'w', 'b', 's', 'n', 'x', 'd'].forEach(function (k) { had[k] = t[k]; });
+      ['m', 'w', 'b', 's', 'n', 'x', 'd', 'k'].forEach(function (k) { had[k] = t[k]; });
       if (via === 'network' && (had.via === 'camera' || had.via === 'typed')) via = had.via;
       had.via = via; had.at = now();
       save(); drawOne(had.slot, true); paintMargin(); paintTogether(); paintCount();
@@ -13069,7 +13683,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   }
   function freeSlot() { var used = {}; st.tiles.forEach(function (t) { if (t.slot >= 0) used[t.slot] = 1; }); for (var k = 0; k < N; k++) if (!used[k]) return k; return -1; }
   function place(t, via) {
-    var slot = freeSlot(), rec = { id: t.id, no: st.nextNo++, slot: slot, m: t.m, w: t.w, b: t.b, s: t.s, n: t.n, x: t.x, d: t.d, via: via, at: now(), hidden: false };
+    var slot = freeSlot(), rec = { id: t.id, no: st.nextNo++, slot: slot, m: t.m, w: t.w, b: t.b, s: t.s, n: t.n, x: t.x, d: t.d, k: t.k || null, via: via, at: now(), hidden: false };
     st.tiles.push(rec);
     save();
     if (slot < 0) { say('The pattern is full. ' + rec.n + ' waits in the margin.'); paintMargin(); paintCount(); return; }
@@ -13108,7 +13722,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     });
     var h = '<p class="tg">' + (p.length ? esc((p.length === 1 ? '1 tile: ' : p.length + ' tiles: ') + mixText(mix) + '. ' + filled + ' with a filled centre; ' + heavy + ' at the heaviest weight.') : 'No tiles yet. The dotted outlines show the empty places.') + '</p>';
     if (five) h += '<p class="tg">' + esc(five === 1 ? 'One tile shows fivefold or tenfold order' + (fivePics ? ': a picture.' : '.') : five + ' tiles show fivefold or tenfold order' + (fivePics === five ? ', each of them a picture.' : ', ' + fivePics + ' of them pictures.')) + '</p>';
-    h += '<ul class="qs"><li>Which tiles look alike? Compare the steps their makers wrote down.</li><li>Where do the texts sit, and where do the sounds?</li><li>Do the tenfold stars come from pictures, or from texts and sounds too?</li><li>Which tiles show no repeat, and what made them?</li><li>What is missing from the room?</li></ul>';
+    h += '<ul class="qs"><li>Which pieces look alike? Compare the steps their makers wrote down.</li><li>Which threads tie pieces together, and what do they share?</li><li>Do the tenfold stars come from pictures, or from texts and sounds too?</li><li>Which pieces show no repeat, and what made them?</li><li>What is missing from the room?</li></ul>';
     $('#together').innerHTML = h;
   }
   $('#pauseBtn').addEventListener('click', function () {
@@ -13215,10 +13829,16 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     $('#tcD').innerHTML = '<dt>Kind</dt><dd>' + esc(MEDN[t.m]) + '</dd><dt>Line weight</dt><dd>' + t.w + ' of 3</dd><dt>Centre</dt><dd>' + (t.b ? 'filled' : 'open') + '</dd>' +
       (t.x ? '<dt>Word</dt><dd>' + esc(t.x) + '</dd>' : '') + '<dt>Its numbers</dt><dd>' + esc((t.d || []).join('; ')) + '</dd>' +
       '<dt>Angle</dt><dd>' + Math.round(36 + 36 * t.s) + '°</dd><dt>Arrived by</dt><dd>' + esc({ network: 'the network', camera: 'the camera', typed: 'a typed code' }[t.via] || t.via) + '</dd>';
+    if (P && t.k) {
+      var dd = document.createElement('dd'), dt = document.createElement('dt');
+      dt.textContent = 'Piece'; dd.className = 'tcp'; dd.appendChild(P.solo(t));
+      $('#tcD').insertBefore(dd, $('#tcD').firstChild); $('#tcD').insertBefore(dt, dd);
+    }
     $('#tcard').hidden = false;
   }
-  $('#pattern').addEventListener('click', function (e) { var g = e.target.closest && e.target.closest('.slot.on'); if (g) openCard(+g.getAttribute('data-i')); });
-  $('#pattern').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { var g = e.target.closest && e.target.closest('.slot.on'); if (g) { e.preventDefault(); openCard(+g.getAttribute('data-i')); } } });
+  function hitOf(e) { return e.target.closest && (e.target.closest('.slot.on') || e.target.closest('.kp-at[data-i]')); }
+  $('#pattern').addEventListener('click', function (e) { var g = hitOf(e); if (g) openCard(+g.getAttribute('data-i')); });
+  $('#pattern').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { var g = hitOf(e); if (g) { e.preventDefault(); openCard(+g.getAttribute('data-i')); } } });
   $('#tcX').addEventListener('click', function () { $('#tcard').hidden = true; });
   $('#tcHide').addEventListener('click', function () {
     if (!shown) return;
@@ -13243,7 +13863,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   }
   function records() {
     return st.tiles.slice().sort(function (a, b) { return a.no - b.no; }).map(function (t) {
-      return { no: t.no, slot: t.slot, shape: t.slot >= 0 ? { d: 'decagon', p: 'pentagon', h: 'hexagon' }[G.SLOTS[t.slot].k] : null, medium: MEDN[t.m], weight: t.w, centre: t.b ? 'filled' : 'open', score: t.s, name: t.n, word: t.x, facts: t.d, arrived_by: t.via, hidden: !!t.hidden };
+      return { no: t.no, slot: t.slot, shape: t.slot >= 0 ? { d: 'decagon', p: 'pentagon', h: 'hexagon' }[G.SLOTS[t.slot].k] : null, medium: MEDN[t.m], weight: t.w, centre: t.b ? 'filled' : 'open', score: t.s, name: t.n, word: t.x, facts: t.d, piece: t.k || null, arrived_by: t.via, hidden: !!t.hidden };
     });
   }
   document.querySelectorAll('[data-export]').forEach(function (b) {
