@@ -5839,7 +5839,8 @@ var qrcode = function() {
     paint();
   }
   var WORDS = { live: 'Live', again: 'Trying again…', slow: 'Slow link', 'slow-ok': 'Slow link', down: 'No connection' };
-  function paint() { cancelAnimationFrame(drawT); drawT = requestAnimationFrame(draw); }
+  /* a short timer, so the girih also redraws in a background tab, where animation frames pause */
+  function paint() { clearTimeout(drawT); drawT = setTimeout(draw, 30); }
   function mixText(list) {
     var mix = { t: 0, p: 0, s: 0 }, parts = [];
     list.forEach(function (t) { mix[t.m]++; });
