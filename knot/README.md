@@ -1,33 +1,43 @@
 # Knot
 
-Knot shows what comes back in a text, a picture or a recording, and joins each reading into a shared girih.
+Knot shows what repeats in a text, a picture or a recording. Repeats are clues to how a thing was made. Each result becomes a tile, and a room of tiles becomes one girih.
 
 It runs in the browser, on a phone or a computer. Your files stay on your device.
 
 **Open Knot:** https://www.hassanasif.net/knot/
 **The room, for a projector:** https://www.hassanasif.net/knot/room.html
 
+## How to use it
+
+1. **Choose.** Pick Text, Picture or Sound. Add your own material, or try an example.
+2. **Read.** Knot shows what repeats. Each result says what Knot found. Read more shows what it does, why, and what it misses.
+3. **Undo.** Use the repeats as clues. Write down three steps you think made your material.
+4. **Redo.** Give your three steps to a partner. Can they make your material again from the steps alone?
+5. **Check.** Send your tile to the room. The tiles join into one pattern on the screen, and the group compares them.
+
 ## What Knot shows
 
-Each result comes as a card: what it shows, why it matters, what it cannot show, how it bears on girih and knots, the outcome on your material, and the settings behind it. A short line at the top of each tab, "In short", puts the results together.
+Each result comes as a card. It says what Knot found on your material. Read more adds four parts: what it does, why, what it misses, and its place in the activity, with the details behind it. A short line at the top of each tab, "In short", puts the results together.
 
 ### Text
 
-Each sentence, or each line of a poem, a song or a list, becomes a point on a circle in reading order. A line joins two points that use the same word. Knot reads English, French, Arabic, Persian and Urdu: it removes Arabic vowel signs, Qur'anic marks and tatweel, folds the Arabic and Persian forms of alef, kaf and yeh into one form each, keeps Urdu ے apart from ی, and sets common words aside. A tap counts a set-aside word again.
+Each sentence, or each line of a poem, a song or a list, becomes a dot on a circle in reading order. A tie joins two dots that use the same word. Knot reads English, French, Arabic, Persian and Urdu: it removes Arabic vowel signs, Qur'anic marks and tatweel, folds the Arabic and Persian forms of alef, kaf and yeh into one form each, keeps Urdu ے apart from ی, and sets common words aside. A tap counts a set-aside word again.
 
-- **Density:** the share of pairs that share a word, against the same words scattered at random over units of the same lengths.
-- **Reach:** how far apart two uses of a word sit, against shuffled orders.
+- **Shared words:** the share of pairs that share a word, against the same words scattered at random over units of the same lengths.
+- **Distance:** how far apart two uses of a word sit, against shuffled orders.
 - **Centre:** the units with the most shared words, with long units discounted (Hoey 1991; Mihalcea and Tarau 2004).
-- **Closing:** whether the last unit picks up the first unit's words, against the other pairs (Douglas 2007).
+- **Loose ends:** the units that share no word with the rest.
+- **Ending:** whether the last unit picks up the first unit's words, against the other pairs (Douglas 2007).
 - **Mirror order:** whether words return in reverse order more often than in shuffled copies. Two words fall in mirror order by chance one time in three (Edwards and Edwards).
 - **Refrain and rhyme:** for lines, an ending that returns at fixed places and the shared final letters before it, as the radīf and qāfiya of a ghazal (Faruqi and Pritchett 1991).
-- **Repeated phrase:** the longest run of words that returns.
+- **Longest return:** the shared word that spans the longest stretch of the text.
+- **Repeated phrase:** the longest run of words that comes back whole.
 - **Returns map:** each word set against each later word, a dotplot (Church and Helfman 1993).
 
 ### Picture
 
-- **Diffraction view:** the picture's Fourier power spectrum, the quantity a crystal's diffraction pattern records. It has no time axis and no place axis, so it is no spectrogram. Each spot has a twin across the centre.
-- **Strongest repeat and directions:** how many stripes fit across the square, which way they run, and the set of directions, so that "ten directions" reads as lines running five ways, 36 degrees apart (Lu and Steinhardt 2007).
+- **Stripe map:** the picture's Fourier power spectrum, the same kind of map that X-rays through a crystal draw. Each pair of spots is one set of stripes. It has no time axis and no place axis. Each spot has a twin across the centre.
+- **Strongest stripes and directions:** how many stripes fit across the square, which way they run, and the set of directions, so that "ten directions" reads as lines running five ways, 36 degrees apart (Lu and Steinhardt 2007).
 - **Line rose:** which way the edges run, weighted by contrast (after Freeman and Roth 1995).
 - **Repeat unit:** two slides that land the picture on itself, drawn as arrows, with a see-through copy that slides along them (Liu, Collins and Tsin 2004).
 - **Star:** how well the picture matches itself turned around one point, from a half to a sixteenth, and whether mirrors pass through that point (after Lee, Collins and Liu 2008).
@@ -35,7 +45,7 @@ Each sentence, or each line of a poem, a song or a list, becomes a point on a ci
 
 ### Sound
 
-- **Spectrogram:** time against pitch, 50 to 8,000 vibrations a second, with octave lines.
+- **Sound picture:** a spectrogram, time against pitch, 50 to 8,000 vibrations a second, with octave lines.
 - **Phrases:** stretches between pauses of a quarter second or more.
 - **Pitch:** the main voice by subharmonic summation (Hermes 1988), counted in cents from the voice's own home pitch, with a pitch rose that folds one octave into a circle (Gedik and Bozkurt 2010; Heydarian and Bainbridge 2019).
 - **Returns:** each moment set against each other moment (Foote 1999), the strongest passage that comes back, and the share of moments that return.
@@ -44,7 +54,7 @@ Knot does not name a maqām, check tajwīd, identify a reciter or judge a recita
 
 ## Your tile and the room
 
-Each reading makes a girih tile. Its colour names the medium, its line weight says how much comes back, and a filled centre marks returns at fixed places. The phone repeats the tile into a small girih of 21 tiles, which you can save.
+Each result makes a girih tile. Its colour names the kind of material, its line weight says how much comes back, and a filled centre marks a strong repeat. The phone repeats the tile into a small girih of 21 tiles, which you can save.
 
 In a session, the room page shows a QR code and a six-letter room code. A phone that joins can send its tile. Knot shows, before sending, exactly what leaves the phone: the medium, three small numbers, a few words about the result, a name and an optional word. No file, text, picture or sound leaves. The tile travels through ntfy.sh, a public message service that needs no account, locked with AES-GCM, with the room code as the secret; ntfy.sh deletes messages after 12 hours. People with the room code can read the tiles. If the network fails, the phone shows its tile as a QR code and a short typed code, which the room reads through a camera or a keyboard.
 
@@ -60,7 +70,7 @@ Knot reads your files inside your browser, and they stay on your device. It keep
 
 ## Cite
 
-Asif, Hassan. 2026. *Knot*. Software, version 6. https://www.hassanasif.net/knot/
+Asif, Hassan. 2026. *Knot*. Software, version 6.1. https://www.hassanasif.net/knot/
 
 ## Sources
 

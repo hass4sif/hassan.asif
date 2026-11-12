@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Knot room</title>
-<meta name="description" content="The Knot room: each person's reading becomes a tile, and the tiles join into one girih on the screen.">
+<meta name="description" content="The Knot room: each person's result becomes a tile, and the tiles join into one girih on the screen.">
 <meta name="theme-color" content="#dbe7e7">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
@@ -72,6 +72,7 @@ button{font:inherit;color:inherit}
 .margin span{display:block;color:var(--ink-2);font-size:13px}
 .tg{margin:8px 0 0;font-size:14.5px}
 .qs{margin:8px 0 0;padding-left:18px;font-size:14.5px;color:var(--ink-2)}
+.steps{margin:8px 0 0;padding-left:20px;font-size:14px;line-height:1.45;color:var(--ink-2)}.steps li{margin:0 0 4px}
 .tcard{position:fixed;right:380px;top:70px;z-index:20;width:min(360px,92vw);background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 18px 40px -14px rgba(40,30,40,.5)}
 .tcard h3{margin:0 24px 6px 0;font-family:var(--f-disp);font-size:28px;line-height:1.05}
 .tcard dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:14.5px}
@@ -106,13 +107,13 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
   <section class="stagebox" aria-label="The room's girih">
     <div class="pattern" id="pattern"></div>
     <p class="arrive" id="arrive" aria-live="polite"></p>
-    <p class="rcap" id="rcap">Each tile is one person’s material. Shapes come from the layout; lines come from the data. Tiles meet at the middle of their edges, at 54°; inside, each tile is its maker’s.</p>
+    <p class="rcap" id="rcap">Each tile is one person’s result. The layout gives the shapes; the results give the lines. Tiles meet at the middle of their edges, at 54°.</p>
     <div class="legend">
       <span><i class="lt" style="background:#e3e8fd;border-color:#4f6cf0"></i>text</span>
       <span><i class="lt" style="background:#d6eff3;border-color:#2a9fb2"></i>picture</span>
       <span><i class="lt" style="background:#fbe7d7;border-color:#e0843f"></i>sound</span>
-      <span><b class="lw w1"></b><b class="lw w2"></b><b class="lw w3"></b>how much comes back</span>
-      <span><i class="lt fig"></i>filled centre: returns at fixed places</span>
+      <span><b class="lw w1"></b><b class="lw w2"></b><b class="lw w3"></b>line weight: how much comes back</span>
+      <span><i class="lt fig"></i>filled centre: a strong repeat</span>
     </div>
   </section>
 
@@ -127,7 +128,17 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
     </div>
 
     <details class="panel" open>
-      <summary>Intake</summary>
+      <summary>How to use the room</summary>
+      <ol class="steps">
+        <li>Scan the QR code, or open the address and type the room code.</li>
+        <li>Read a text, a picture or a sound in Knot. Each result makes a tile.</li>
+        <li>Press Send. The tile takes the next free place in the pattern.</li>
+        <li>Compare the tiles together. This is the Check: where do they agree, and where do they differ?</li>
+      </ol>
+    </details>
+
+    <details class="panel" open>
+      <summary>Adding tiles</summary>
       <div class="row">
         <button class="rpill act" type="button" id="pauseBtn">Pause</button>
         <button class="rpill act" type="button" id="scanBtn">Scan a phone</button>
@@ -138,9 +149,10 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
       </div>
       <form class="row" id="typedForm" autocomplete="off">
         <label class="vh" for="typedIn">Typed code</label>
-        <input id="typedIn" placeholder="Typed code, as P21-417" spellcheck="false">
+        <input id="typedIn" placeholder="Typed code, such as P21-417" spellcheck="false">
         <button class="rpill act" type="submit">Add</button>
       </form>
+      <p class="small">If a phone cannot send, it shows a QR code and a short code. Scan the QR code with Scan a phone, or type the short code here.</p>
       <p class="small" id="intakeStat" role="status"></p>
     </details>
 
@@ -151,7 +163,7 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
 
     <details class="panel">
       <summary>The margin: each tile, in order</summary>
-      <p class="small">As al-Yūnīnī collated Bukhārī: the base text stays, each variant keeps its own mark, and the room corrects no tile. Tap a tile in the pattern to see its card.</p>
+      <p class="small">The room keeps each tile as it came, in order, and changes no tile. Al-Yūnīnī edited Bukhārī the same way: the base text stays, and each variant reading keeps its own mark. Tap a tile in the pattern to see its card.</p>
       <ol class="margin" id="margin"></ol>
     </details>
 
@@ -166,7 +178,7 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
         <button class="rpill warn" type="button" id="newRound">New round</button>
         <button class="rpill act" type="button" id="newRoom">New room code</button>
       </div>
-      <p class="small">The room saves itself in this browser after each tile, so a reload keeps the tiles. Tiles reach the room through ntfy.sh, which deletes them after 12 hours.</p>
+      <p class="small">New round empties the pattern and keeps the code. New room code starts a fresh room, and phones need the new code. The room saves itself in this browser after each tile, so a reload keeps the tiles. Tiles reach the room through ntfy.sh, which deletes them after 12 hours.</p>
     </details>
   </aside>
 </main>
@@ -12948,11 +12960,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     return parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0] || 'no tiles';
   }
   var CAPS = {
-    both: 'Each tile is one person’s material. Shapes come from the layout; lines come from the data. Tiles meet at the middle of their edges, at 54°; inside, each tile is its maker’s.',
-    lines: 'Girih: the tiles hidden, as on a finished wall. The lines keep their colours, so you can still tell who made what.',
+    both: 'Each tile is one person’s result. The layout gives the shapes; the results give the lines. Tiles meet at the middle of their edges, at 54°.',
+    lines: 'Girih: the tiles hidden, as on a finished wall. The lines keep their colours, so you can still see who made what.',
     tiles: 'The tiles alone: the layout under the lines, which a finished wall hides.',
-    collate: 'Collation view: each tile takes its own angle, from 36° for little that returns to 72° for much. The lines still meet at each midpoint, and bend where neighbours differ.',
-    strands: 'Strands: each colour is one line followed through the room. At each midpoint it runs straight on into the neighbour’s tile.'
+    collate: 'Collation: each tile takes its own angle, from 36° when little comes back to 72° when much does. The lines still meet at each midpoint, and bend where neighbours differ.',
+    strands: 'Strands: each colour is one line, followed through the room. At each midpoint it runs straight on into the next tile.'
   };
   document.querySelectorAll('[data-view]').forEach(function (b) {
     b.addEventListener('click', function () {
@@ -13040,16 +13052,16 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       var f = (t.d || []).join(' ');
       if (/five directions|tenfold|fivefold/.test(f)) { five++; if (t.m === 'p') fivePics++; }
     });
-    var h = '<p class="tg">' + (p.length ? esc(p.length + ' tiles: ' + mixText(mix) + '. ' + filled + ' with a filled centre; ' + heavy + ' at the heaviest weight.') : 'No tiles yet. The dotted outlines show the room that could be.') + '</p>';
-    if (five) h += '<p class="tg">' + esc(five === 1 ? 'One tile reports fivefold or tenfold order' + (fivePics ? ': a picture.' : '.') : five + ' tiles report fivefold or tenfold order' + (fivePics === five ? ', each of them a picture.' : ', ' + fivePics + ' of them pictures.')) + '</p>';
-    h += '<ul class="qs"><li>Where do the texts cluster, and where do the sounds sit?</li><li>Are the tenfold stars pictures, or texts and sounds too?</li><li>Which tiles have no repeat, and what made them?</li><li>What is missing from the room?</li></ul>';
+    var h = '<p class="tg">' + (p.length ? esc(p.length + ' tiles: ' + mixText(mix) + '. ' + filled + ' with a filled centre; ' + heavy + ' at the heaviest weight.') : 'No tiles yet. The dotted outlines show the empty places.') + '</p>';
+    if (five) h += '<p class="tg">' + esc(five === 1 ? 'One tile shows fivefold or tenfold order' + (fivePics ? ': a picture.' : '.') : five + ' tiles show fivefold or tenfold order' + (fivePics === five ? ', each of them a picture.' : ', ' + fivePics + ' of them pictures.')) + '</p>';
+    h += '<ul class="qs"><li>Which tiles look alike? Compare the steps their makers wrote down.</li><li>Where do the texts sit, and where do the sounds?</li><li>Do the tenfold stars come from pictures, or from texts and sounds too?</li><li>Which tiles show no repeat, and what made them?</li><li>What is missing from the room?</li></ul>';
     $('#together').innerHTML = h;
   }
   $('#pauseBtn').addEventListener('click', function () {
     paused = !paused;
     this.textContent = paused ? 'Resume' : 'Pause';
     this.setAttribute('aria-pressed', paused ? 'true' : 'false');
-    say(paused ? 'Intake paused. New tiles wait.' : '');
+    say(paused ? 'Paused. New tiles wait.' : '');
     if (!paused) { waiting.forEach(function (w) { queue.push(w); }); waiting = []; pump(); }
     paintCount();
   });
@@ -13086,10 +13098,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   }
   function poll() {
     clearTimeout(pollT);
-    setLink('Polling');
+    setLink('Slow link');
     var since = st.lastId || String(st.round);
     fetch(R.RELAY + '/' + topic + '/json?poll=1&since=' + encodeURIComponent(since), { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (body) {
-      setLink('Polling', true);
+      setLink('Slow link', true);
       body.split('\n').forEach(function (line) { if (line.trim()) { try { onMsg(JSON.parse(line)); } catch (e) {} } });
     }).catch(function () { setLink('No connection: the camera and typed codes still add tiles'); }).then(function () {
       pollT = setTimeout(function () { tries = 0; connect(); }, 9000);
@@ -13145,7 +13157,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   $('#typedForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var t = R.fromTyped($('#typedIn').value);
-    if (!t) { say('A typed code looks like P21-417: T, P or S, then 1 to 3, then 0 or 1, then the name’s number.'); return; }
+    if (!t) { say('A typed code looks like P21-417. The letter is T for text, P for picture or S for sound. Then come the line weight, 1 to 3, and the centre, 0 for open or 1 for filled. The last part is the number in the name.'); return; }
     addTile(t, 'typed'); $('#typedIn').value = ''; say('Added ' + t.n + '.');
   });
 
@@ -13155,9 +13167,9 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     var t = tileAt(slot); if (!t) return;
     shown = t;
     $('#tcH').textContent = 'No. ' + t.no + ': ' + t.n;
-    $('#tcD').innerHTML = '<dt>Medium</dt><dd>' + esc(MEDN[t.m]) + '</dd><dt>Line weight</dt><dd>' + t.w + ' of 3</dd><dt>Centre</dt><dd>' + (t.b ? 'filled' : 'open') + '</dd>' +
+    $('#tcD').innerHTML = '<dt>Kind</dt><dd>' + esc(MEDN[t.m]) + '</dd><dt>Line weight</dt><dd>' + t.w + ' of 3</dd><dt>Centre</dt><dd>' + (t.b ? 'filled' : 'open') + '</dd>' +
       (t.x ? '<dt>Word</dt><dd>' + esc(t.x) + '</dd>' : '') + '<dt>Its numbers</dt><dd>' + esc((t.d || []).join('; ')) + '</dd>' +
-      '<dt>Collation angle</dt><dd>' + Math.round(36 + 36 * t.s) + '°</dd><dt>Arrived by</dt><dd>' + esc({ network: 'the network', camera: 'the camera', typed: 'a typed code' }[t.via] || t.via) + '</dd>';
+      '<dt>Angle</dt><dd>' + Math.round(36 + 36 * t.s) + '°</dd><dt>Arrived by</dt><dd>' + esc({ network: 'the network', camera: 'the camera', typed: 'a typed code' }[t.via] || t.via) + '</dd>';
     $('#tcard').hidden = false;
   }
   $('#pattern').addEventListener('click', function (e) { var g = e.target.closest && e.target.closest('.slot.on'); if (g) openCard(+g.getAttribute('data-i')); });

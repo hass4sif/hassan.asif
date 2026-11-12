@@ -1,7 +1,7 @@
 /* Knot's service worker. It keeps a copy of Knot on the device so Knot opens without a network, as an installed app
    or from the Home Screen. It asks the network first and falls back to the copy, so an update shows as soon as the
    network has it. It answers only for Knot's own folder and leaves other requests, such as ntfy.sh, alone. */
-var CACHE = 'knot6-1';
+var CACHE = 'knot6-2';
 var SHELL = ['./', './index.html', './room.html', './fonts.css', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) {
