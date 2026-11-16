@@ -1,6 +1,6 @@
 # Knot
 
-Knot shows what repeats in a text, a picture or a recording. Repeats are clues to how a thing was made. Each result becomes a piece cut from the material and a girih tile, and a room gathers them into one collage and one girih.
+Knot finds what repeats in a text, a picture or a recording. Each result becomes a piece cut from the material, and a room gathers the pieces into one collage.
 
 It runs in the browser, on a phone or a computer. Your files stay on your device.
 
@@ -10,14 +10,12 @@ It runs in the browser, on a phone or a computer. Your files stay on your device
 ## How to use it
 
 1. **Choose.** Pick Text, Picture or Sound. Add your own material, or try an example.
-2. **Read.** Knot takes your material apart with a few plain questions, the kind a maker would ask. Each answer says what Knot found and how it checked.
-3. **Undo.** Use the answers as clues. Write down three steps you think made your material. Then compare them with Knot’s three steps.
-4. **Redo.** Give your three steps to a partner. Can they make your material again from the steps alone?
-5. **Check.** Send your tile to the room. Open the Room tab: the group’s pieces gather into one collage, there and on the screen at the front.
+2. **Look.** Knot shows what repeats.
+3. **Send.** In a session, join the room and press Send. Your piece joins the collage on the big screen.
 
 ## What Knot shows
 
-Each result answers one question. The card gives Knot’s answer, what it means, how Knot checks it in one sentence, an Undo clue (what the answer suggests about the making) and a Redo step (one step you could write down). More adds why it matters, what it misses, what it does to your tile, and the settings. Under "In short", Knot offers its own guess at three steps, folded away so that people write theirs first.
+Since version 6.4 the page is short: each card gives a plain question, a verdict and the answer, and the page shows the clearest results (for a text: the words that come back, the lines that tie the rest together, a refrain or rhyme, a repeated phrase; for a picture: the repeat, the star, the colours; for a sound: the phrases, the home note, the parts that come back). The other readings below are still computed, and they shape the pieces and threads in the room.
 
 ### Text
 
@@ -76,7 +74,7 @@ Knot reads your files inside your browser, and they stay on your device. It keep
 
 ## Cite
 
-Asif, Hassan. 2026. *Knot*. Software, version 6.3. https://www.hassanasif.net/knot/
+Asif, Hassan. 2026. *Knot*. Software, version 6.4. https://www.hassanasif.net/knot/
 
 ## Sources
 
