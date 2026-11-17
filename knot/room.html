@@ -71,6 +71,7 @@ button{font:inherit;color:inherit}
 .margin li.hid{opacity:.45;text-decoration:line-through}
 .margin span{display:block;color:var(--ink-2);font-size:13px}
 .tg{margin:8px 0 0;font-size:14.5px}
+.rlist{margin:8px 0 0;padding:0;list-style:none;font-size:14.5px}.rlist li{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px dotted rgba(0,0,0,.2)}.rlist li.on{font-weight:650}
 .qs{margin:8px 0 0;padding-left:18px;font-size:14.5px;color:var(--ink-2)}
 .steps{margin:8px 0 0;padding-left:20px;font-size:14px;line-height:1.45;color:var(--ink-2)}.steps li{margin:0 0 4px}
 .tcard{position:fixed;right:380px;top:70px;z-index:20;width:min(360px,92vw);background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 18px 40px -14px rgba(40,30,40,.5)}
@@ -123,7 +124,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
       <span><i class="lt" style="background:#e3e8fd;border-color:#4f6cf0"></i>text</span>
       <span><i class="lt" style="background:#d6eff3;border-color:#2a9fb2"></i>picture</span>
       <span><i class="lt" style="background:#fbe7d7;border-color:#e0843f"></i>sound</span>
-      <span><b class="lw w1"></b><b class="lw w2"></b><b class="lw w3"></b>line weight: how much comes back</span>
+      <span><b class="lw w1"></b><b class="lw w2"></b><b class="lw w3"></b>line weight: how much repeats</span>
       <span class="lg-g"><i class="lt fig"></i>filled centre: a strong repeat</span>
       <span class="lg-c"><b class="thr"></b>thread: something shared</span>
     </div>
@@ -177,6 +178,13 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
       <summary>The margin: each tile, in order</summary>
       <p class="small">The room keeps each tile as it came, in order, and changes no tile. Al-Yūnīnī edited Bukhārī the same way: the base text stays, and each variant reading keeps its own mark. Tap a tile in the pattern to see its card.</p>
       <ol class="margin" id="margin"></ol>
+    </details>
+
+    <details class="panel" open>
+      <summary>Rounds in the last 12 hours</summary>
+      <div class="row"><button class="rpill act" type="button" id="refreshBtn">Refresh</button></div>
+      <div id="rounds"></div>
+      <p class="small">Refresh reads the room again from the network. Show brings back an earlier round, for as long as ntfy.sh keeps it.</p>
     </details>
 
     <details class="panel">
@@ -874,7 +882,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
       } else if (a.m === 'p' && b.m === 'p') {
         if (ka.n && ka.n === kb.n) label = FOLDW[ka.n] + ' star';
         else if (ka.five && kb.five) label = 'five directions';
-      } else if (a.m === 's' && b.m === 's' && ka.rt && kb.rt) label = 'comes back';
+      } else if (a.m === 's' && b.m === 's' && ka.rt && kb.rt) label = 'repeats';
       if (label) pairs.push({ i: i, j: j, label: label, d: Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) });
     }
     pairs.sort(function (p, q) { return p.d - q.d; });
@@ -13628,7 +13636,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     both: 'Each tile is one person’s result. The layout gives the shapes; the results give the lines. Tiles meet at the middle of their edges, at 54°.',
     lines: 'Girih: the tiles hidden, as on a finished wall. The lines keep their colours, so you can still see who made what.',
     tiles: 'The tiles alone: the layout under the lines, which a finished wall hides.',
-    collate: 'Collation: each tile takes its own angle, from 36° when little comes back to 72° when much does. The lines still meet at each midpoint, and bend where neighbours differ.',
+    collate: 'Collation: each tile takes its own angle, from 36° when little repeats to 72° when much does. The lines still meet at each midpoint, and bend where neighbours differ.',
     strands: 'Strands: each colour is one line, followed through the room. At each midpoint it runs straight on into the next tile.'
   };
   document.body.setAttribute('data-rv', view);
@@ -13738,10 +13746,12 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   var follower = null;
   var LINK = { live: ['Live', true], again: ['Trying again…', false], slow: ['Slow link', false], 'slow-ok': ['Slow link', true], down: ['No connection: the camera and typed codes still add tiles', false] };
   function setLink(t, ok) { var el = $('#link'); el.textContent = t; el.classList.toggle('ok', !!ok); }
-  /* each message, in the order ntfy.sh keeps them: a new-round marker clears the tiles before it */
+  /* each message, in the order ntfy.sh keeps them: a new-round marker clears the tiles before it. While an earlier
+     round is shown (st.until), messages after it are left aside. */
   function onItem(obj, m) {
     if (!obj || obj.v !== 6 || (obj.r && obj.r !== st.code)) return;
     if (m.time < st.round) { st.lastId = m.id; return; }
+    if (st.until && m.time >= st.until) { st.lastId = m.id; return; }
     if (obj.round) {
       st.lastId = m.id;
       if (m.time > st.round) { clearRound(m.time); say('A new round started. The pattern is empty.'); }
@@ -13901,9 +13911,48 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     });
   });
 
+  /* ---------------------------------------------------------------- Refresh, and the rounds of the last twelve hours */
+  function reread() { st.tiles = []; st.nextNo = 1; queue = []; waiting = []; st.lastId = ''; save(); drawAll(); if (follower) follower.restart(); else connect(); }
+  function roundsList() {
+    var box = $('#rounds');
+    if (!box || !window.crypto || !crypto.subtle) return;
+    box.innerHTML = '<p class="tg">Reading the last twelve hours…</p>';
+    R.topicFor(st.code).then(function (tp) {
+      return fetch(R.RELAY + '/' + tp + '/json?poll=1&since=12h', { cache: 'no-store' }).then(function (r) { return r.text(); });
+    }).then(function (body) {
+      var msgs = body.split('\n').filter(function (l) { return l.trim(); }).map(function (l) { try { return JSON.parse(l); } catch (e) { return null; } })
+        .filter(function (m) { return m && m.event === 'message'; });
+      return Promise.all(msgs.map(function (m) { return R.unlock(st.code, m.message).then(function (o) { return { o: o, t: m.time }; }, function () { return null; }); }));
+    }).then(function (list) {
+      var rounds = [{ t: 0, n: 0, ids: {} }];
+      list.forEach(function (x) {
+        if (!x || !x.o || x.o.v !== 6) return;
+        if (x.o.round) { rounds.push({ t: x.t, n: 0, ids: {} }); return; }
+        var r = rounds[rounds.length - 1];
+        if (!x.o.del && !r.ids[x.o.id]) { r.ids[x.o.id] = 1; r.n++; }
+      });
+      if (!rounds[0].n) rounds.shift();
+      if (!rounds.length) { box.innerHTML = '<p class="tg">No rounds in the last twelve hours.</p>'; return; }
+      var at = function (t) { return t ? new Date(t * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'the start'; };
+      box.innerHTML = '<ul class="rlist">' + rounds.map(function (r, k) {
+        var live = k === rounds.length - 1, on = st.until ? (st.round === r.t) : live;
+        return '<li' + (on ? ' class="on"' : '') + '>From ' + esc(at(r.t)) + ': ' + r.n + (r.n === 1 ? ' piece' : ' pieces') + (live ? ' (this round)' : '') +
+          ' <button class="rpill act" type="button" data-rt="' + r.t + '" data-ru="' + (live ? 0 : rounds[k + 1].t) + '">' + (on ? 'Showing' : 'Show') + '</button></li>';
+      }).join('') + '</ul>';
+      box.querySelectorAll('[data-rt]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          st.round = +b.dataset.rt; st.until = +b.dataset.ru || 0;
+          say(st.until ? 'Showing an earlier round. New pieces wait until you show this round again.' : 'Showing this round.');
+          reread(); roundsList();
+        });
+      });
+    }).catch(function () { box.innerHTML = '<p class="tg">The rounds could not be read. Check the connection and press Refresh.</p>'; });
+  }
+  $('#refreshBtn').addEventListener('click', function () { say('Reading the room again.'); reread(); roundsList(); });
+
   /* ---------------------------------------------------------------- rounds, rooms and the projector */
   function clearRound(t) {
-    st.round = t; st.tiles = []; st.nextNo = 1; queue = []; waiting = [];
+    st.round = t; st.until = 0; st.tiles = []; st.nextNo = 1; queue = []; waiting = [];
     save(); drawAll();
   }
   function armed(btn, label, fn) {
@@ -13941,7 +13990,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     document.addEventListener(ev, function () { var on = !!(document.fullscreenElement || document.webkitFullscreenElement); document.body.classList.toggle('present', on); $('#presentBtn').textContent = on ? 'Leave' : 'Present'; });
   });
 
-  paintJoin(); build(); connect();
+  paintJoin(); build(); connect(); roundsList();
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) navigator.serviceWorker.register('sw.js').catch(function () {});
   window.__room = { addTile: addTile, state: function () { return st; }, view: function () { return view; } };
 })();

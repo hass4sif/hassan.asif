@@ -5,8 +5,8 @@ type: software
 authors:
   - family-names: "Asif"
     given-names: "Hassan"
-version: "6.4"
-date-released: "2026-11-12"
+version: "6.5"
+date-released: "2026-11-17"
 license: MIT
 url: "https://www.hassanasif.net/knot/"
 abstract: "Knot shows what repeats in a text, a picture or a recording, and compares each result with chance where it can. Each result becomes a piece cut from the material and a girih tile, and a room gathers them into one collage and one girih. It runs in the browser."

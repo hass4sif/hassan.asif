@@ -184,6 +184,11 @@ svg.focus .node.hit text{fill:#fff}
 .vd-mid{background:#e5e1f8;color:#2b2448}
 .vd-lo{background:#f1eeec;color:#6a6060}
 .ro{margin:6px 0 0;font-size:17px;line-height:1.42;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.rm{margin:8px 0 0;font-size:15px;line-height:1.45;color:var(--ink-2)}
+.rh{margin:8px 0 0;font-size:14.5px;line-height:1.45;color:var(--ink-2)}.rh summary{cursor:pointer;font-weight:650}.rh p{margin:6px 0 0}
+.rl{margin:8px 0 0;font-size:14.5px}.rl a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.ro .sw{display:inline-flex;align-items:center;gap:5px;margin-right:8px;white-space:nowrap}.ro .sw i{width:16px;height:16px;border-radius:4px;display:inline-block;border:1px solid rgba(0,0,0,.2)}
+.roomin{margin:10px 0 0;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.85);font-size:16px;line-height:1.45}
 .rg{margin:6px 0 0;font-size:14.5px;line-height:1.48;color:var(--ink-2)}
 .cd{margin-top:8px}
 .cd summary{cursor:pointer;font-family:var(--f-wide);font-stretch:125%;font-weight:800;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-2);padding:4px 0}
@@ -338,14 +343,15 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
   <canvas class="wash" data-wash="home" aria-hidden="true"></canvas>
   <div class="wrap">
     <h1 class="k-title" id="k-name">Knot</h1>
-    <p class="lede">Knot finds what repeats in a text, a picture or a sound.</p>
+    <p class="lede">Knot is an experiment. It looks for what repeats in a text, a picture or a sound.</p>
+    <p class="roomin" id="roomIn" role="status" hidden></p>
     <ul class="ways" id="tools">
-      <li><button type="button" data-go="text" data-dots><span class="pill sm">Text</span><span class="wd">Words that come back.</span></button></li>
+      <li><button type="button" data-go="text" data-dots><span class="pill sm">Text</span><span class="wd">Words and lines that repeat.</span></button></li>
       <li><button type="button" data-go="picture" data-dots><span class="pill sm alt">Picture</span><span class="wd">A tile or a star that repeats.</span></button></li>
-      <li><button type="button" data-go="sound" data-dots><span class="pill sm">Sound</span><span class="wd">Pauses, pitch, and parts that come back.</span></button></li>
+      <li><button type="button" data-go="sound" data-dots><span class="pill sm">Sound</span><span class="wd">Pauses, pitch, and parts that repeat.</span></button></li>
       <li><button type="button" data-go="room" data-dots><span class="pill sm alt">Room</span><span class="wd">Everyone’s pieces together.</span></button></li>
     </ul>
-    <p class="small top-note">Your file stays on your device.</p>
+    <p class="small top-note">Each reading follows a published method, step by step. It will miss things, and that is part of the point. Your file stays on your device.</p>
   </div>
 </section>
 
@@ -375,8 +381,8 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
     <div id="textOut" hidden>
       <div class="wrap" style="gap:16px">
         <div id="tSum"></div>
-        <h3 class="h3">Words that come back</h3>
-        <p class="hint">Tap a word to see where it comes back.</p>
+        <h3 class="h3">Words that repeat</h3>
+        <p class="hint">Tap a word to see where it appears.</p>
         <div class="chips" id="chips"></div>
         <h3 class="h3">What Knot found</h3>
         <div class="reads" id="tReads"></div>
@@ -472,7 +478,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
       </div>
       <figcaption id="specCap">Time runs left to right. Higher sounds sit higher. Dark is loud.</figcaption>
     </figure>
-    <div class="legend"><span><i style="background:var(--c5)"></i>voice</span><span><i style="background:var(--c4)"></i>phrases</span><span><i style="background:var(--c6)"></i>a part that comes back</span></div>
+    <div class="legend"><span><i style="background:var(--c5)"></i>voice</span><span><i style="background:var(--c4)"></i>phrases</span><span><i style="background:var(--c6)"></i>a part that repeats</span></div>
     <div class="kx" aria-hidden="true">
       <canvas id="retC" class="sq" width="400" height="400"></canvas><p id="retCap"></p>
       <canvas id="pitchC" class="sq" width="400" height="400"></canvas>
@@ -499,6 +505,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
       <span class="seg-l">Show</span>
       <button class="chip" type="button" data-rv="collage" aria-pressed="true">Collage</button>
       <button class="chip" type="button" data-rv="girih" aria-pressed="false">Girih</button>
+      <button class="chip" type="button" id="rvRefresh">Refresh</button>
     </div>
     <figure class="rvfig">
       <div class="rvbox" id="rvBox"><p class="empty">Join a room below. Then everyone’s pieces show here.</p></div>
@@ -563,7 +570,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
   <div class="wrap">
     <div class="foot">
       <p>Your files stay on your device. Send shares a few numbers, and a small piece if you tick the box.</p>
-      <p>Knot 6, 2026. Open source, MIT licence.<span class="site-only"> Made by <a href="/">Hassan Asif</a>.</span></p>
+      <p>Knot 6.5, 2026. An experiment. Open source, MIT licence.<span class="site-only"> Made by <a href="/">Hassan Asif</a>.</span></p>
     </div>
   </div>
 </footer>
@@ -1248,7 +1255,7 @@ var STOPLISTS = {"en":["a","about","above","after","again","against","all","also
       } else if (a.m === 'p' && b.m === 'p') {
         if (ka.n && ka.n === kb.n) label = FOLDW[ka.n] + ' star';
         else if (ka.five && kb.five) label = 'five directions';
-      } else if (a.m === 's' && b.m === 's' && ka.rt && kb.rt) label = 'comes back';
+      } else if (a.m === 's' && b.m === 's' && ka.rt && kb.rt) label = 'repeats';
       if (label) pairs.push({ i: i, j: j, label: label, d: Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) });
     }
     pairs.sort(function (p, q) { return p.d - q.d; });
@@ -3869,13 +3876,32 @@ var qrcode = function() {
   var VD = { strong: 'hi', clear: 'hi', 'girih sign': 'hi', 'more than chance': 'hi', 'less than chance': 'hi', rare: 'hi', yes: 'hi',
     'refrain found': 'hi', 'rhyme found': 'mid', 'strong return': 'hi', close: 'mid', far: 'hi', uncommon: 'mid', faint: 'lo',
     estimate: 'mid', 'like chance': 'lo', common: 'lo', 'not found': 'lo', 'no strong return': 'lo', no: 'lo',
-    'too short': 'lo', 'no match': 'lo', weak: 'lo' };
-  /* Knot 6.4: a card is the question, a short verdict and the answer. The finer readings stay in the code for the room. */
-  var HIDE = /^(How far apart|Which (lines|sentences) stand alone|Does the end go back|Do words come back in reverse|Which word reaches furthest|Which ways do the lines run|How close are the stripes|What does the sound look like)/;
+    'too short': 'lo', 'no match': 'lo', weak: 'lo', 'could be chance': 'lo', 'too short to test': 'lo', refrain: 'hi', rhyme: 'mid', 'none strong': 'lo' };
+  /* Knot 6.5: a card says what Knot found, what it means, how Knot checks (folded) and where to read more.
+     The finer readings stay in the code for the room. */
+  var HIDE = /^(How far apart|Which (lines|sentences) stand alone|Do words come back in reverse|Which word reaches furthest|Which ways do the lines run|How close are the stripes|What does the sound look like)/;
+  var READ = {
+    'Words that repeat': ['Hoey 1991, Patterns of Lexis in Text', 'https://openlibrary.org/search?q=Patterns+of+Lexis+in+Text'],
+    'hold the rest together': ['Mihalcea and Tarau 2004, TextRank', 'https://aclanthology.org/W04-3252/'],
+    'It ends where it began': ['Douglas 2007, Thinking in Circles', 'https://openlibrary.org/search?q=Thinking+in+Circles+Douglas'],
+    'A refrain or a rhyme': ['Faruqi and Pritchett, on the ghazal', 'https://www.columbia.edu/itc/mealac/pritchett/00ghalib/'],
+    'A phrase used again': ['Lord 1960, The Singer of Tales', 'https://openlibrary.org/search?q=The+Singer+of+Tales'],
+    'A tile that repeats': ['Liu, Collins and Tsin 2004', 'https://doi.org/10.1109/TPAMI.2004.1262332'],
+    'A star': ['Lee, Collins and Liu 2008', 'https://doi.org/10.1109/CVPR.2008.4587831'],
+    'Lines in five directions': ['Lu and Steinhardt 2007', 'https://doi.org/10.1126/science.1135491'],
+    'Colours': ['Heckbert 1982', 'https://doi.org/10.1145/965145.801294'],
+    'The home note': ['Hermes 1988', 'https://doi.org/10.1121/1.396427'],
+    'Parts that repeat': ['Foote 1999', 'https://doi.org/10.1145/319463.319472']
+  };
   function card(o) {
     if (HIDE.test(o.t)) return '';
+    var rd = null;
+    Object.keys(READ).forEach(function (k) { if (o.t.indexOf(k) >= 0) rd = READ[k]; });
     return '<article class="rd"' + (o.c ? ' style="--rc:var(' + o.c + ')"' : '') + '><h4 class="rt">' + esc(o.t) +
-      (o.v ? ' <span class="vd vd-' + (VD[o.v] || 'mid') + '">' + esc(o.v) + '</span>' : '') + '</h4><p class="ro">' + o.out + '</p></article>';
+      (o.v ? ' <span class="vd vd-' + (VD[o.v] || 'mid') + '">' + esc(o.v) + '</span>' : '') + '</h4><p class="ro">' + o.out + '</p>' +
+      (o.note ? '<p class="rm"><b>What this means:</b> ' + esc(o.note) + '</p>' : '') +
+      (o.how ? '<details class="rh"><summary>How Knot checks</summary><p>' + esc(o.how) + '</p>' + (o.cannot ? '<p><b>What it can’t see:</b> ' + esc(o.cannot) + '</p>' : '') + '</details>' : '') +
+      (rd ? '<p class="rl"><a href="' + rd[1] + '" target="_blank" rel="noopener">Read more: ' + esc(rd[0]) + '</a></p>' : '') + '</article>';
   }
   /* Knot's guess at three steps, folded away so that people write their own first */
   function stepsBox(list) { void list; return ''; }
@@ -4221,7 +4247,7 @@ var qrcode = function() {
       b.addEventListener('click', function () { focusWord(active === w.s ? null : w.s); });
       chips.appendChild(b);
     });
-    if (!a.words.length) chips.innerHTML = '<p class="small">No word comes back across the ' + a.mode + ' yet.</p>';
+    if (!a.words.length) chips.innerHTML = '<p class="small">No word repeats across the ' + a.mode + ' yet.</p>';
     asideChips(a);
     $('#tSum').innerHTML = textSummary(a);
     $('#tReads').innerHTML = textReads(a);
@@ -4347,9 +4373,9 @@ var qrcode = function() {
   function textReads(a) {
     var out = '', d = a.density, U = unitWord(a, 2), u1 = a.mode === 'lines' ? 'line' : 'sentence', k = 0, dc = a.densityChance;
     var top = topWords(a, 3);
-    out += card({ q: ++k, t: 'Which words come back?', v: dc ? (dc.v === 'about' ? 'like chance' : dc.v + ' than chance') : 'too short',
-      out: esc(top.length ? q3(top) + (top.length > 1 ? ' come back most.' : ' comes back most.') : 'No word comes back.'),
-      note: dc ? (dc.v === 'less' ? 'Fewer pairs than luck would give: the shared words stay close together, in a few ' + U + '.' : dc.v === 'more' ? 'More pairs than luck would give: the shared words spread out across the text, as a refrain does.' : 'About as many pairs as luck would give.') + ' Shuffled copies of your text give ' + pctr(dc.mean) + ' on average.' : 'Knot needs six ' + U + ' or more, and four ties or more, to compare with luck.',
+    out += card({ q: ++k, t: 'Words that repeat', v: dc ? (dc.v === 'about' ? 'could be chance' : dc.v + ' than chance') : 'too short to test',
+      out: esc(top.length ? q3(top) + (top.length > 1 ? ' repeat most.' : ' repeats most.') : 'No word repeats.'),
+      note: dc ? (dc.v === 'less' ? 'These words stay close together, in a few ' + U + '.' : dc.v === 'more' ? 'These words spread across the whole text, the way a refrain does.' : 'Your words tie the ' + U + ' together about as often as chance would.') + ' Your text ties ' + pctr(d) + ' of its pairs of ' + U + '; shuffled copies of it tie ' + pctr(dc.mean) + '.' : 'To compare with chance, Knot needs six ' + U + ' or more, and four ties.',
       how: 'Knot puts each ' + u1 + ' on a circle as a dot and draws a tie between two dots when their ' + U + ' share a word. Then it shuffles the same words into ' + U + ' of the same lengths, ' + NSH + ' times, to see what luck alone gives.',
       undo: top.length ? 'The words that come back most are the threads the writer kept pulling: ' + q3(top) + '.' : 'No word comes back, so each ' + u1 + ' brings new words.',
       redo: top.length ? 'Try the step “Keep coming back to ' + q3(top) + '.”' : '',
@@ -4369,8 +4395,8 @@ var qrcode = function() {
         set: 'Average distance over the ties; ' + NSH + ' shuffles of the order of the ' + U + '. Ratio to the shuffled distance: ' + fmt1(a.reach.ratio) + '.' });
     }
     if (a.core.length) {
-      out += card({ q: ++k, t: 'Which ' + U + ' tie the rest together?', c: '--c5', out: esc(cap(u1) + (a.core.length > 1 ? 's ' : ' ') + listNums(a.core) + '.'),
-        note: 'These share the most words with the rest of the text. Read them together: they often say what the text is about.',
+      out += card({ q: ++k, t: cap(U) + ' that hold the rest together', c: '--c5', out: esc(cap(u1) + (a.core.length > 1 ? 's ' : ' ') + listNums(a.core) + '.'),
+        note: 'They share the most words with the rest of the text. Read them together: they often say what the text is about.',
         how: 'Knot counts the ties of each ' + u1 + '. It gives long ' + U + ' less weight, so size alone does not win.',
         undo: 'These ' + U + ' may be the plan the rest grew from.',
         redo: 'Try the step “Write the main point, then tie the other ' + U + ' back to it.”',
@@ -4383,9 +4409,9 @@ var qrcode = function() {
       how: 'Knot looks for dots on the circle with no tie.',
       undo: a.loose.length ? 'A loose end can be a step of its own, such as an example or a quote.' : '',
       redo: a.loose.length ? 'Try the step “Add one ' + u1 + ' that stands apart, such as an example.”' : '' });
-    if (a.close) {
+    if (a.close && a.close.c) {
       var cw = a.close.words.slice(0, 4).map(function (w) { return '“' + w + '”'; }).join(', '), rare = a.close.share <= 0.05;
-      out += card({ q: ++k, t: 'Does the end go back to the start?', c: '--c4', v: a.close.c ? (rare ? 'rare' : a.close.share <= 0.2 ? 'uncommon' : 'common') : 'no match',
+      out += card({ q: ++k, t: 'It ends where it began', c: '--c4', v: a.close.c ? (rare ? 'rare' : a.close.share <= 0.2 ? 'uncommon' : 'common') : 'no match',
         out: a.close.c ? esc('Yes: the first and last ' + U + ' share ' + cw + '.') : esc('No: the first and last ' + U + ' share no word.'),
         note: a.close.c ? (rare ? 'That is rare here: ' : a.close.share <= 0.2 ? 'That is uncommon here: ' : 'That is common here: ') + pctr(a.close.share) + ' of the pairs of ' + U + ' share as many words or more.' : 'The text ends somewhere new.',
         how: 'Knot compares the words of the last ' + u1 + ' with the words of the first. Then it checks how many other pairs of ' + U + ' share as many words.',
@@ -4420,10 +4446,10 @@ var qrcode = function() {
     if (a.form) {
       var f2 = a.form, rf = f2.refrain, rh = f2.rhyme;
       if (rf || rh) {
-        out += card({ q: ++k, t: 'Is there a refrain or a rhyme?', c: '--c3', v: rf ? 'refrain found' : 'rhyme found',
+        out += card({ q: ++k, t: 'A refrain or a rhyme', c: '--c3', v: rf ? 'refrain' : 'rhyme',
           out: esc((rf ? '“' + rf.show + '” ends ' + rf.lines.length + ' of ' + a.n + ' lines.' : '') + (rh ? (rf ? ' Before it, ' : ' ') + rh.c + ' of ' + rh.of + ' ' + (rf ? 'words' : 'lines') + ' end in the letters “' + rh.s + '”.' : '')),
           note: rf ? (rf.keepLines >= 0.98 ? 'The refrain uses common words, which Knot sets aside, so it makes no ties of its own.' : 'The refrain makes ' + pctr(1 - rf.keepLines) + ' of the ties. Without it, ' + pctr(rf.keepLines) + ' remain.') : 'The line ends share their last letters.',
-          how: 'Knot looks for an ending of up to four words that comes back at the end of many lines. Then it looks for the letters the lines share just before it.',
+          how: 'Knot looks for an ending of up to four words that ends many lines. Then it looks for the letters the lines share just before it.',
           undo: rf ? 'A refrain is a piece made once and used again, line after line.' : 'Shared end letters link the lines, like a rhyme.',
           redo: rf ? 'Try the step “End each line with ‘' + rf.show + '’.”' : 'Try the step “End each line with the letters ‘' + rh.s + '’.”',
           why: 'In a ghazal, the radīf is a refrain at the end of the line, and the qāfiya is the rhyme just before it. Many ghazals have a radīf; each needs a qāfiya (Faruqi and Pritchett 1991).',
@@ -4433,8 +4459,8 @@ var qrcode = function() {
       }
     }
     if (a.phrase) {
-      out += card({ q: ++k, t: 'Which phrase comes back whole?', out: esc('“' + a.phrase.show + '”, ' + a.phrase.c + ' times.'),
-        note: 'The longest run of three or more words that comes back word for word.',
+      out += card({ q: ++k, t: 'A phrase used again', out: esc('“' + a.phrase.show + '”, ' + a.phrase.c + ' times.'),
+        note: 'The longest run of three or more words that appears again, word for word. Singers and speakers build with ready-made phrases like this.',
         how: 'Knot reads along the text looking for runs of three to twelve words that appear again inside a ' + u1 + '.',
         undo: 'A phrase that comes back whole is a ready-made piece: a formula, a blessing, a slogan or a chorus.',
         redo: 'Try the step “Use the phrase ‘' + a.phrase.show + '’ again.”',
@@ -4757,11 +4783,20 @@ var qrcode = function() {
       var bx = boxes[bi].sort(function (p, q) { return p[bc] - q[bc]; }), mid = bx.length >> 1;
       boxes.splice(bi, 1, bx.slice(0, mid), bx.slice(mid));
     }
-    return boxes.map(function (b) {
+    /* Knot 6.5: the median cut gives the colours; each sampled pixel then goes to its nearest colour, so the shares are
+       the real areas (the cut alone splits by count, which gave the same shares for each picture) */
+    var cols = boxes.map(function (b) {
       var s = [0, 0, 0];
       b.forEach(function (p) { s[0] += p[0]; s[1] += p[1]; s[2] += p[2]; });
-      return { c: s.map(function (v) { return Math.round(v / b.length); }), share: b.length / px.length };
-    }).sort(function (a, b) { return b.share - a.share; });
+      return { c: s.map(function (v) { return Math.round(v / b.length); }), n: 0 };
+    });
+    px.forEach(function (p) {
+      var best = 0, bd = Infinity;
+      cols.forEach(function (c, k) { var dr = p[0] - c.c[0], dg = p[1] - c.c[1], db = p[2] - c.c[2], dd = dr * dr + dg * dg + db * db; if (dd < bd) { bd = dd; best = k; } });
+      cols[best].n++;
+    });
+    return cols.filter(function (c) { return c.n > 0; }).map(function (c) { return { c: c.c, share: c.n / px.length }; })
+      .sort(function (a, b) { return b.share - a.share; });
   }
   function hex(c) { return '#' + c.map(function (v) { return (v < 16 ? '0' : '') + v.toString(16); }).join(''); }
   /* the star test: how well the picture matches itself turned by 360/n degrees around one point, and, for the
@@ -5059,7 +5094,7 @@ var qrcode = function() {
     var r = pic.rep, u = pic.unit, s = pic.star, rs = roseText(pic.rose);
     var five = rs.five || r.order === 10, star = s && s.n ? s.n : 0, fiveStar = star === 5 || star === 10, st = star ? 'a ' + FOLD[star].toLowerCase() + ' star' : '', t;
     if (five && fiveStar && u) t = 'Girih that repeats: stars in fives or tens, and one tile used again and again.';
-    else if (five && fiveStar) t = 'Girih: stars in fives or tens. Its repeat is bigger than the photo, or it never repeats.';
+    else if (five && fiveStar) t = 'Girih: stars in fives or tens, with no repeat inside this photo.';
     else if (five) t = 'Lines in five directions: the sign of girih.';
     else if (u && star) t = 'A repeating pattern, with ' + st + '.';
     else if (u) t = 'A repeating pattern: one tile, used again and again.';
@@ -5074,9 +5109,9 @@ var qrcode = function() {
     /* 1. the repeat unit */
     if (u) {
       var us = unitShape(u);
-      out += card({ q: 1, t: 'Does it repeat?', c: '--c4', v: u.v >= 0.7 ? 'strong' : 'clear',
-        out: esc('Yes. ' + cap(us.name) + ', about ' + pct(us.la) + '% of the width, repeats.'),
-        note: 'Green arrows a and b on your picture mark it. Press Slide a copy to watch the picture land on itself. The copy matches at ' + u.v.toFixed(2) + ', where 1 means exactly.',
+      out += card({ q: 1, t: 'A tile that repeats', c: '--c4', v: u.v >= 0.7 ? 'strong' : 'clear',
+        out: esc('Yes. ' + cap(us.name) + ', about ' + pct(us.la) + '% of the width, repeats across the picture.'),
+        note: 'One piece, drawn once and copied: the engine of the pattern. Green arrows a and b mark it. Press Slide a copy to watch the picture land on itself. The copy matches at ' + u.v.toFixed(2) + ', where 1 means exactly.',
         how: 'Knot slides a see-through copy of your picture over itself, like tracing paper, and looks for the two shortest slides where the copy lines up again.',
         undo: 'This piece is the engine: the maker drew it once and copied it.',
         redo: 'Try the step “Draw one ' + us.word + ', then copy it along arrows a and b.”',
@@ -5085,8 +5120,8 @@ var qrcode = function() {
         check: 'A repeat unit fills the centre of your tile, and a close match raises its line weight.',
         set: 'Autocorrelation of the grey square, padded and corrected for the window; peaks above 0.45 within two fifths of the width. Corners of ' + Math.round(us.ang) + '° and ' + (180 - Math.round(us.ang)) + '°.' });
     } else {
-      out += card({ q: 1, t: 'Does it repeat?', c: '--c4', v: 'not found',
-        out: r.order === 2 ? 'In one direction: the picture is a band, like a frieze.' : r.order >= 8 ? 'Not inside this photo, though the picture has clear order.' : 'Knot found no repeat.',
+      out += card({ q: 1, t: 'A tile that repeats', c: '--c4', v: 'not found',
+        out: r.order === 2 ? 'In one direction only: the picture is a band, like a frieze.' : r.order >= 8 ? 'Not inside this photo, though the picture has clear order.' : 'No repeating tile in this picture.',
         note: r.order >= 8 ? 'The repeat may be larger than the photo, or the pattern may have order with no repeat, as a Penrose tiling does.' : 'A larger repeat, or a photo taken at an angle, can hide one.',
         how: 'Knot slides a see-through copy of your picture over itself, like tracing paper, and looks for short slides where the copy lines up again.',
         undo: 'With no repeat in view, look to the star and the line directions for clues.',
@@ -5098,9 +5133,9 @@ var qrcode = function() {
     /* 2. the star test */
     if (s && s.n) {
       var mir = s.mirror >= 0.6, fold = FOLD[s.n].toLowerCase();
-      out += card({ q: 2, t: 'Is there a star?', c: '--c5', v: s.ex[s.n] >= 0.6 ? 'strong' : 'clear',
-        out: esc('Yes: a ' + fold + ' star, at the red circle.'),
-        note: 'Turned by ' + (Math.round(3600 / s.n) / 10) + '°, a ' + FRAC[s.n] + ' of a full turn, the picture matches itself at ' + s.ex[s.n].toFixed(2) + '. ' + (s.tapped ? 'You chose this point.' : 'Knot picked the strongest star.') + ' Tap the middle of another star to test it.',
+      out += card({ q: 2, t: 'A star', c: '--c5', v: s.ex[s.n] >= 0.6 ? 'strong' : 'clear',
+        out: esc('A ' + fold + ' star, at the red circle: turned a ' + FRAC[s.n] + ' of a full turn, the picture matches itself at ' + s.ex[s.n].toFixed(2) + '.'),
+        note: 'A ' + fold + ' star starts from a circle cut into ' + s.n + ' equal parts. ' + (s.tapped ? 'You chose this point.' : 'Knot picked the strongest star.') + ' Tap the middle of another star to test it.',
         how: 'Knot spins your picture around one point, like a plate on a table, and checks how well it matches itself after a half turn, a third, a quarter and so on, down to a sixteenth. Each bar shows one of these matches.',
         undo: 'A ' + fold + ' star starts from a circle cut into ' + s.n + ' equal parts.',
         redo: 'Try the step “Draw a circle, mark ' + s.n + ' equal points, and join them into a star.”',
@@ -5109,14 +5144,14 @@ var qrcode = function() {
         check: 'A strong star raises the line weight of your tile.',
         set: '32 rings, 256 samples each; the named star is the largest n whose bar reaches three quarters of the tallest and 0.3; mirrors count at 0.6' + (mir ? ' (here ' + s.mirror.toFixed(2) + ')' : '') + '. After Lee, Collins and Liu 2008.' });
     } else {
-      out += card({ q: 2, t: 'Is there a star?', c: '--c5', v: 'not found', out: s && s.tapped ? 'No clear star at the red circle.' : 'Knot found no clear star.',
+      out += card({ q: 2, t: 'A star', c: '--c5', v: 'not found', out: s && s.tapped ? 'No clear star at the red circle.' : 'No clear star in this picture.',
         note: 'Tap the middle of a star on your picture to test that point.',
         how: 'Knot spins your picture around one point, like a plate on a table, and checks how well it matches itself after a half turn, a third, a quarter and so on.',
         undo: 'With no star, look to the repeat and the line directions for clues.' });
     }
     /* 3. which ways the lines run */
     var dirK = rs.k ? 2 * rs.k : r.order;
-    out += card({ q: 3, t: 'Which ways do the lines run?', c: '--c2', v: five ? 'girih sign' : rs.k || r.order ? 'clear' : 'not found',
+    out += card({ q: 3, t: five ? 'Lines in five directions' : 'Which ways do the lines run?', c: '--c2', v: five ? 'girih sign' : rs.k || r.order ? 'clear' : 'not found',
       out: esc(rs.out + (r.order ? ' The stripe map finds lines in ' + dirWays(r.order / 2) + '.' : '')),
       note: five ? 'Five directions, 36° apart: the girih sign.' : DIRNOTE[dirK] || 'Curves and soft edges give no main direction.',
       how: 'Knot traces the edges in your picture, like running a pencil along each line, and counts which way each one points. On the line rose, a long petal means many edges that way.',
@@ -5145,7 +5180,8 @@ var qrcode = function() {
     }
     /* 5. colours */
     if (pic.pal && pic.pal.length) {
-      out += card({ q: 5, t: 'Which colours?', out: esc(pic.pal.length + ' main colours, shown under the picture.'),
+      out += card({ q: 5, t: 'Colours', out: pic.pal.slice(0, 4).map(function (p) { return '<span class="sw"><i style="background:' + hex(p.c) + '"></i>' + Math.round(p.share * 100) + '%</span>'; }).join(' ') + ' ' + esc((pic.pal.length > 4 ? 'and ' + (pic.pal.length - 4) + ' more: ' : ': ') + 'the main colours, by area.'),
+        note: 'Colour can repeat on its own rhythm, on top of the lines.',
         how: 'Knot sorts the colours of your picture into a few groups and measures the area of each.',
         undo: 'Colour adds its own repeat on top of the lines.',
         redo: 'Try the step “Fill the stars in one colour and the ground in another.”',
@@ -5770,7 +5806,7 @@ var qrcode = function() {
   function soundSummary() {
     var s = snd, bits = [], ph = s.phrases;
     bits.push(fmt1(s.dur) + ' seconds' + (ph.length > 1 ? ', ' + ph.length + ' phrases.' : ', no pause.'));
-    if (s.ret && s.ret.strong) bits.push('The part at ' + clock(s.ret.t1) + ' comes back at ' + clock(s.ret.t2) + '.');
+    if (s.ret && s.ret.strong) bits.push('The part at ' + clock(s.ret.t1) + ' returns at ' + clock(s.ret.t2) + '.');
     return '<p class="insum">' + esc(bits.join(' ')) + '</p>';
   }
   function soundReads() {
@@ -5784,8 +5820,8 @@ var qrcode = function() {
       set: '46 ms Hann slices, up to 1,200 columns, 50 Hz to 8 kHz on an octave scale; Knot reads up to the first minute.' });
     if (ph.length > 1) {
       var P0 = phraseStats(ph);
-      out += card({ q: 2, t: 'Where does it pause?', c: '--c4', out: esc(ph.length + ' phrases, about ' + fmt1(P0.len) + ' seconds each.'),
-        note: 'The green bar under the sound picture marks the phrases.',
+      out += card({ q: 2, t: 'Pauses', c: '--c4', out: esc(ph.length + ' phrases, about ' + fmt1(P0.len) + ' seconds each, with pauses between them.'),
+        note: 'A pause often marks a breath or the end of a thought. The green bar under the sound picture marks the phrases.',
         how: 'Knot finds the quiet stretches of a quarter second or more. The sound between two quiet stretches is a phrase, often one breath.',
         undo: 'The phrases show the pace and the breathing of the voice.',
         redo: 'Try the step “Sing or speak in phrases of about ' + fmt1(P0.len) + ' seconds, then pause.”',
@@ -5793,33 +5829,33 @@ var qrcode = function() {
         cannot: 'Whether a pause is a breath, a rest or an edit. Echo in a room makes pauses shorter.',
         set: 'Loudness in 20 ms frames; a threshold from the recording’s own range; pauses of 0.25 s or more.' });
     } else {
-      out += card({ q: 2, t: 'Where does it pause?', c: '--c4', out: 'No pause.', note: 'Music with no rests, or a recording with steady sound behind it.',
+      out += card({ q: 2, t: 'Pauses', c: '--c4', out: 'No pause in ' + fmt1(s.dur) + ' seconds.', note: 'Music with no rests, or a recording with steady sound behind it.',
         how: 'Knot finds the quiet stretches of a quarter second or more. The sound between two quiet stretches is a phrase.' });
     }
     if (s.pitch) {
       var P = s.pitch, nn = $('#noteNames') && $('#noteNames').checked;
-      out += card({ q: 3, t: 'Which note is home?', c: '--c5', v: 'estimate',
-        out: esc('About ' + Math.round(P.home) + ' Hz' + (nn ? ' (near ' + note(P.home) + ')' : '') + '. The note the voice keeps coming back to.'),
-        note: '100 cents make one piano step, and 1,200 make an octave. The red line on the sound picture follows the voice; the pitch rose folds it into one octave.',
-        how: 'Knot follows the pitch of the main voice and finds the note it comes back to most: its home. It counts the other notes as steps above or below home.',
+      out += card({ q: 3, t: 'The home note', c: '--c5', v: 'estimate',
+        out: esc('About ' + Math.round(P.home) + ' Hz' + (nn ? ' (near ' + note(P.home) + ')' : '') + ': the note the voice returns to most. The voice moves about ' + Math.round((P.hi - P.lo) / 100) + ' piano steps around it.'),
+        note: 'A home note is where a melody rests. The red line on the sound picture follows the voice.',
+        how: 'Knot follows the pitch of the main voice and finds the note it returns to most: its home. It counts the other notes as steps above or below home. 100 cents make one piano step, and 1,200 make an octave.',
         undo: 'The home note and the steps around it show the scale the voice uses.',
         redo: 'Try the step “Start on one note and keep coming back to it.”',
         why: 'Singers and reciters choose their own home note, and maqām and dastgāh use steps between the piano’s keys. So cents from the voice’s own home note fit better than note names (Heydarian and Bainbridge 2019; Gedik and Bozkurt 2010).',
         cannot: 'The name or path of a maqām, or a pitch under a chorus or a music bed. Knot does not name a maqām, check tajwīd, identify a reciter or judge a recitation.',
         set: 'Subharmonic summation, 70 to 900 Hz (Hermes 1988); home is the tallest peak of a 10 cent histogram; petals over one octave; range from the 10th to the 90th percentile. The rose borrows its circle from old drawings of modes (During, Encyclopaedia Iranica, “Dawr”).' });
     } else {
-      out += card({ q: 3, t: 'Which note is home?', c: '--c5', v: 'not found', out: 'No steady pitch.', note: 'Noise, or speech with no sung or long notes.',
-        how: 'Knot follows the pitch of the main voice and looks for the note it comes back to most.' });
+      out += card({ q: 3, t: 'The home note', c: '--c5', v: 'not found', out: 'No steady pitch.', note: 'Noise, or speech with no sung or long notes.',
+        how: 'Knot follows the pitch of the main voice and looks for the note it returns to most.' });
     }
     var r = s.ret;
-    out += card({ q: 4, t: 'Which parts come back?', c: '--c6', v: r && r.strong ? 'strong return' : 'no strong return',
-      out: esc(r && r.strong ? 'The part at ' + clock(r.t1) + ' comes back at ' + clock(r.t2) + '.' : 'No part comes back closely.'),
-      note: s.share >= 0.9 && ph.length <= 1 && s.pitch && s.pitch.hi - s.pitch.lo < 50 ? 'A steady sound matches itself the whole way: a drone, a hum or one long note.' : r && r.strong ? 'Violet marks the part and its return on the sound picture and on the returns map.' : 'Speech seldom comes back this way; songs, chants and refrains do.',
-      how: 'Knot compares each moment of the sound with each other moment, like checking a song for its chorus. On the returns map, a bright line next to the diagonal is a part that comes back.',
+    out += card({ q: 4, t: 'Parts that repeat', c: '--c6', v: r && r.strong ? 'strong' : 'none strong',
+      out: esc((r && r.strong ? 'The part at ' + clock(r.t1) + ' returns at ' + clock(r.t2) + ', ' + fmt1(r.lag) + ' seconds later. ' : 'No part repeats closely. ') + ((s.share || 0) >= 0.95 ? 'Almost all of the sound has a match somewhere else in it.' : 'About ' + Math.round((s.share || 0) * 100) + '% of the sound has a match somewhere else in it.')),
+      note: s.share >= 0.9 && ph.length <= 1 && s.pitch && s.pitch.hi - s.pitch.lo < 50 ? 'A steady sound matches itself the whole way: a drone, a hum or one long note.' : r && r.strong ? 'A part made once and used again: a refrain, a loop or a chorus. Violet marks it on the sound picture.' : 'Speech seldom repeats this way; songs, chants and refrains do.',
+      how: 'Knot compares each moment of the sound with each other moment, like checking a song for its chorus.',
       undo: r && r.strong ? 'A part that comes back is a piece made once and used again: a refrain, a loop or a repeated line.' : 'With few returns, the sound keeps going: speech, or a long line that does not repeat.',
       redo: r && r.strong ? 'Try the step “Repeat the part at ' + clock(r.t1) + ' about ' + fmt1(r.lag) + ' seconds later.”' : '',
       why: 'The sound picture shows what sounds now; the returns map shows when you heard it before (Foote 1999). Qawwals call adding verses from another poem girah lagānā, tying a knot (Sufinama).',
-      cannot: 'Why a part comes back, or whether its words come back. A tune sung again at a new pitch, or by a new voice, can fade, and a looped music bed can drown out the voice.',
+      cannot: 'Why a part repeats, or whether its words repeat. A tune sung again at a new pitch, or by a new voice, can fade, and a looped music bed can drown out the voice.',
       check: 'The share that comes back sets the line weight of your tile, and a strong return fills its centre.',
       set: 'Up to 200 moments, 40 bands, each band set against its own average; cosine similarity smoothed along diagonals; a return of 1.5 s counts as strong at 0.6; a moment comes back at 0.65 or more over 1.5 s.' });
     return out;
@@ -5827,7 +5863,7 @@ var qrcode = function() {
   function soundTile() {
     var s = snd, sh = s.share || 0, facts = [];
     facts.push(s.phrases.length > 1 ? s.phrases.length + ' phrases' : 'no pauses');
-    if (s.ret && s.ret.strong) facts.push('comes back after ' + fmt1(s.ret.lag) + ' s');
+    if (s.ret && s.ret.strong) facts.push('returns after ' + fmt1(s.ret.lag) + ' s');
     if (s.pitch) facts.push('range ' + Math.round((s.pitch.hi - s.pitch.lo) / 10) * 10 + ' cents');
     return { m: 's', w: sh >= 0.6 ? 3 : sh >= 0.25 ? 2 : 1, b: s.ret && s.ret.strong ? 1 : 0, s: Math.max(0, Math.min(1, sh)), d: facts.slice(0, 3), k: window.KnotPiece ? window.KnotPiece.fromSound(s, $('#specC')) : null };
   }
@@ -5950,7 +5986,7 @@ var qrcode = function() {
       r.card.forEach(function (c) { lines.push('  ' + c[0] + ': ' + c[1]); });
       lines.push('');
     });
-    lines.push('Knot 6, www.hassanasif.net/knot, ' + new Date().toISOString().slice(0, 10));
+    lines.push('Knot 6.5, www.hassanasif.net/knot, ' + new Date().toISOString().slice(0, 10));
     return lines.join('\n');
   }
   function knotCanvas(size) {
@@ -6154,7 +6190,7 @@ var qrcode = function() {
   var BASIS = {
     t: ['how many pairs of sentences or lines share a word', 'a refrain, a rare ending or mirror order', 'no refrain, rare ending or mirror order'],
     p: ['the best match among the repeat unit, the star and the line directions', 'a repeat unit', 'no repeat unit'],
-    s: ['how much of the sound comes back', 'a strong return', 'no strong return']
+    s: ['how much of the sound repeats', 'a strong return', 'no strong return']
   };
   function current() { return tiles[curTab] || (last && tiles[last]) || null; }
   var P = window.KnotPiece;
@@ -6172,7 +6208,7 @@ var qrcode = function() {
   function name() { var v = ($('#myName') && $('#myName').value || '').trim(); return v || 'Knot ' + num; }
   function word() { return ($('#myWord') && $('#myWord').value || '').trim(); }
   var SHAPE = {
-    t: 'Your text’s knot, with its first words and the words that come back.',
+    t: 'Your text’s knot, with its first words and the words that repeat.',
     p: { unit: 'Cut from your picture: four of its repeating tile.', star: 'Cut from your picture: its star.', dir: 'Cut from your picture, along its lines.', band: 'Cut from your picture: one band.', blob: 'Cut from the middle of your picture.' },
     s: 'Your sound’s voice line, bent into a ring.',
     cut: { t: 'A few of your lines lie around it.', p: 'Three bits of your picture lie around it.', s: 'Two bits of the sound picture lie around it.' }
@@ -6264,7 +6300,8 @@ var qrcode = function() {
     paintRoom();
   }
   function paintRoom() {
-    var chip = $('#roomChip');
+    var chip = $('#roomChip'), ri = $('#roomIn');
+    if (ri) { ri.hidden = !room; ri.innerHTML = room ? '<b>You’re in room ' + room + '.</b> Pick Text, Picture or Sound. When Knot has read your material, press Send at the foot of the page.' : ''; }
     chip.hidden = !room; chip.innerHTML = room ? '<span class="rw">Room </span>' + room : '';
     if (room) html.classList.add('app');
     $('#joinBox').hidden = !!room;
@@ -6390,7 +6427,7 @@ var qrcode = function() {
   try { if (localStorage.getItem('knot-rv') === 'girih') view = 'girih'; } catch (e) {}
   var CAP = {
     collage: 'The room’s collage. Each piece is one person’s material, cut into a shape that comes from what Knot found: a picture’s tile or star, a text’s knot and words, a sound’s pitch ring. Small cuts of the same material lie around each piece. Dashed threads join pieces that share a word, a star or a return. Your own piece has a dotted ring.',
-    girih: 'The room’s girih. Each tile is one person’s result: blue for a text, teal for a picture, orange for a sound. Thicker lines mean more comes back. A filled centre marks a strong repeat. Your own tile has a dark outline. Tiles meet at the middle of their edges, so the lines run on from tile to tile.'
+    girih: 'The room’s girih. Each tile is one person’s result: blue for a text, teal for a picture, orange for a sound. Thicker lines mean more repeats. A filled centre marks a strong repeat. Your own tile has a dark outline. Tiles meet at the middle of their edges, so the lines run on from tile to tile.'
   };
   var MEDN = { t: 'text', p: 'picture', s: 'sound' };
   var code = '', follower = null, tiles = [], nextNo = 1, round = 0, lastId = '', link = '', drawT = 0;
@@ -6484,6 +6521,9 @@ var qrcode = function() {
     b.addEventListener('click', function () { view = b.dataset.rv; try { localStorage.setItem('knot-rv', view); } catch (e) {} paint(); });
   });
   document.addEventListener('knot:room', function (e) { join((e.detail && e.detail.code) || ''); });
+  /* Refresh: read the room again from the start of what ntfy.sh keeps */
+  var rb = $('#rvRefresh');
+  if (rb) rb.addEventListener('click', function () { var c = code; stop(); code = ''; join(c); });
   join(window.KnotTile && window.KnotTile.room ? window.KnotTile.room() : '');
   window.KnotRoomView = { state: function () { return { code: code, tiles: tiles, round: round, link: link }; } };
 })();
