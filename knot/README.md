@@ -15,7 +15,7 @@ It runs in the browser, on a phone or a computer. Your files stay on your device
 
 ## What Knot shows
 
-Since version 6.5 each card says what Knot found, what it means, how Knot checks (folded), and where to read more. The page shows the clearest results (for a text: the words that repeat, the lines that hold the rest together, a refrain or rhyme, a phrase used again, an ending that returns to the start; for a picture: the repeating tile, the star, lines in five directions, the colours; for a sound: the pauses, the home note, the parts that repeat). The other readings below are still computed, and they shape the pieces and threads in the room.
+Since version 6.5 each card says what Knot found, what it means, how Knot checks (folded), and where to read more. The page shows the clearest results (for a text: the words that repeat, the lines that tie the rest together, a refrain or rhyme, a phrase used again, an ending that returns to the start; for a picture: the repeating tile, the star, lines in five directions, the colours; for a sound: the pauses, the home note, the parts that repeat). The other readings below are still computed, and they shape the pieces and threads in the room.
 
 ### Text
 

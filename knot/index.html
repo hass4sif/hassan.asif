@@ -349,7 +349,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
       <li><button type="button" data-go="text" data-dots><span class="pill sm">Text</span><span class="wd">Words and lines that repeat.</span></button></li>
       <li><button type="button" data-go="picture" data-dots><span class="pill sm alt">Picture</span><span class="wd">A tile or a star that repeats.</span></button></li>
       <li><button type="button" data-go="sound" data-dots><span class="pill sm">Sound</span><span class="wd">Pauses, pitch, and parts that repeat.</span></button></li>
-      <li><button type="button" data-go="room" data-dots><span class="pill sm alt">Room</span><span class="wd">Everyone’s pieces together.</span></button></li>
+      <li><button type="button" data-go="room" data-dots><span class="pill sm alt">Room</span><span class="wd">The group’s pieces together.</span></button></li>
     </ul>
     <p class="small top-note">Each reading follows a published method, step by step. It will miss things, and that is part of the point. Your file stays on your device.</p>
   </div>
@@ -508,7 +508,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
       <button class="chip" type="button" id="rvRefresh">Refresh</button>
     </div>
     <figure class="rvfig">
-      <div class="rvbox" id="rvBox"><p class="empty">Join a room below. Then everyone’s pieces show here.</p></div>
+      <div class="rvbox" id="rvBox"><p class="empty">Join a room below. Then the group’s pieces show here.</p></div>
       <figcaption id="rvCap">Each piece comes from one person’s material. Dashed lines join pieces that share something. Yours has a dotted ring.</figcaption>
     </figure>
     <div class="sheet" id="rvMore" data-dots hidden>
@@ -3882,7 +3882,7 @@ var qrcode = function() {
   var HIDE = /^(How far apart|Which (lines|sentences) stand alone|Do words come back in reverse|Which word reaches furthest|Which ways do the lines run|How close are the stripes|What does the sound look like)/;
   var READ = {
     'Words that repeat': ['Hoey 1991, Patterns of Lexis in Text', 'https://openlibrary.org/search?q=Patterns+of+Lexis+in+Text'],
-    'hold the rest together': ['Mihalcea and Tarau 2004, TextRank', 'https://aclanthology.org/W04-3252/'],
+    'tie the rest together': ['Mihalcea and Tarau 2004, TextRank', 'https://aclanthology.org/W04-3252/'],
     'It ends where it began': ['Douglas 2007, Thinking in Circles', 'https://openlibrary.org/search?q=Thinking+in+Circles+Douglas'],
     'A refrain or a rhyme': ['Faruqi and Pritchett, on the ghazal', 'https://www.columbia.edu/itc/mealac/pritchett/00ghalib/'],
     'A phrase used again': ['Lord 1960, The Singer of Tales', 'https://openlibrary.org/search?q=The+Singer+of+Tales'],
@@ -4395,7 +4395,7 @@ var qrcode = function() {
         set: 'Average distance over the ties; ' + NSH + ' shuffles of the order of the ' + U + '. Ratio to the shuffled distance: ' + fmt1(a.reach.ratio) + '.' });
     }
     if (a.core.length) {
-      out += card({ q: ++k, t: cap(U) + ' that hold the rest together', c: '--c5', out: esc(cap(u1) + (a.core.length > 1 ? 's ' : ' ') + listNums(a.core) + '.'),
+      out += card({ q: ++k, t: cap(U) + ' that tie the rest together', c: '--c5', out: esc(cap(u1) + (a.core.length > 1 ? 's ' : ' ') + listNums(a.core) + '.'),
         note: 'They share the most words with the rest of the text. Read them together: they often say what the text is about.',
         how: 'Knot counts the ties of each ' + u1 + '. It gives long ' + U + ' less weight, so size alone does not win.',
         undo: 'These ' + U + ' may be the plan the rest grew from.',
@@ -5121,7 +5121,7 @@ var qrcode = function() {
         set: 'Autocorrelation of the grey square, padded and corrected for the window; peaks above 0.45 within two fifths of the width. Corners of ' + Math.round(us.ang) + '° and ' + (180 - Math.round(us.ang)) + '°.' });
     } else {
       out += card({ q: 1, t: 'A tile that repeats', c: '--c4', v: 'not found',
-        out: r.order === 2 ? 'In one direction only: the picture is a band, like a frieze.' : r.order >= 8 ? 'Not inside this photo, though the picture has clear order.' : 'No repeating tile in this picture.',
+        out: r.order === 2 ? 'In one direction: the picture is a band, like a frieze.' : r.order >= 8 ? 'Not inside this photo, though the picture has clear order.' : 'No repeating tile in this picture.',
         note: r.order >= 8 ? 'The repeat may be larger than the photo, or the pattern may have order with no repeat, as a Penrose tiling does.' : 'A larger repeat, or a photo taken at an angle, can hide one.',
         how: 'Knot slides a see-through copy of your picture over itself, like tracing paper, and looks for short slides where the copy lines up again.',
         undo: 'With no repeat in view, look to the star and the line directions for clues.',
@@ -6322,7 +6322,7 @@ var qrcode = function() {
     if (!built) {
       box.innerHTML =
         '<h3 class="h3" id="sendH"></h3>' +
-        '<p class="what">Nothing leaves your phone until you press Send.</p>' +
+        '<p class="what">Your material stays on your phone until you press Send.</p>' +
         '<div class="fields"><label>Your name in the room <input id="myName" maxlength="24" autocomplete="off"></label>' +
         '<label>One word, if you like <input id="myWord" maxlength="24" autocomplete="off" placeholder="Optional"></label></div>' +
         '<label class="check"><input type="checkbox" id="sendPiece"> Send a small piece of my material</label>' +
