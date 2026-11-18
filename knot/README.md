@@ -15,7 +15,7 @@ It runs in the browser, on a phone or a computer. Your files stay on your device
 
 ## What Knot shows
 
-Since version 6.7 a photo of a tile panel can be read whole: when the middle square shows no repeat, Knot reads the whole photo, scores each slide by normalized cross-correlation over the overlap alone (Padfield 2012), counts repeats up to three fifths of the photo or in one direction, and tries the photo straightened, as if the camera had faced the wall square on. Since version 6.6 each card says what Knot found and reads it in three steps: Undo, what repeats and where to see it; Redo, how Knot found it, with a step to remake it; Check, what it shows and what Knot can't see. Each tab ends with What we learned, and the room page reads its finished pattern the same way, with three questions to talk about. New round and New room code appear on the host's room page alone: open room.html#code=XXXXXX&host on the projector. The page shows the clearest results (for a text: the words that repeat, the lines that tie the rest together, a refrain or rhyme, a phrase used again, an ending that returns to the start; for a picture: the repeating tile, the star, lines in five directions, the colors; for a sound: the pauses, the home note, the parts that repeat). The other readings below are still computed, and they shape the pieces and threads in the room.
+Since version 6.8 Knot rebuilds a picture from its smallest piece and shows the rebuild beside the photo, with the places where they differ: with a repeating tile, each point takes the average color of the same point in each copy (after the median tile of Liu, Collins and Tsin 2004); with a turn, the average of its turned copies and their mirror images (Lee, Collins and Liu 2008). The match leaves each point's own color out. Knot now names the symmetry it measures, a turn and its mirrors, and leaves the shape (a star, a flower, a cross) to the rebuild and to the reader. Since version 6.7 a photo of a tile panel can be read whole: when the middle square shows no repeat, Knot reads the whole photo, scores each slide by normalized cross-correlation over the overlap alone (Padfield 2012), counts repeats up to three fifths of the photo or in one direction, and tries the photo straightened, as if the camera had faced the wall square on. Since version 6.6 each card says what Knot found and reads it in three steps: Undo, what repeats and where to see it; Redo, how Knot found it, with a step to remake it; Check, what it shows and what Knot can't see. Each tab ends with What we learned, and the room page reads its finished pattern the same way, with three questions to talk about. New round and New room code appear on the host's room page alone: open room.html#code=XXXXXX&host on the projector. The page shows the clearest results (for a text: the words that repeat, the lines that tie the rest together, a refrain or rhyme, a phrase used again, an ending that returns to the start; for a picture: the repeating tile, the star, lines in five directions, the colors; for a sound: the pauses, the home note, the parts that repeat). The other readings below are still computed, and they shape the pieces and threads in the room.
 
 ### Text
 
@@ -74,7 +74,7 @@ Knot reads your files inside your browser, and they stay on your device. It keep
 
 ## Cite
 
-Asif, Hassan. 2026. *Knot*. Software, version 6.7. https://www.hassanasif.net/knot/
+Asif, Hassan. 2026. *Knot*. Software, version 6.8. https://www.hassanasif.net/knot/
 
 ## Sources
 

@@ -70,8 +70,7 @@ button{font:inherit;color:inherit}
 .vh:focus-visible+label.pill{outline:3px dotted var(--ink);outline-offset:3px}
 
 /* ---------- top band ---------- */
-.band{position:sticky;top:0;z-index:80;height:var(--band-h);background:color-mix(in srgb,var(--base) 84%,transparent);
-  -webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15)}
+.band{position:sticky;top:0;z-index:80;height:var(--band-h);background:var(--base);box-shadow:0 1px 0 rgba(0,0,0,.08)}
 .band-track{height:100%;display:flex;align-items:stretch;gap:5px;padding:0 max(5px,env(safe-area-inset-right,0px)) 0 max(5px,env(safe-area-inset-left,0px));overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}
 .band-track::-webkit-scrollbar{display:none}
 .band .pill{flex:0 0 auto;--pill-fs:12.5px;--pill-pad:9px 17px 0;margin-top:-10px;height:calc(var(--band-h) + 2px);border-radius:0 0 6px 6px}
@@ -187,7 +186,15 @@ svg.focus .node.hit text{fill:#fff}
 .rm{margin:8px 0 0;font-size:15px;line-height:1.45;color:var(--ink-2)}
 .rh{margin:8px 0 0;font-size:14.5px;line-height:1.45;color:var(--ink-2)}.rh summary{cursor:pointer;font-weight:650}.rh p{margin:6px 0 0}
 .rl{margin:8px 0 0;font-size:14.5px}.rl a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
-.ro .sw{display:inline-flex;align-items:center;gap:5px;margin-right:8px;white-space:nowrap}.ro .sw i{width:16px;height:16px;border-radius:4px;display:inline-block;border:1px solid rgba(0,0,0,.2)}
+.ro .csw{display:inline-flex;align-items:center;gap:5px;margin-right:10px;white-space:nowrap}.ro .csw i{flex:0 0 auto;width:16px;height:16px;border-radius:4px;display:inline-block;border:1px solid rgba(0,0,0,.2)}
+/* Knot 6.8: the rebuild, three pictures in a row (two on a phone, the differences below) */
+.rd.wide{grid-column:1/-1}
+.rbfig{display:flex;flex-direction:column;gap:12px;margin:12px 0 4px}
+.rbrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rbrow figure{margin:0;min-width:0}
+.rbrow canvas{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:8px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.rbrow figcaption{margin-top:5px;font-size:13px;line-height:1.35;color:var(--ink-2)}
+@media (max-width:560px){.rbrow{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .roomin{margin:10px 0 0;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.85);font-size:16px;line-height:1.45}
 .rg{margin:6px 0 0;font-size:14.5px;line-height:1.48;color:var(--ink-2)}
 .cd{margin-top:8px}
@@ -358,7 +365,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
     <p class="roomin" id="roomIn" role="status" hidden></p>
     <ul class="ways" id="tools">
       <li><button type="button" data-go="text" data-dots><span class="pill sm">Text</span><span class="wd">Words and lines that repeat.</span></button></li>
-      <li><button type="button" data-go="picture" data-dots><span class="pill sm alt">Picture</span><span class="wd">A tile or a star that repeats.</span></button></li>
+      <li><button type="button" data-go="picture" data-dots><span class="pill sm alt">Picture</span><span class="wd">A tile that repeats, or a turn.</span></button></li>
       <li><button type="button" data-go="sound" data-dots><span class="pill sm">Sound</span><span class="wd">Pauses, pitch, and parts that repeat.</span></button></li>
       <li><button type="button" data-go="room" data-dots><span class="pill sm alt">Room</span><span class="wd">The group’s pieces together.</span></button></li>
     </ul>
@@ -431,13 +438,13 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
         <button class="pill alt" id="exWall" type="button">Samarkand tiles</button>
         <button class="pill plain" id="exWaves" type="button">Five waves</button>
       </div>
-      <p class="hint">Tap a spot on the picture to test it for a star.</p>
+      <p class="hint">Tap a spot on the picture to test whether the picture turns around it.</p>
       <p class="status" id="pstat" role="status" aria-live="polite"></p>
     </div>
     <div id="pSum"></div>
     <figure>
-      <div class="stage"><canvas id="pv" class="sq" width="512" height="512" aria-label="Your picture, cut to a square from the middle"></canvas><canvas id="po" class="ov" width="512" height="512" aria-label="Tap to test for a star at that point"></canvas></div>
-      <figcaption>Green arrows: the piece that repeats. Red circle: the star.</figcaption>
+      <div class="stage"><canvas id="pv" class="sq" width="512" height="512" aria-label="Your picture, cut to a square from the middle"></canvas><canvas id="po" class="ov" width="512" height="512" aria-label="Tap to test for a turn at that point"></canvas></div>
+      <figcaption>Green arrows: the tile that repeats. Red circle: the part that turns; the red slice, turned, fills it. Dotted lines: mirrors.</figcaption>
     </figure>
     <div class="row">
       <button class="pill sm" id="ghostBtn" type="button" hidden>Slide a copy</button>
@@ -582,7 +589,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
   <div class="wrap">
     <div class="foot">
       <p>Your files stay on your device. Send shares a few numbers, and a small piece if you tick the box.</p>
-      <p>Knot 6.7, 2026. An experiment. Open source, MIT license.<span class="site-only"> Made by <a href="/">Hassan Asif</a>.</span></p>
+      <p>Knot 6.8, 2026. An experiment. Open source, MIT license.<span class="site-only"> Made by <a href="/">Hassan Asif</a>.</span></p>
     </div>
   </div>
 </footer>
@@ -1218,7 +1225,7 @@ var STOPLISTS = {"en":["a","about","above","after","again","against","all","also
   /* the pieces sent and shown in the phone's list of what leaves */
   function describe(t, k) {
     if (!k) return '';
-    if (t.m === 'p') return 'a small cut of your picture' + (k.sh === 'unit' ? ' (two by two of its repeating tile)' : k.sh === 'star' ? ' (the disc of its star)' : '') + ', about ' + (k.img ? Math.round(k.img.length * 0.75 / 100) / 10 + ' kB' : 'no image');
+    if (t.m === 'p') return 'a small cut of your picture' + (k.sh === 'unit' ? ' (two by two of its repeating tile)' : k.sh === 'star' ? ' (the disc around the point it turns around)' : '') + ', about ' + (k.img ? Math.round(k.img.length * 0.75 / 100) / 10 + ' kB' : 'no image');
     if (t.m === 't') return 'the opening of your text' + (k.tx ? ' (“' + (k.tx.length > 60 ? k.tx.slice(0, 60) + '…' : k.tx) + '”)' : '') + '; these words: ' + (k.wd || []).join(', ') + (k.ph ? '; the phrase “' + k.ph + '”' : '') + '; and the shape of your text’s knot';
     if (t.m === 's') return 'your sound’s pitch line and a small, silent copy of its sound picture';
     return '';
@@ -1265,7 +1272,7 @@ var STOPLISTS = {"en":["a","about","above","after","again","against","all","also
         var lb = kb.wd.map(function (w) { return w.toLowerCase(); });
         for (var x = 0; x < ka.wd.length && !label; x++) if (lb.indexOf(ka.wd[x].toLowerCase()) >= 0) label = ka.wd[x];
       } else if (a.m === 'p' && b.m === 'p') {
-        if (ka.n && ka.n === kb.n) label = FOLDW[ka.n] + ' star';
+        if (ka.n && ka.n === kb.n) label = FOLDW[ka.n] + ' turn';
         else if (ka.five && kb.five) label = 'five directions';
       } else if (a.m === 's' && b.m === 's' && ka.rt && kb.rt) label = 'repeats';
       if (label) pairs.push({ i: i, j: j, label: label, d: Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) });
@@ -3900,7 +3907,8 @@ var qrcode = function() {
     'A refrain or a rhyme': ['Faruqi and Pritchett, on the ghazal', 'https://www.columbia.edu/itc/mealac/pritchett/00ghalib/'],
     'A phrase used again': ['Lord 1960, The Singer of Tales', 'https://openlibrary.org/search?q=The+Singer+of+Tales'],
     'A tile that repeats': ['Liu, Collins and Tsin 2004', 'https://doi.org/10.1109/TPAMI.2004.1262332'],
-    'A star': ['Lee, Collins and Liu 2008', 'https://doi.org/10.1109/CVPR.2008.4587831'],
+    'A turn that matches': ['Lee, Collins and Liu 2008', 'https://doi.org/10.1109/CVPR.2008.4587831'],
+    'Knot’s rebuild': ['Liu, Collins and Tsin 2004', 'https://doi.org/10.1109/TPAMI.2004.1262332'],
     'Lines in five directions': ['Lu and Steinhardt 2007', 'https://doi.org/10.1126/science.1135491'],
     'Colors': ['Heckbert 1982', 'https://doi.org/10.1145/965145.801294'],
     'The home note': ['Hermes 1988', 'https://doi.org/10.1121/1.396427'],
@@ -3917,8 +3925,8 @@ var qrcode = function() {
     if (HIDE.test(o.t)) return '';
     var rd = null;
     Object.keys(READ).forEach(function (k) { if (o.t.indexOf(k) >= 0) rd = READ[k]; });
-    return '<article class="rd"' + (o.c ? ' style="--rc:var(' + o.c + ')"' : '') + '><h4 class="rt">' + esc(o.t) +
-      (o.v ? ' <span class="vd vd-' + (VD[o.v] || 'mid') + '">' + esc(o.v) + '</span>' : '') + '</h4><p class="ro">' + o.out + '</p>' +
+    return '<article class="rd' + (o.cls ? ' ' + o.cls : '') + '"' + (o.c ? ' style="--rc:var(' + o.c + ')"' : '') + '><h4 class="rt">' + esc(o.t) +
+      (o.v ? ' <span class="vd vd-' + (VD[o.v] || 'mid') + '">' + esc(o.v) + '</span>' : '') + '</h4><p class="ro">' + o.out + '</p>' + (o.fig || '') +
       urc(o) +
       (rd ? '<p class="rl"><a href="' + rd[1] + '" target="_blank" rel="noopener">Read more: ' + esc(rd[0]) + '</a></p>' : '') + '</article>';
   }
@@ -3945,9 +3953,11 @@ var qrcode = function() {
     var r = pic.rep, u = pic.unit, s = pic.star, rs = roseText(pic.rose), five = rs.five || r.order === 10, f = [];
     if (u) f.push('one ' + unitShape(u).word + ' that repeats across the picture, at the green arrows');
     else if (pic.unit1) f.push('one piece that repeats in one direction, at the green arrow');
-    if (s && s.n) f.push('a ' + FOLD[s.n].toLowerCase() + ' star at the red circle');
+    if (s && s.n) f.push(aN(FOLD[s.n].toLowerCase()) + ' turn at the red dot' + (s.mirror >= 0.6 ? ', with ' + s.n + ' mirror lines' : ''));
+    var rb = pic.rb || {}, rbt = rb.tile || rb.row || rb.turn;
+    if (rbt) f.push('a rebuild from ' + (rb.tile ? 'one tile' : rb.row ? 'one band' : 'one slice') + ' that matches the photo at ' + rbt.match.toFixed(2));
     if (five) f.push('lines in five directions, the sign of girih');
-    return f.length ? 'Knot took your picture apart and found what repeats: ' + f.join('; ') + '.' : 'Knot took your picture apart and found no repeat and no star. Photos of people and places seldom repeat.';
+    return f.length ? 'Knot took your picture apart and found what repeats: ' + f.join('; ') + '.' : 'Knot took your picture apart and found no repeat and no turn. Photos of people and places seldom repeat.';
   }
   function soundFound() {
     var s = snd, ph = s.phrases, f = [];
@@ -5181,23 +5191,17 @@ var qrcode = function() {
       arrow(c, o[0], o[1], B[0], B[1], tok('--c4'), 'b');
     } else if (pic.unit1) arrow(c, o[0], o[1], pic.unit1.a[0] * 2, pic.unit1.a[1] * 2, tok('--c4'), 'a');
     if (s && (s.n || s.tapped)) {
-      var red = tok('--c5'), halo = 'rgba(255,255,255,0.85)';
-      var path = function () {
-        c.beginPath(); c.arc(s.x, s.y, s.r1, 0, 2 * Math.PI);
-        if (s.n) {
-          var ph = Math.atan2(s.Ci[s.n] || 0, s.Cr[s.n] || 0), a0 = -ph / s.n;
-          for (var q = 0; q < s.n; q++) {
-            var an = a0 + 2 * Math.PI * q / s.n;
-            c.moveTo(s.x + 12 * Math.cos(an), s.y - 12 * Math.sin(an)); c.lineTo(s.x + s.r1 * Math.cos(an), s.y - s.r1 * Math.sin(an));
-          }
-        }
-      };
+      var red = tok('--c5'), halo = 'rgba(255,255,255,0.85)', sl = s.n ? sliceOf(s) : null;
+      if (sl) {
+        /* the smallest slice, shaded: turned (and mirrored) it fills the circle */
+        wedgePath(c, s.x, s.y, s.r1, sl.a0, sl.w); c.fillStyle = 'rgba(214,58,74,0.30)'; c.fill();
+        c.lineJoin = 'round'; c.strokeStyle = halo; c.lineWidth = 7; c.stroke(); c.strokeStyle = red; c.lineWidth = 3; c.stroke();
+      }
       c.lineCap = 'round';
-      path(); c.strokeStyle = halo; c.lineWidth = 9; c.stroke();
-      path(); c.strokeStyle = red; c.lineWidth = 4; c.stroke();
+      c.beginPath(); c.arc(s.x, s.y, s.r1, 0, 2 * Math.PI); c.strokeStyle = halo; c.lineWidth = 7; c.stroke(); c.strokeStyle = red; c.lineWidth = 3; c.stroke();
       if (s.n && s.mirror >= 0.6) {
         /* mirror lines: dotted, through the center */
-        c.setLineDash([2, 9]); c.lineWidth = 3.5; c.strokeStyle = tok('--ink');
+        c.setLineDash([2, 9]); c.lineWidth = 3; c.strokeStyle = 'rgba(20,20,30,.75)';
         c.beginPath();
         for (var q2 = 0; q2 < s.n; q2++) {
           var an2 = s.mphi + Math.PI * q2 / s.n;
@@ -5205,8 +5209,8 @@ var qrcode = function() {
         }
         c.stroke(); c.setLineDash([]);
       }
-      c.beginPath(); c.arc(s.x, s.y, 9, 0, 2 * Math.PI); c.fillStyle = red; c.fill();
-      c.strokeStyle = '#fff'; c.lineWidth = 3; c.stroke();
+      c.beginPath(); c.arc(s.x, s.y, 6, 0, 2 * Math.PI); c.fillStyle = red; c.fill();
+      c.strokeStyle = '#fff'; c.lineWidth = 2.5; c.stroke();
     }
     var bars = $('#bars'), bx = $('#barsX'), hb = '', hx = '';
     for (var n = 2; n <= 16; n++) {
@@ -5219,7 +5223,9 @@ var qrcode = function() {
     var pal = $('#pal');
     pal.innerHTML = (pic.pal || []).map(function (p) { return '<span><i style="background:' + hex(p.c) + '"></i>' + Math.round(p.share * 100) + '%</span>'; }).join('');
     $('#pSum').innerHTML = pictureSummary();
+    pic.rb = rebuildOf(pic);
     $('#pReads').innerHTML = pictureReads();
+    drawRebuild();
     emitTile('picture', pictureTile());
   }
   function ease(t) { t = Math.max(0, Math.min(1, t)); return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
@@ -5282,34 +5288,237 @@ var qrcode = function() {
   function stepsPicture() {
     var r = pic.rep, u = pic.unit, s = pic.star, rs = roseText(pic.rose), out = [];
     var five = rs.five || r.order === 10;
-    if (s && s.n) out.push('Draw a circle, mark ' + s.n + ' equal points on it, and join them into a ' + FOLD[s.n].toLowerCase() + ' star.');
+    if (s && s.n) {
+      if (s.mirror >= 0.6) {
+        out.push('Draw half of one slice of a circle: a wedge of ' + fmtDeg(180 / s.n) + ', between two mirror lines.');
+        out.push('Mirror it to make the slice, then turn copies of the slice ' + s.n + ' times around the center.');
+      } else out.push('Draw one slice of a circle, a wedge of ' + fmtDeg(360 / s.n) + ', and turn copies of it ' + s.n + ' times around the center.');
+    }
+    if (u) out.push('Copy one ' + unitShape(u).word + ' across the surface, sliding it along arrows a and b.');
+    else if (pic.unit1) out.push('Copy one piece in a row, sliding it along arrow a.');
     if (five) out.push('Run the lines in five directions, 36° apart.');
     else if (rs.k >= 2) out.push('Draw lines in ' + dirWays(rs.k) + '.');
     else if (r.order) out.push('Draw lines in ' + dirWays(r.order / 2) + '.');
-    if (u) out.push('Copy one ' + unitShape(u).word + ' across the surface, sliding it along arrows a and b.');
-    else if (pic.unit1) out.push('Copy one piece in a row, sliding it along arrow a.');
-    else if (r.order === 2) out.push('Repeat one stripe in a row, like a frieze.');
-    else if (five || (s && s.n)) out.push('Keep growing the pattern outward; its repeat is larger than this photo.');
+    if (!u && !pic.unit1 && r.order === 2) out.push('Repeat one stripe in a row, like a frieze.');
     if (pic.pal && pic.pal.length) out.push('Fill the shapes in ' + Math.min(pic.pal.length, 3) + ' main colors.');
     return out;
   }
+  function fmtDeg(v) { return (Math.round(v * 10) / 10) + '°'; }
+  function aN(w) { return /^(eight|eleven)/i.test(w) ? 'an ' + w : 'a ' + w; }
   function pictureSummary() {
     var r = pic.rep, u = pic.unit, s = pic.star, rs = roseText(pic.rose);
-    var five = rs.five || r.order === 10, star = s && s.n ? s.n : 0, fiveStar = star === 5 || star === 10, st = star ? 'a ' + FOLD[star].toLowerCase() + ' star' : '', t;
-    if (five && fiveStar && u) t = 'Girih that repeats: stars in fives or tens, and one tile used again and again.';
-    else if (five && fiveStar) t = 'Girih: stars in fives or tens, with no repeat inside this photo.';
+    var five = rs.five || r.order === 10, n = s && s.n ? s.n : 0, girihTurn = n === 5 || n === 10, mir = n && s.mirror >= 0.6;
+    var st = n ? aN(FOLD[n].toLowerCase()) + ' turn' + (mir ? ' with ' + n + ' mirror lines' : '') : '', t;
+    if (five && girihTurn && u) t = 'Girih that repeats: lines in five directions, ' + st + ', and one tile used again and again.';
+    else if (five && girihTurn) t = 'Girih: lines in five directions and ' + st + ', with no repeat inside this photo.';
     else if (five) t = 'Lines in five directions: the sign of girih.';
-    else if (u && star) t = 'A repeating pattern, with ' + st + '.';
+    else if (u && n) t = 'A repeating pattern: one ' + unitShape(u).word + ', used again and again, and ' + st + '.';
     else if (u) t = 'A repeating pattern: one tile, used again and again.';
-    else if (star) t = cap(st) + ' around one point' + (pic.unit1 ? ', and a piece that repeats in one direction.' : '.');
+    else if (n) t = cap(st) + ': the picture lands on itself when turned around one point' + (pic.unit1 ? ', and a piece repeats in one direction.' : '.');
     else if (pic.unit1) t = 'A piece that repeats in one direction, like a frieze or a column of tiles.';
-    else if (FAM[r.order] || r.order === 2) t = 'Some order, but no clear repeat or star.';
-    else if (rs.k) t = 'Straight edges, but no repeat and no star.';
-    else t = 'No repeat and no star. Photos of people and places seldom repeat.';
+    else if (FAM[r.order] || r.order === 2) t = 'Some order, but no clear repeat and no turn.';
+    else if (rs.k) t = 'Straight edges, but no repeat and no turn.';
+    else t = 'No repeat and no turn. Photos of people and places seldom repeat.';
     return '<p class="insum">' + esc(t) + '</p>';
+  }
+  /* Knot 6.8: the rebuild. Knot remakes your picture from its smallest piece and lays the remake beside the photo. With
+     a repeat unit, each point takes the average color of the same point in each copy of the tile (after the median tile
+     of Liu, Collins and Tsin 2004). With a turn, each point of the circle takes the average color of its turned copies,
+     and of their mirror images when the circle has mirrors (Lee, Collins and Liu 2008). The match leaves each point's
+     own color out, so it scores how well the other copies predict that point: 1 means exactly. The differences mark
+     where the photo departs from the copies: the maker's hand, wear, light, or a part that does not repeat. */
+  var RB = 256;
+  function sliceOf(s) {
+    /* the smallest slice: between two mirror lines when there are mirrors, else one turn's worth, centered on the
+       strongest direction */
+    if (s.mirror >= 0.6) return { a0: s.mphi, w: Math.PI / s.n };
+    var ph = Math.atan2(s.Ci[s.n] || 0, s.Cr[s.n] || 0), a = -ph / s.n;
+    return { a0: a - Math.PI / s.n, w: 2 * Math.PI / s.n };
+  }
+  function wedgePath(c, x, y, r, a0, w) {
+    c.beginPath(); c.moveTo(x, y);
+    for (var i = 0; i <= 32; i++) { var t = a0 + w * i / 32; c.lineTo(x + r * Math.cos(t), y - r * Math.sin(t)); }
+    c.closePath();
+  }
+  function addRGB(d, x, y, acc) {
+    if (x < 0 || y < 0 || x > RB - 1.001 || y > RB - 1.001) return 0;
+    var x0 = x | 0, y0 = y | 0, fx = x - x0, fy = y - y0, k = (y0 * RB + x0) * 4, k2 = k + RB * 4;
+    var w00 = (1 - fx) * (1 - fy), w10 = fx * (1 - fy), w01 = (1 - fx) * fy, w11 = fx * fy;
+    acc[0] += d[k] * w00 + d[k + 4] * w10 + d[k2] * w01 + d[k2 + 4] * w11;
+    acc[1] += d[k + 1] * w00 + d[k + 5] * w10 + d[k2 + 1] * w01 + d[k2 + 5] * w11;
+    acc[2] += d[k + 2] * w00 + d[k + 6] * w10 + d[k2 + 2] * w01 + d[k2 + 6] * w11;
+    return 1;
+  }
+  function lum(r, g, b) { return 0.299 * r + 0.587 * g + 0.114 * b; }
+  function Corr() { this.n = 0; this.sx = 0; this.sy = 0; this.sxx = 0; this.syy = 0; this.sxy = 0; }
+  Corr.prototype.add = function (x, y) { this.n++; this.sx += x; this.sy += y; this.sxx += x * x; this.syy += y * y; this.sxy += x * y; };
+  Corr.prototype.r = function () {
+    var n = this.n; if (n < 50) return 0;
+    var vx = this.sxx - this.sx * this.sx / n, vy = this.syy - this.sy * this.sy / n;
+    return vx > 0 && vy > 0 ? Math.max(0, (this.sxy - this.sx * this.sy / n) / Math.sqrt(vx * vy)) : 0;
+  };
+  function cdist(d, o, e) { var a = d[o] - e[o], b = d[o + 1] - e[o + 1], g = d[o + 2] - e[o + 2]; return Math.sqrt(a * a + b * b + g * g) / 441.7; }
+  /* the circle, remade from one slice: each point is the average of its turned (and mirrored) copies */
+  function rbTurn(d, s) {
+    /* the turn is tested out to the red circle; the rebuild goes on outward, ring by ring, while the turned copies
+       still agree (a ring's match of 0.4 or more), up to the largest circle inside the square */
+    var n = s.n, cx = (s.x - 0.5) / 2, cy = (s.y - 0.5) / 2, Rmax = Math.min(cx - 1, cy - 1, RB - 2 - cx, RB - 2 - cy), R0 = Math.min(s.r1 / 2, Rmax);
+    if (n < 2 || R0 < 12) return null;
+    var mir = s.mirror >= 0.6, M = [], k, c2 = Math.cos(2 * s.mphi), s2 = Math.sin(2 * s.mphi);
+    for (k = 0; k < n; k++) {
+      var t = 2 * Math.PI * k / n, ra = Math.cos(t), rb = Math.sin(t), rc = -Math.sin(t), rd = Math.cos(t);
+      M.push([ra, rb, rc, rd]);
+      /* a mirror over the line at angle mphi (y up), then the turn */
+      if (mir) M.push([ra * c2 - rb * s2, -ra * s2 - rb * c2, rc * c2 - rd * s2, -rc * s2 - rd * c2]);
+    }
+    var BW = 4, NB = Math.ceil(Rmax / BW) + 1, bins = [], b;
+    for (b = 0; b < NB; b++) bins.push(new Corr());
+    var out = new Uint8ClampedArray(RB * RB * 4), diff = new Float32Array(RB * RB), rad = new Float32Array(RB * RB), acc = [0, 0, 0], px, py, RM2 = Rmax * Rmax;
+    for (py = 0; py < RB; py++) for (px = 0; px < RB; px++) {
+      var p = py * RB + px, o = p * 4, dx = px - cx, dy = py - cy, r2 = dx * dx + dy * dy;
+      rad[p] = Math.sqrt(r2);
+      if (r2 > RM2) { diff[p] = -1; continue; }
+      acc[0] = acc[1] = acc[2] = 0; var m = 0;
+      for (k = 0; k < M.length; k++) { var Q = M[k]; m += addRGB(d, cx + Q[0] * dx + Q[1] * dy, cy + Q[2] * dx + Q[3] * dy, acc); }
+      out[o] = acc[0] / m; out[o + 1] = acc[1] / m; out[o + 2] = acc[2] / m; out[o + 3] = 255;
+      var own = lum(d[o], d[o + 1], d[o + 2]);
+      if (m > 1) bins[Math.floor(rad[p] / BW)].add(own, (lum(acc[0], acc[1], acc[2]) - own) / (m - 1));
+      diff[p] = cdist(d, o, out);
+    }
+    var R = R0, weak = 0;
+    for (b = Math.ceil(R0 / BW); b < NB; b++) {
+      if (bins[b].n < 20) break;
+      if (bins[b].r() >= 0.4) { R = Math.min(Rmax, (b + 1) * BW); weak = 0; } else if (++weak >= 2) break;
+    }
+    var C = new Corr();
+    for (b = 0; b < NB && b * BW < R; b++) { var q = bins[b]; C.n += q.n; C.sx += q.sx; C.sy += q.sy; C.sxx += q.sxx; C.syy += q.syy; C.sxy += q.sxy; }
+    for (var p2 = 0; p2 < RB * RB; p2++) if (rad[p2] > R) {
+      var o2 = p2 * 4; out[o2] = 255 - (255 - d[o2]) * 0.3; out[o2 + 1] = 255 - (255 - d[o2 + 1]) * 0.3; out[o2 + 2] = 255 - (255 - d[o2 + 2]) * 0.3; out[o2 + 3] = 255; diff[p2] = -1;
+    }
+    var sl = sliceOf(s);
+    return { kind: 'turn', n: n, mir: mir, cx: cx, cy: cy, R: R, R0: R0, a0: sl.a0, w: sl.w, img: out, diff: diff, match: C.r(), copies: M.length };
+  }
+  /* the photo, remade from one tile (wrap true) or one band (wrap false): each point is the average of the same point
+     in each copy */
+  function rbTile(d, A, B, ox, oy, wrap) {
+    var det = A[0] * B[1] - A[1] * B[0], la = Math.hypot(A[0], A[1]);
+    if (Math.abs(det) < 40 || la < 6) return null;
+    var copies = wrap ? RB * RB / Math.abs(det) : RB / la;
+    if (copies < 2) return null;
+    var Ka = Math.max(12, Math.min(128, Math.round(la))), Kb = wrap ? Math.max(12, Math.min(128, Math.round(Math.hypot(B[0], B[1])))) : 400;
+    var Sm = new Float64Array(Ka * Kb * 3), N = new Float64Array(Ka * Kb), idx = new Int32Array(RB * RB), px, py;
+    for (py = 0; py < RB; py++) for (px = 0; px < RB; px++) {
+      var vx = px - ox, vy = py - oy, al = (vx * B[1] - vy * B[0]) / det, be = (-vx * A[1] + vy * A[0]) / det;
+      var ia = Math.min(Ka - 1, ((al - Math.floor(al)) * Ka) | 0), ib;
+      if (wrap) ib = Math.min(Kb - 1, ((be - Math.floor(be)) * Kb) | 0);
+      else ib = Math.max(0, Math.min(Kb - 1, Math.floor(be + 200)));
+      var j = ia * Kb + ib, p = py * RB + px, o = p * 4;
+      idx[p] = j; Sm[3 * j] += d[o]; Sm[3 * j + 1] += d[o + 1]; Sm[3 * j + 2] += d[o + 2]; N[j]++;
+    }
+    var out = new Uint8ClampedArray(RB * RB * 4), diff = new Float32Array(RB * RB), C = new Corr();
+    for (var q = 0; q < RB * RB; q++) {
+      var jj = idx[q], oo = q * 4, nn = N[jj];
+      out[oo] = Sm[3 * jj] / nn; out[oo + 1] = Sm[3 * jj + 1] / nn; out[oo + 2] = Sm[3 * jj + 2] / nn; out[oo + 3] = 255;
+      if (nn > 1) { var ow = lum(d[oo], d[oo + 1], d[oo + 2]); C.add(ow, (lum(Sm[3 * jj], Sm[3 * jj + 1], Sm[3 * jj + 2]) - ow) / (nn - 1)); }
+      diff[q] = cdist(d, oo, out);
+    }
+    return { kind: wrap ? 'tile' : 'row', A: A, B: B, ox: ox, oy: oy, img: out, diff: diff, match: C.r(), copies: copies };
+  }
+  function rebuildOf(P) {
+    var s = P.star, u = P.unit, key = [s ? s.x + ',' + s.y + ',' + s.n : '', u ? u.a + ',' + u.b : '', P.unit1 ? P.unit1.a + '' : ''].join('|');
+    if (P.rb && P.rb.key === key) return P.rb;
+    var cv = document.createElement('canvas'); cv.width = cv.height = RB;
+    var x = cv.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+    x.drawImage($('#pv'), 0, 0, RB, RB);
+    var d = x.getImageData(0, 0, RB, RB).data, rb = { key: key, photo: d };
+    var ox = s && s.n ? (s.x - 0.5) / 2 : RB / 2, oy = s && s.n ? (s.y - 0.5) / 2 : RB / 2;
+    try {
+      if (u && u.b) rb.tile = rbTile(d, u.a, u.b, ox, oy, true);
+      else if (P.unit1) { var a = P.unit1.a, la = Math.hypot(a[0], a[1]); rb.row = rbTile(d, a, [-a[1] / la, a[0] / la], ox, oy, false); }
+      if (s && s.n) rb.turn = rbTurn(d, s);
+    } catch (e) { /* a rebuild is an extra: the other readings stand without it */ }
+    return rb;
+  }
+  function rbRows() {
+    var rb = pic.rb || {}, rows = [];
+    if (rb.tile) rows.push(rb.tile); else if (rb.row) rows.push(rb.row);
+    if (rb.turn) rows.push(rb.turn);
+    return rows;
+  }
+  function rbLabels(t) {
+    if (t.kind === 'tile') return ['The smallest piece: one tile', 'Copied along a and b'];
+    if (t.kind === 'row') return ['The smallest piece: one band', 'Copied along a'];
+    return ['The smallest piece: 1/' + (t.mir ? 2 * t.n : t.n) + ' of a circle', (t.mir ? 'Mirrored, then turned ' : 'Turned ') + t.n + ' times'];
+  }
+  function rebuildCard() {
+    var rows = rbRows(), fig = '', best = 0, s = pic.star;
+    rows.forEach(function (t, i) {
+      var lab = rbLabels(t);
+      best = Math.max(best, t.match);
+      fig += '<div class="rbrow">' +
+        '<figure><canvas id="rb1-' + i + '" width="256" height="256"></canvas><figcaption>' + esc(lab[0]) + '</figcaption></figure>' +
+        '<figure><canvas id="rb2-' + i + '" width="256" height="256"></canvas><figcaption>' + esc(lab[1]) + ': Knot’s rebuild. Match ' + t.match.toFixed(2) + '</figcaption></figure>' +
+        '<figure><canvas id="rb3-' + i + '" width="256" height="256"></canvas><figcaption>Red: where your photo differs from the rebuild</figcaption></figure></div>';
+    });
+    if (!rows.length) return card({ q: 0, t: 'Knot’s rebuild', c: '--c4', v: 'not found',
+      out: pic.unit || pic.unit1 ? 'The repeat is about as large as the photo, so the photo shows fewer than two copies: too few to rebuild from. Step back so that two or three tiles show.' : 'Knot found no piece to rebuild your picture from: nothing repeats inside the photo, and nothing turns.',
+      rep: 'No piece that repeats or turns.',
+      note: 'Photos of people and places seldom repeat. For a tile panel, step back so two or three tiles show, and face the wall square on.',
+      how: 'Knot looks for a tile that repeats and a point that the picture turns around. With either, it cuts the smallest piece and rebuilds the picture from copies of it.' });
+    var tl = rows[0], tn = rows.length > 1 ? rows[1] : null, txt;
+    if (tl.kind === 'turn') txt = 'Knot rebuilt the picture around the red dot from one slice, ' + (tl.mir ? 'mirrored and turned ' : 'turned ') + tl.n + ' times' + (tl.R > tl.R0 + 6 ? ', out past the red circle, as far as the turned copies agree' : '') + '. The rebuild matches your photo at ' + tl.match.toFixed(2) + ', where 1 means exactly.';
+    else txt = 'Knot rebuilt your picture from one ' + (tl.kind === 'tile' ? 'tile, copied along arrows a and b' : 'band, copied along arrow a') + '. The rebuild matches your photo at ' + tl.match.toFixed(2) + ', where 1 means exactly.' + (tn ? ' It also rebuilt the part around the red dot from one slice, ' + (tn.mir ? 'mirrored and turned ' : 'turned ') + tn.n + ' times: match ' + tn.match.toFixed(2) + '.' : '');
+    var turn = tl.kind === 'turn' ? tl : tn;
+    return card({ q: 0, t: 'Knot’s rebuild', c: '--c4', cls: 'wide', v: best >= 0.75 ? 'strong' : best >= 0.5 ? 'clear' : 'weak',
+      out: esc(txt), fig: '<div class="rbfig">' + fig + '</div>',
+      rep: 'At the left, the smallest piece Knot found. In the middle, the picture remade from copies of that piece alone.',
+      note: 'If the rebuild looks like your photo, Knot read the pattern well: the maker likely drew this piece once and copied it. Red marks, at the right, show where your photo departs from the copies: the maker’s hand, wear, light, or a part that does not repeat.',
+      how: 'For each point, Knot finds the same point in each copy of the piece and averages their colors. The match leaves each point’s own color out, so it scores how well the other copies predict that point.',
+      redo: turn ? (turn.mir ? 'Try the step “Draw half a slice, mirror it, then turn the slice ' + turn.n + ' times.”' : 'Try the step “Draw one slice, then turn it ' + turn.n + ' times.”') : 'Try the step “Draw one tile, then copy it along a and b.”',
+      cannot: 'What the piece shows: a star, a flower or a leaf. A close match says the copies agree, not what they mean.' });
+  }
+  function drawRebuild() {
+    var rows = rbRows(), d = pic.rb && pic.rb.photo;
+    if (!d) return;
+    rows.forEach(function (t, i) {
+      var c1 = document.getElementById('rb1-' + i), c2 = document.getElementById('rb2-' + i), c3 = document.getElementById('rb3-' + i);
+      if (!c1 || !c2 || !c3) return;
+      var x1 = c1.getContext('2d'), x2 = c2.getContext('2d'), x3 = c3.getContext('2d'), im;
+      /* 1. the smallest piece: the photo, faded outside the piece */
+      im = x1.createImageData(RB, RB); im.data.set(d); x1.putImageData(im, 0, 0);
+      x1.save(); x1.beginPath(); x1.rect(0, 0, RB, RB);
+      if (t.kind === 'turn') {
+        x1.moveTo(t.cx, t.cy);
+        for (var a = 32; a >= 0; a--) { var an = t.a0 + t.w * a / 32; x1.lineTo(t.cx + t.R * Math.cos(an), t.cy - t.R * Math.sin(an)); }
+        x1.closePath();
+      } else {
+        var A = t.A, B = t.kind === 'tile' ? t.B : [t.B[0] * 400, t.B[1] * 400], o = [t.ox - (A[0] + B[0]) / 2, t.oy - (A[1] + B[1]) / 2];
+        x1.moveTo(o[0], o[1]); x1.lineTo(o[0] + B[0], o[1] + B[1]); x1.lineTo(o[0] + A[0] + B[0], o[1] + A[1] + B[1]); x1.lineTo(o[0] + A[0], o[1] + A[1]); x1.closePath();
+      }
+      x1.fillStyle = 'rgba(255,255,255,0.72)'; x1.fill('evenodd'); x1.restore();
+      x1.lineJoin = 'round';
+      if (t.kind === 'turn') wedgePath(x1, t.cx, t.cy, t.R, t.a0, t.w);
+      else { x1.beginPath(); x1.moveTo(o[0], o[1]); x1.lineTo(o[0] + B[0], o[1] + B[1]); x1.lineTo(o[0] + A[0] + B[0], o[1] + A[1] + B[1]); x1.lineTo(o[0] + A[0], o[1] + A[1]); x1.closePath(); }
+      x1.strokeStyle = 'rgba(255,255,255,.9)'; x1.lineWidth = 4; x1.stroke(); x1.strokeStyle = t.kind === 'turn' ? tok('--c5') : tok('--c4'); x1.lineWidth = 2; x1.stroke();
+      /* 2. the rebuild */
+      im = x2.createImageData(RB, RB); im.data.set(t.img); x2.putImageData(im, 0, 0);
+      /* 3. the differences: the photo in light gray, red where it departs most from the rebuild */
+      var df = t.diff, vals = [], p;
+      for (p = 0; p < df.length; p += 7) if (df[p] >= 0) vals.push(df[p]);
+      vals.sort(function (u, v) { return u - v; });
+      var lo = Math.max(0.08, vals[Math.floor(vals.length * 0.75)] || 0), span = 0.15;
+      im = x3.createImageData(RB, RB);
+      for (p = 0; p < df.length; p++) {
+        var o3 = p * 4, g = 255 - (255 - lum(d[o3], d[o3 + 1], d[o3 + 2])) * 0.35, k = df[p] < 0 ? 0 : Math.max(0, Math.min(1, (df[p] - lo) / span));
+        im.data[o3] = g + (214 - g) * k; im.data[o3 + 1] = g + (40 - g) * k; im.data[o3 + 2] = g + (58 - g) * k; im.data[o3 + 3] = 255;
+      }
+      x3.putImageData(im, 0, 0);
+      if (t.kind === 'turn') { x3.beginPath(); x3.arc(t.cx, t.cy, t.R, 0, 2 * Math.PI); x3.strokeStyle = 'rgba(40,40,50,.35)'; x3.lineWidth = 1.5; x3.stroke(); }
+    });
   }
   function pictureReads() {
     var r = pic.rep, u = pic.unit, s = pic.star, out = '', rs = roseText(pic.rose), five = rs.five || r.order === 10;
+    out += rebuildCard();
     /* 1. the repeat unit */
     if (u) {
       var us = unitShape(u);
@@ -5330,32 +5539,32 @@ var qrcode = function() {
         rep: pic.unit1 ? 'One piece of the picture, repeated in a row. Green arrow a shows how far to slide it to reach the next copy.' : 'No piece that repeats inside this photo.',
         note: pic.unit1 ? 'A row of the same piece, like a frieze or a column of tiles. Its second direction may lie outside the photo.' : r.order >= 8 ? 'The repeat may be larger than the photo, or the pattern may have order with no repeat, as a Penrose tiling does.' : 'A repeat larger than the photo can hide one. If one tile fills the photo, step back so that two or three tiles show each way.',
         how: 'Knot lays a see-through copy of your picture over it, like tracing paper, and slides the copy. It also reads the whole photo, and tries it straightened, as if the camera had faced the wall square on. ' + (pic.unit1 ? 'The copy lined up again in one direction alone.' : 'No slide made it line up again.'),
-        undo: 'With no repeat in view, look to the star and the line directions for clues.',
+        undo: 'With no repeat in view, look to the turn and the line directions for clues.',
         why: 'A pattern that repeats is one unit, used again (Liu, Collins and Tsin 2004).',
         cannot: 'A repeat larger than three fifths of the photo, or a single tile that fills it.',
         check: 'With no repeat unit, your tile keeps an open center.',
         set: 'Autocorrelation peaks above 0.45.' });
     }
-    /* 2. the star test */
+    /* 2. the turn test: does the picture land on itself when turned around one point? Knot 6.8 names the symmetry it
+       measures, and leaves the shape (star, flower, cross) to the rebuild and to the reader */
     if (s && s.n) {
-      var mir = s.mirror >= 0.6, fold = FOLD[s.n].toLowerCase();
-      out += card({ q: 2, t: 'A star', c: '--c5', v: s.ex[s.n] >= 0.6 ? 'strong' : 'clear',
-        out: esc('A ' + fold + ' star, at the red circle: turned a ' + FRAC[s.n] + ' of a full turn, the picture matches itself at ' + s.ex[s.n].toFixed(2) + '.'),
-        rep: 'The pattern around one point, at the red circle. As it turns, it lands on itself ' + s.n + ' times in one full turn.',
-        note: 'A ' + fold + ' star starts from a circle cut into ' + s.n + ' equal parts.' + (s.n === 10 || s.n === 5 ? ' Tenfold and fivefold stars are a sign of girih.' : '') + ' ' + (s.tapped ? 'You chose this point.' : 'Knot picked the strongest star.') + ' Tap the middle of another star to test it.',
-        how: 'Knot spins your picture around that point, like a plate on a table, and checks how well it matches itself after a half turn, a third, a quarter, and so on, down to a sixteenth. The smallest turn that still matches names the star: a tenth of a turn gives a tenfold star.',
-        undo: 'A ' + fold + ' star starts from a circle cut into ' + s.n + ' equal parts.',
-        redo: 'Try the step “Draw a circle, mark ' + s.n + ' equal points, and join them into a star.”',
-        why: 'A star is order around one point. The girih decagon carries a tenfold star, and the pentagon a fivefold one (Lu and Steinhardt 2007). A tenfold star also matches after a fifth and after a half turn, so those bars stand tall too.',
-        cannot: 'Over and under, which line passes on top at each crossing: Knot sees light and dark. It also misses stars at other points, and the pattern outside the red circle.',
-        check: 'A strong star raises the line weight of your tile.',
-        set: '32 rings, 256 samples each; the named star is the largest n whose bar reaches three quarters of the tallest and 0.3; mirrors count at 0.6' + (mir ? ' (here ' + s.mirror.toFixed(2) + ')' : '') + '. After Lee, Collins and Liu 2008.' });
+      var mir = s.mirror >= 0.6, fold = FOLD[s.n].toLowerCase(), part = mir ? 2 * s.n : s.n;
+      out += card({ q: 2, t: 'A turn that matches', c: '--c5', v: s.ex[s.n] >= 0.6 ? 'strong' : 'clear',
+        out: esc('Turn the picture ' + aN(FRAC[s.n]) + ' of a full turn around the red dot, and it lands on itself, at a match of ' + s.ex[s.n].toFixed(2) + ': ' + fold + ' symmetry.' + (mir ? ' It also folds onto itself along ' + s.n + ' mirror lines, the dotted lines.' : '')),
+        rep: 'One slice of the red circle, shaded red: 1/' + part + ' of the circle. ' + (mir ? 'Mirrored, then turned ' : 'Turned ') + s.n + ' times around the red dot, the slice fills the circle.',
+        note: 'Knot measures the turn, not the shape: the shape at the red dot may be a star, a flower, a cross or a rosette. Knot’s rebuild, above, shows it.' + (s.n === 10 || s.n === 5 ? ' In girih, fivefold and tenfold turns sit at the middle of stars.' : '') + ' ' + (s.tapped ? 'You chose this point.' : 'Knot picked the point that turns best.') + ' Tap another point to test it.',
+        how: 'Knot spins your picture around that point, like a plate on a table, and checks how well it matches itself after a half turn, a third, a quarter, and so on, down to a sixteenth. The smallest turn that still matches names the symmetry: a quarter turn gives fourfold.' + (mir ? ' Then it flips the picture over a line through the point and checks again: a match means a mirror.' : ''),
+        redo: mir ? 'Try the step “Draw half a slice, mirror it, then turn the slice ' + s.n + ' times.”' : 'Try the step “Draw one slice, then turn it ' + s.n + ' times.”',
+        why: 'Order around one point is rotational symmetry. The girih decagon carries a tenfold turn, and the pentagon a fivefold one (Lu and Steinhardt 2007). A tenfold turn also matches after a fifth and after a half turn, so those bars stand tall too.',
+        cannot: 'What the shape is: a star, a flower or a cross. Over and under at each crossing: Knot sees light and dark. It also misses turns at other points, and the pattern outside the red circle.',
+        check: 'A strong turn raises the line weight of your tile.',
+        set: '32 rings, 256 samples each; the named turn is the largest n whose bar reaches three quarters of the tallest and 0.3; mirrors count at 0.6' + (mir ? ' (here ' + s.mirror.toFixed(2) + ')' : '') + '. After Lee, Collins and Liu 2008.' });
     } else {
-      out += card({ q: 2, t: 'A star', c: '--c5', v: 'not found', out: s && s.tapped ? 'No clear star at the red circle.' : 'No clear star in this picture.',
-        rep: 'No clear star at this point.',
-        note: 'Tap the middle of a star on your picture to test that point.',
+      out += card({ q: 2, t: 'A turn that matches', c: '--c5', v: 'not found', out: s && s.tapped ? 'No turn matches around the red dot.' : 'No turn matches in this picture.',
+        rep: 'No point that the picture turns around.',
+        note: 'Tap a point on your picture that looks like a center, to test it.',
         how: 'Knot spins your picture around one point, like a plate on a table, and checks how well it matches itself after a half turn, a third, a quarter, and so on. No turn matched well.',
-        undo: 'With no star, look to the repeat and the line directions for clues.' });
+        undo: 'With no turn, look to the repeat and the line directions for clues.' });
     }
     /* 3. which ways the lines run */
     var dirK = rs.k ? 2 * rs.k : r.order;
@@ -5389,17 +5598,17 @@ var qrcode = function() {
     }
     /* 5. colors */
     if (pic.pal && pic.pal.length) {
-      out += card({ q: 5, t: 'Colors', out: pic.pal.slice(0, 4).map(function (p) { return '<span class="sw"><i style="background:' + hex(p.c) + '"></i>' + Math.round(p.share * 100) + '%</span>'; }).join(' ') + ' ' + esc((pic.pal.length > 4 ? 'and ' + (pic.pal.length - 4) + ' more: ' : ': ') + 'the main colors, by area.'),
+      out += card({ q: 5, t: 'Colors', out: pic.pal.slice(0, 4).map(function (p) { return '<span class="csw"><i style="background:' + hex(p.c) + '"></i>' + Math.round(p.share * 100) + '%</span>'; }).join(' ') + ' ' + esc((pic.pal.length > 4 ? 'and ' + (pic.pal.length - 4) + ' more: ' : ': ') + 'the main colors, by area.'),
         rep: 'Areas of the same color, across the picture.',
         note: 'Color can repeat on its own rhythm, on top of the lines.',
         how: 'Knot sorts the colors of your picture into a few groups and measures the area of each.',
         undo: 'Color adds its own repeat on top of the lines.',
-        redo: 'Try the step “Fill the stars in one color and the ground in another.”',
+        redo: 'Try the step “Fill the main shapes in one color and the ground in another.”',
         why: 'A pattern repeats in its colors as well as its shapes, and color can change its symmetry (Grünbaum 2006).',
         cannot: 'The true color of the glaze. Light, shadow and age change what the camera sees.',
         set: 'Median cut on the 512 px square, six boxes (Heckbert 1982).' });
     }
-    out += learned('a picture', pictureFound(), stepsPicture(), 'over and under, the material, or who made it');
+    out += learned('a picture', pictureFound(), stepsPicture(), 'what the shapes are (a star, a flower, a leaf), over and under, the material, or who made it');
     return out;
   }
   /* the tile a picture gives the room: weight from the strongest match, a center when a repeat unit shows */
@@ -5409,7 +5618,7 @@ var qrcode = function() {
     var facts = [];
     if (rs.five || r.order === 10) facts.push('lines in five directions');
     else if (r.order) facts.push('lines in ' + dirWays(r.order / 2));
-    if (s && s.n) facts.push(FOLD[s.n].toLowerCase() + ' star' + (s.mirror >= 0.6 ? ' with mirrors' : ''));
+    if (s && s.n) facts.push(FOLD[s.n].toLowerCase() + ' turn' + (s.mirror >= 0.6 ? ' with mirrors' : ''));
     if (u) facts.push('repeat unit, match ' + u.v.toFixed(2));
     else if (pic.unit1) facts.push('repeat in one direction, match ' + pic.unit1.v.toFixed(2));
     if (!facts.length) facts.push('no repeat found');
@@ -5420,7 +5629,7 @@ var qrcode = function() {
     ghostRun++;
     var rc = this.getBoundingClientRect(), x = (e.clientX - rc.left) / rc.width * PS, y = (e.clientY - rc.top) / rc.height * PS;
     var t = seek(pic, x, y, true);
-    if (!t) { say('#pstat', 'That point is too near the edge for a star test. Tap nearer the middle.', true); return; }
+    if (!t) { say('#pstat', 'That point is too near the edge for a turn test. Tap nearer the middle.', true); return; }
     say('#pstat', '');
     t.tapped = true; pic.star = t; drawPicture();
   });
@@ -6214,7 +6423,7 @@ var qrcode = function() {
       });
       lines.push('');
     }
-    lines.push('Knot 6.7, www.hassanasif.net/knot, ' + new Date().toISOString().slice(0, 10));
+    lines.push('Knot 6.8, www.hassanasif.net/knot, ' + new Date().toISOString().slice(0, 10));
     return lines.join('\n');
   }
   function knotCanvas(size) {
@@ -6260,7 +6469,7 @@ var qrcode = function() {
     if (tab === 'text') { if (!txt || txt.sents.length < 3) return; figs.push(pair([knotCanvas(900)], [])); }
     if (tab === 'picture') {
       if (!pic || !pic.rep) return;
-      figs.push(pair([$('#pv'), $('#po')], []));
+      figs.push(pair([$('#pv'), $('#po')], [document.getElementById('rb2-0')].filter(Boolean)));
     }
     if (tab === 'sound') {
       if (!snd) return;
@@ -6417,7 +6626,7 @@ var qrcode = function() {
   var tiles = { text: null, picture: null, sound: null }, curTab = 'text', last = null;
   var BASIS = {
     t: ['how many pairs of sentences or lines share a word', 'a refrain, a rare ending or mirror order', 'no refrain, rare ending or mirror order'],
-    p: ['the best match among the repeat unit, the star and the line directions', 'a repeat unit', 'no repeat unit'],
+    p: ['the best match among the repeat unit, the turn and the line directions', 'a repeat unit', 'no repeat unit'],
     s: ['how much of the sound repeats', 'a strong return', 'no strong return']
   };
   function current() { return tiles[curTab] || (last && tiles[last]) || null; }
@@ -6437,7 +6646,7 @@ var qrcode = function() {
   function word() { return ($('#myWord') && $('#myWord').value || '').trim(); }
   var SHAPE = {
     t: 'Your text’s knot, with its first words and the words that repeat.',
-    p: { unit: 'Cut from your picture: four of its repeating tile.', star: 'Cut from your picture: its star.', dir: 'Cut from your picture, along its lines.', band: 'Cut from your picture: one band.', blob: 'Cut from the middle of your picture.' },
+    p: { unit: 'Cut from your picture: four of its repeating tile.', star: 'Cut from your picture: its center, which turns onto itself.', dir: 'Cut from your picture, along its lines.', band: 'Cut from your picture: one band.', blob: 'Cut from the middle of your picture.' },
     s: 'Your sound’s voice line, bent into a ring.',
     cut: { t: 'A few of your lines lie around it.', p: 'Three bits of your picture lie around it.', s: 'Two bits of the sound picture lie around it.' }
   };
@@ -6654,7 +6863,7 @@ var qrcode = function() {
   var view = 'collage';
   try { if (localStorage.getItem('knot-rv') === 'girih') view = 'girih'; } catch (e) {}
   var CAP = {
-    collage: 'The room’s collage. Each piece is one person’s material, cut into a shape that comes from what Knot found: a picture’s tile or star, a text’s knot and words, a sound’s pitch ring. Small cuts of the same material lie around each piece. Dashed threads join pieces that share a word, a star or a return. Your own piece has a dotted ring.',
+    collage: 'The room’s collage. Each piece is one person’s material, cut into a shape that comes from what Knot found: a picture’s tile or turn, a text’s knot and words, a sound’s pitch ring. Small cuts of the same material lie around each piece. Dashed threads join pieces that share a word, a turn or a return. Your own piece has a dotted ring.',
     girih: 'The room’s girih. Each tile is one person’s result: blue for a text, teal for a picture, orange for a sound. Thicker lines mean more repeats. A filled center marks a strong repeat. Your own tile has a dark outline. Tiles meet at the middle of their edges, so the lines run on from tile to tile.'
   };
   var MEDN = { t: 'text', p: 'picture', s: 'sound' };

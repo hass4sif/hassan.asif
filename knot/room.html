@@ -127,7 +127,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
   <section class="stagebox" aria-label="The room's girih">
     <div class="pattern" id="pattern"></div>
     <p class="arrive" id="arrive" aria-live="polite"></p>
-    <p class="rcap" id="rcap">Collage: each piece is one person’s material, cut into a shape that comes from what Knot found. Small cuts of the same material lie around it, and new pieces land on top. Dashed threads join pieces that share a word, a star or a return. Tap a piece to read its card.</p>
+    <p class="rcap" id="rcap">Collage: each piece is one person’s material, cut into a shape that comes from what Knot found. Small cuts of the same material lie around it, and new pieces land on top. Dashed threads join pieces that share a word, a turn or a return. Tap a piece to read its card.</p>
     <div class="legend">
       <span><i class="lt" style="background:#e3e8fd;border-color:#4f6cf0"></i>text</span>
       <span><i class="lt" style="background:#d6eff3;border-color:#2a9fb2"></i>picture</span>
@@ -844,7 +844,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
   /* the pieces sent and shown in the phone's list of what leaves */
   function describe(t, k) {
     if (!k) return '';
-    if (t.m === 'p') return 'a small cut of your picture' + (k.sh === 'unit' ? ' (two by two of its repeating tile)' : k.sh === 'star' ? ' (the disc of its star)' : '') + ', about ' + (k.img ? Math.round(k.img.length * 0.75 / 100) / 10 + ' kB' : 'no image');
+    if (t.m === 'p') return 'a small cut of your picture' + (k.sh === 'unit' ? ' (two by two of its repeating tile)' : k.sh === 'star' ? ' (the disc around the point it turns around)' : '') + ', about ' + (k.img ? Math.round(k.img.length * 0.75 / 100) / 10 + ' kB' : 'no image');
     if (t.m === 't') return 'the opening of your text' + (k.tx ? ' (“' + (k.tx.length > 60 ? k.tx.slice(0, 60) + '…' : k.tx) + '”)' : '') + '; these words: ' + (k.wd || []).join(', ') + (k.ph ? '; the phrase “' + k.ph + '”' : '') + '; and the shape of your text’s knot';
     if (t.m === 's') return 'your sound’s pitch line and a small, silent copy of its sound picture';
     return '';
@@ -891,7 +891,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
         var lb = kb.wd.map(function (w) { return w.toLowerCase(); });
         for (var x = 0; x < ka.wd.length && !label; x++) if (lb.indexOf(ka.wd[x].toLowerCase()) >= 0) label = ka.wd[x];
       } else if (a.m === 'p' && b.m === 'p') {
-        if (ka.n && ka.n === kb.n) label = FOLDW[ka.n] + ' star';
+        if (ka.n && ka.n === kb.n) label = FOLDW[ka.n] + ' turn';
         else if (ka.five && kb.five) label = 'five directions';
       } else if (a.m === 's' && b.m === 's' && ka.rt && kb.rt) label = 'repeats';
       if (label) pairs.push({ i: i, j: j, label: label, d: Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) });
@@ -13657,7 +13657,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     return parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0] || 'no tiles';
   }
   var CAPS = {
-    collage: 'Collage: each piece is one person’s material, cut into a shape that comes from what Knot found. Small cuts of the same material lie around it, and new pieces land on top. Dashed threads join pieces that share a word, a star or a return. Tap a piece to read its card.',
+    collage: 'Collage: each piece is one person’s material, cut into a shape that comes from what Knot found. Small cuts of the same material lie around it, and new pieces land on top. Dashed threads join pieces that share a word, a turn or a return. Tap a piece to read its card.',
     both: 'Each tile is one person’s result. The layout gives the shapes; the results give the lines. Tiles meet at the middle of their edges, at 54°.',
     lines: 'Girih: the tiles hidden, as on a finished wall. The lines keep their colors, so you can still see who made what.',
     tiles: 'The tiles alone: the layout under the lines, which a finished wall hides.',
@@ -13759,7 +13759,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     });
     Object.keys(wd).filter(function (w) { return wd[w] > 1; }).sort(function (a, b) { return wd[b] - wd[a]; }).slice(0, 2)
       .forEach(function (w) { out.push('the word ‘' + w + '’ in ' + wd[w] + ' texts'); });
-    Object.keys(stars).filter(function (n) { return stars[n] > 1; }).forEach(function (n) { out.push('a ' + (FOLDN[n] || n + '-point') + ' star in ' + stars[n] + ' pictures'); });
+    Object.keys(stars).filter(function (n) { return stars[n] > 1; }).forEach(function (n) { out.push('a ' + (FOLDN[n] || n + '-fold') + ' turn in ' + stars[n] + ' pictures'); });
     if (five > 1) out.push('lines in five directions in ' + five + ' pictures');
     if (rets > 1) out.push('a part that comes back in ' + rets + ' sounds');
     return out;
@@ -13774,7 +13774,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     li.push(filled + ' with a filled center: a strong repeat, such as a refrain, a tile used again or a part that comes back.');
     li.push(thin + ' with thin lines: little repeats.');
     if (kinds.length > 1) li.push('Most repetition: the ' + MEDN[kinds[0]] + 's.');
-    li.push(sh.length ? 'Shared: ' + sh.join('; ') + '.' : 'Shared: no word, star or return yet.');
+    li.push(sh.length ? 'Shared: ' + sh.join('; ') + '.' : 'Shared: no word, turn or return yet.');
     var h = '<dl class="urc">' +
       '<div><dt>Undo</dt><dd>' + esc(p.length + (p.length === 1 ? ' piece: ' : ' pieces: ') + mixText(mix) + '. Knot took each person’s material apart, and each piece is cut from what it found.') + '</dd></div>' +
       '<div><dt>Redo</dt><dd>' + esc('The room puts the pieces back together. In the collage, a dashed thread joins pieces that share something. In the girih, each piece takes a tile, and the tiles meet edge to edge, as on the wall: press Girih to see it.') + '</dd></div>' +
