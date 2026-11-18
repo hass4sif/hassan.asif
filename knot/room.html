@@ -891,7 +891,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
         var lb = kb.wd.map(function (w) { return w.toLowerCase(); });
         for (var x = 0; x < ka.wd.length && !label; x++) if (lb.indexOf(ka.wd[x].toLowerCase()) >= 0) label = ka.wd[x];
       } else if (a.m === 'p' && b.m === 'p') {
-        if (ka.n && ka.n === kb.n) label = FOLDW[ka.n] + ' turn';
+        if (ka.n && ka.n === kb.n) label = 'matching parts';
         else if (ka.five && kb.five) label = 'five directions';
       } else if (a.m === 's' && b.m === 's' && ka.rt && kb.rt) label = 'repeats';
       if (label) pairs.push({ i: i, j: j, label: label, d: Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) });
@@ -13759,7 +13759,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     });
     Object.keys(wd).filter(function (w) { return wd[w] > 1; }).sort(function (a, b) { return wd[b] - wd[a]; }).slice(0, 2)
       .forEach(function (w) { out.push('the word ‘' + w + '’ in ' + wd[w] + ' texts'); });
-    Object.keys(stars).filter(function (n) { return stars[n] > 1; }).forEach(function (n) { out.push('a ' + (FOLDN[n] || n + '-fold') + ' turn in ' + stars[n] + ' pictures'); });
+    Object.keys(stars).filter(function (n) { return stars[n] > 1; }).forEach(function (n) { out.push((FOLDN[n] || n + '-fold') + ' matching parts in ' + stars[n] + ' pictures'); });
     if (five > 1) out.push('lines in five directions in ' + five + ' pictures');
     if (rets > 1) out.push('a part that comes back in ' + rets + ' sounds');
     return out;
