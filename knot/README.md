@@ -15,7 +15,7 @@ It runs in the browser, on a phone or a computer. Your files stay on your device
 
 ## What Knot shows
 
-Since version 6.5 each card says what Knot found, what it means, how Knot checks (folded), and where to read more. The page shows the clearest results (for a text: the words that repeat, the lines that tie the rest together, a refrain or rhyme, a phrase used again, an ending that returns to the start; for a picture: the repeating tile, the star, lines in five directions, the colours; for a sound: the pauses, the home note, the parts that repeat). The other readings below are still computed, and they shape the pieces and threads in the room.
+Since version 6.6 each card says what Knot found and reads it in three steps: Undo, what repeats and where to see it; Redo, how Knot found it, with a step to remake it; Check, what it shows and what Knot can't see. Each tab ends with What we learned, and the room page reads its finished pattern the same way, with three questions to talk about. New round and New room code appear on the host's room page alone: open room.html#code=XXXXXX&host on the projector. The page shows the clearest results (for a text: the words that repeat, the lines that tie the rest together, a refrain or rhyme, a phrase used again, an ending that returns to the start; for a picture: the repeating tile, the star, lines in five directions, the colors; for a sound: the pauses, the home note, the parts that repeat). The other readings below are still computed, and they shape the pieces and threads in the room.
 
 ### Text
 
@@ -23,7 +23,7 @@ Each sentence, or each line of a poem, a song or a list, becomes a dot on a circ
 
 - **Shared words:** the share of pairs that share a word, against the same words scattered at random over units of the same lengths.
 - **Distance:** how far apart two uses of a word sit, against shuffled orders.
-- **Centre:** the units with the most shared words, with long units discounted (Hoey 1991; Mihalcea and Tarau 2004).
+- **Center:** the units with the most shared words, with long units discounted (Hoey 1991; Mihalcea and Tarau 2004).
 - **Loose ends:** the units that share no word with the rest.
 - **Ending:** whether the last unit picks up the first unit's words, against the other pairs (Douglas 2007).
 - **Mirror order:** whether words return in reverse order more often than in shuffled copies. Two words fall in mirror order by chance one time in three (Edwards and Edwards).
@@ -39,7 +39,7 @@ Each sentence, or each line of a poem, a song or a list, becomes a dot on a circ
 - **Strongest stripes:** how many stripes fit across the square and which way they run: the size of the repeated piece.
 - **Does it repeat? (repeat unit):** two slides that land the picture on itself, drawn as arrows, with a see-through copy that slides along them (Liu, Collins and Tsin 2004).
 - **Is there a star? (star test):** how well the picture matches itself turned around one point, from a half turn to a sixteenth, and whether mirrors pass through that point (after Lee, Collins and Liu 2008).
-- **Colours:** the main colours by area, by median cut (Heckbert 1982).
+- **Colors:** the main colors by area, by median cut (Heckbert 1982).
 
 ### Sound
 
@@ -56,13 +56,13 @@ Each result makes a piece and a girih tile.
 
 The piece is cut from your material, in a shape that comes from what Knot found. A picture gives two by two of its repeating tile, or the disc of its star with as many points, or a cut whose sides follow its line directions; its pixels stay square, like the small stones of a mosaic. A text gives its own knot: one corner for each sentence or line, set out by its length, printed with the opening of the text, with the ties as chords and the most shared words around the edge. A sound gives its pitch line wrapped into a ring, which swells when the voice goes up and dips at each pause, filled with a small sound picture in orange, dark where the sound is loud; a violet line joins a part and its return. Small cuts lie around each piece: shards of the picture or the sound picture in the five girih shapes (Lu and Steinhardt 2007), a few lines cut from the text, and the pitch line bent like a wire. The same tile gives the same cuts on each screen.
 
-The girih tile shows the same result in the session's girih. Its colour names the kind of material, its line weight says how much repeats, and a filled centre marks a strong repeat. The phone repeats the tile into a small girih of 21 tiles, which you can save.
+The girih tile shows the same result in the session's girih. Its color names the kind of material, its line weight says how much repeats, and a filled center marks a strong repeat. The phone repeats the tile into a small girih of 21 tiles, which you can save.
 
-In a session, the room page shows a QR code and a six-letter room code. A phone that joins can send its tile. Knot shows, before sending, exactly what leaves the phone: the medium, three small numbers, a few words about the result, a name, an optional word and, if you tick the box, the piece. For a picture, the piece carries a thumbnail of at most 64 by 64 pixels, cut as above. For a sound, it carries a grey sound picture of at most 96 by 48 pixels, which makes no sound, and the pitch line as 48 numbers. For a text, it carries the opening of the text, up to 160 characters, its six most shared words and its repeated phrase. Untick the box to send the numbers and words alone; the room then shows a plain shape. Your file itself stays on the phone. The tile travels through ntfy.sh, a public message service that needs no account, locked with AES-GCM, with the room code as the secret; it stays under the 4,096 bytes that ntfy.sh keeps as one message, and ntfy.sh deletes messages after 12 hours. People with the room code can read the tiles. If the network fails, the phone shows its tile as a QR code and a short typed code, which the room reads through a camera or a keyboard; these carry the numbers and words, without the piece. Each phone has a Room tab that shows the same collage and girih as the room page: both read the room's log on ntfy.sh in the same order, so tiles sent before a screen opened still show for twelve hours. New round on the room page sends a marker that clears the pattern on each screen. Tiles added by camera or typed code go out on the network too.
+In a session, the room page shows a QR code and a six-letter room code. A phone that joins can send its tile. Knot shows, before sending, exactly what leaves the phone: the medium, three small numbers, a few words about the result, a name, an optional word and, if you tick the box, the piece. For a picture, the piece carries a thumbnail of at most 64 by 64 pixels, cut as above. For a sound, it carries a gray sound picture of at most 96 by 48 pixels, which makes no sound, and the pitch line as 48 numbers. For a text, it carries the opening of the text, up to 160 characters, its six most shared words and its repeated phrase. Untick the box to send the numbers and words alone; the room then shows a plain shape. Your file itself stays on the phone. The tile travels through ntfy.sh, a public message service that needs no account, locked with AES-GCM, with the room code as the secret; it stays under the 4,096 bytes that ntfy.sh keeps as one message, and ntfy.sh deletes messages after 12 hours. People with the room code can read the tiles. If the network fails, the phone shows its tile as a QR code and a short typed code, which the room reads through a camera or a keyboard; these carry the numbers and words, without the piece. Each phone has a Room tab that shows the same collage and girih as the room page: both read the room's log on ntfy.sh in the same order, so tiles sent before a screen opened still show for twelve hours. New round on the room page sends a marker that clears the pattern on each screen. Tiles added by camera or typed code go out on the network too.
 
 The room opens on the collage. Pieces take their places along a sunflower spiral, the arrangement of seeds in a sunflower head (Vogel 1979), in the order they came, packed close so that they overlap a little; each new piece lands on top, with its cuts. Dashed threads run over the pieces like stitches and join pieces that share something: two texts with a shared word, two pictures with the same star or both with lines in five directions, two sounds that both repeat.
 
-The room also places tiles ring by ring from a central decagon, one each 600 milliseconds. Tiles meet at the middle of their edges at 54 degrees, Hankin's "polygons in contact" method (Kaplan 2005; Kaplan and Salesin 2004), so the lines run on from tile to tile. Besides the collage, the room offers five views: tiles and lines; girih, with the tiles hidden; tiles alone; collation, where each tile takes its own angle from its numbers and the lines bend where neighbours differ; and strands, which follow each line through the room. The layout is a modern reconstruction. The room saves itself after each tile and exports SVG, PNG and JSON.
+The room also places tiles ring by ring from a central decagon, one each 600 milliseconds. Tiles meet at the middle of their edges at 54 degrees, Hankin's "polygons in contact" method (Kaplan 2005; Kaplan and Salesin 2004), so the lines run on from tile to tile. Besides the collage, the room offers five views: tiles and lines; girih, with the tiles hidden; tiles alone; collation, where each tile takes its own angle from its numbers and the lines bend where neighbors differ; and strands, which follow each line through the room. The layout is a modern reconstruction. The room saves itself after each tile and exports SVG, PNG and JSON.
 
 ## Own window
 
@@ -74,7 +74,7 @@ Knot reads your files inside your browser, and they stay on your device. It keep
 
 ## Cite
 
-Asif, Hassan. 2026. *Knot*. Software, version 6.5. https://www.hassanasif.net/knot/
+Asif, Hassan. 2026. *Knot*. Software, version 6.6. https://www.hassanasif.net/knot/
 
 ## Sources
 
@@ -108,6 +108,6 @@ Asif, Hassan. 2026. *Knot*. Software, version 6.5. https://www.hassanasif.net/kn
 - Wattenberg, M. 2002. "Arc Diagrams: Visualizing Structure in Strings." IEEE InfoVis.
 - Wichmann, B. 2008. "Islamic Tilings by Symmetry Group."
 
-## Licence
+## License
 
-Code: MIT licence (see `LICENSE`). Parts by others, with their licences: see `THIRD_PARTY.md`. The Samarkand tiles in the picture example: the Tuman Aqa tomb, Shah-i Zinda, Samarkand; photo by Patrickringgenberg, CC BY 3.0, via Wikimedia Commons, cropped.
+Code: MIT license (see `LICENSE`). Parts by others, with their licenses: see `THIRD_PARTY.md`. The Samarkand tiles in the picture example: the Tuman Aqa tomb, Shah-i Zinda, Samarkand; photo by Patrickringgenberg, CC BY 3.0, via Wikimedia Commons, cropped.

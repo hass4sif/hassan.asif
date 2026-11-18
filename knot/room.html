@@ -96,6 +96,14 @@ body.present .rmain{grid-template-columns:minmax(0,1fr) 300px}
 body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-c{display:none}
 .legend .thr{display:inline-block;width:26px;height:0;border-top:2px dashed #2b2424;opacity:.6;vertical-align:middle;margin-right:7px}
 .tcard dd.tcp svg{width:120px;height:120px;display:block}
+
+/* Knot 6.6: the room's reading */
+#together .urc{margin:8px 0 0;display:grid;gap:8px}
+#together .urc>div{display:grid;grid-template-columns:4.2em minmax(0,1fr);gap:2px 8px;align-items:baseline}
+#together .urc dt{font-family:var(--f-wide);font-stretch:125%;font-weight:800;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+#together .urc dd{margin:0;font-size:14.5px;line-height:1.45;color:var(--ink-2);min-width:0}
+#together .cl{margin:0;padding-left:16px}#together .cl li{margin:0 0 3px}
+#together .tg b{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -125,7 +133,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
       <span><i class="lt" style="background:#d6eff3;border-color:#2a9fb2"></i>picture</span>
       <span><i class="lt" style="background:#fbe7d7;border-color:#e0843f"></i>sound</span>
       <span><b class="lw w1"></b><b class="lw w2"></b><b class="lw w3"></b>line weight: how much repeats</span>
-      <span class="lg-g"><i class="lt fig"></i>filled centre: a strong repeat</span>
+      <span class="lg-g"><i class="lt fig"></i>filled center: a strong repeat</span>
       <span class="lg-c"><b class="thr"></b>thread: something shared</span>
     </div>
   </section>
@@ -141,12 +149,17 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
     </div>
 
     <details class="panel" open>
+      <summary>What the room shows</summary>
+      <div id="together"></div>
+    </details>
+
+    <details class="panel" open>
       <summary>How to use the room</summary>
       <ol class="steps">
         <li>Scan the QR code, or open the address and type the room code.</li>
-        <li>Read a text, a picture or a sound in Knot. Each result makes a piece from the material.</li>
-        <li>Press Send. The piece joins the collage, and its tile takes the next free place in the girih.</li>
-        <li>Compare the pieces together. This is the Check: where do they agree, and where do they differ?</li>
+        <li>Undo: read a text, a picture or a sound in Knot. Knot takes it apart and finds what repeats.</li>
+        <li>Redo: press Send. The piece joins the collage, and its tile takes the next free place in the girih.</li>
+        <li>Check: compare the pieces. Where do they agree, and where do they differ? What did Knot miss?</li>
       </ol>
     </details>
 
@@ -169,10 +182,6 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
       <p class="small" id="intakeStat" role="status"></p>
     </details>
 
-    <details class="panel" open>
-      <summary>Read it together</summary>
-      <div id="together"></div>
-    </details>
 
     <details class="panel">
       <summary>The margin: each tile, in order</summary>
@@ -184,7 +193,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
       <summary>Rounds in the last 12 hours</summary>
       <div class="row"><button class="rpill act" type="button" id="refreshBtn">Refresh</button></div>
       <div id="rounds"></div>
-      <p class="small">Refresh reads the room again from the network. Show brings back an earlier round, for as long as ntfy.sh keeps it.</p>
+      <p class="small">Refresh reads the room again from ntfy.sh. Wait for Live before you press it. Show brings back an earlier round, for as long as ntfy.sh keeps it.</p>
     </details>
 
     <details class="panel">
@@ -194,11 +203,13 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
         <button class="rpill act" type="button" data-export="png">PNG</button>
         <button class="rpill act" type="button" data-export="json">JSON</button>
       </div>
-      <div class="row">
+      <div class="row" id="hostOnly" hidden>
         <button class="rpill warn" type="button" id="newRound">New round</button>
         <button class="rpill act" type="button" id="newRoom">New room code</button>
       </div>
-      <p class="small">New round empties the pattern and keeps the code. New room code starts a fresh room, and phones need the new code. The room saves itself in this browser after each tile, so a reload keeps the tiles. Tiles reach the room through ntfy.sh, which deletes them after 12 hours.</p>
+      <p class="small" id="hostNote" hidden>New round empties the pattern on each screen and keeps the code. New room code starts a fresh room, and phones need the new code.</p>
+      <p class="small" id="viewNote">New round and New room code are on the host’s screen.</p>
+      <p class="small">The room saves itself in this browser after each tile, so a reload keeps the tiles. Tiles reach the room through ntfy.sh, which deletes them after 12 hours.</p>
     </details>
   </aside>
 </main>
@@ -606,7 +617,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
     return null;
   }
 
-  /* ---------------------------------------------------------------- drawing a piece, centred on 0,0, about 1 across */
+  /* ---------------------------------------------------------------- drawing a piece, centered on 0,0, about 1 across */
   var uid = 0;
   function starPts(n, mi, ro) {
     var pts = [], a0 = -Math.PI / 2 + (ro || 0) * Math.PI / 180, inner = n <= 4 ? 0.48 : n <= 6 ? 0.56 : 0.66, tw = mi ? 0 : 0.42;
@@ -687,7 +698,7 @@ body[data-rv="collage"] .legend .lg-g,body:not([data-rv="collage"]) .legend .lg-
     return { d: smooth(blobPts(seed, 7, 0.3)) };
   }
   /* the shared defs of one drawing: a shadow for pieces, a lighter one for shards, and the duotone that turns the
-     grey sound picture into the sound's own orange, dark where the sound is loud */
+     gray sound picture into the sound's own orange, dark where the sound is loud */
   function defs(pre) {
     var d = el('defs', {});
     var a = el('filter', { id: pre + 'sh', x: '-30%', y: '-30%', width: '160%', height: '160%' });
@@ -13518,7 +13529,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 </script>
 <script>
 /* Knot room: the projector page. Phones send tiles; the room places them ring by ring from the central decagon,
-   one every 600 ms, so a burst reads as a procession. Each tile meets its neighbours at the middle of its edges, so the
+   one every 600 ms, so a burst reads as a procession. Each tile meets its neighbors at the middle of its edges, so the
    lines run on through the room. */
 (function () {
   'use strict';
@@ -13537,13 +13548,27 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   function load(c) { try { var s = JSON.parse(localStorage.getItem(key(c)) || 'null'); if (s && s.code === c && now() - (s.saved || 0) < 7 * 86400) return s; } catch (e) {} return null; }
   /* round 0: a fresh room page replays the tiles ntfy.sh still keeps, so tiles sent before the page opened still show */
   function fresh(c) { return { code: c, round: 0, lastId: '', tiles: [], nextNo: 1, saved: now() }; }
+  /* Knot 6.6: the host. The room page opened with &host after the code (room.html#code=CAFE26&host) shows New round
+     and New room code, and this browser remembers that for the code. Other room pages, such as one opened from a
+     phone, show the pattern without them. */
+  var host = false;
+  function hostKey(c) { return 'knot-host-' + c; }
+  function markHost(c) { host = true; try { localStorage.setItem(hostKey(c), '1'); } catch (e) {} }
   (function start() {
-    var m = /(?:^|[#&])code=([A-Za-z0-9]{6})/.exec(location.hash || ''), c = m ? R.normCode(m[1]) : '';
+    var hs = location.hash || '', m = /(?:^|[#&])code=([A-Za-z0-9]{6})/.exec(hs), c = m ? R.normCode(m[1]) : '';
     if (!c) { try { c = R.normCode(localStorage.getItem('knot-room-last') || ''); } catch (e) {} }
     if (!c) c = R.newCode();
     st = load(c) || fresh(c);
-    history.replaceState(null, '', location.pathname + location.search + '#code=' + c);
+    if (/(?:^|[#&])host(?:=1)?(?:&|$)/.test(hs)) markHost(c);
+    else { try { host = localStorage.getItem(hostKey(c)) === '1'; } catch (e) {} }
+    history.replaceState(null, '', location.pathname + location.search + '#code=' + c + (host ? '&host' : ''));
   })();
+  function paintHost() {
+    var a = $('#hostOnly'), b = $('#hostNote'), v = $('#viewNote');
+    if (a) a.hidden = !host;
+    if (b) b.hidden = !host;
+    if (v) v.hidden = host;
+  }
 
   /* ---------------------------------------------------------------- joining */
   function joinLink() { return location.origin + location.pathname.replace(/room(\.html)?$/, '') + '?app#room=' + st.code; }
@@ -13634,10 +13659,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   var CAPS = {
     collage: 'Collage: each piece is one person’s material, cut into a shape that comes from what Knot found. Small cuts of the same material lie around it, and new pieces land on top. Dashed threads join pieces that share a word, a star or a return. Tap a piece to read its card.',
     both: 'Each tile is one person’s result. The layout gives the shapes; the results give the lines. Tiles meet at the middle of their edges, at 54°.',
-    lines: 'Girih: the tiles hidden, as on a finished wall. The lines keep their colours, so you can still see who made what.',
+    lines: 'Girih: the tiles hidden, as on a finished wall. The lines keep their colors, so you can still see who made what.',
     tiles: 'The tiles alone: the layout under the lines, which a finished wall hides.',
-    collate: 'Collation: each tile takes its own angle, from 36° when little repeats to 72° when much does. The lines still meet at each midpoint, and bend where neighbours differ.',
-    strands: 'Strands: each colour is one line, followed through the room. At each midpoint it runs straight on into the next tile.'
+    collate: 'Collation: each tile takes its own angle, from 36° when little repeats to 72° when much does. The lines still meet at each midpoint, and bend where neighbors differ.',
+    strands: 'Strands: each color is one line, followed through the room. At each midpoint it runs straight on into the next tile.'
   };
   document.body.setAttribute('data-rv', view);
   document.querySelectorAll('[data-view]').forEach(function (b) {
@@ -13718,19 +13743,44 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     var ol = $('#margin');
     ol.innerHTML = st.tiles.slice().sort(function (a, b) { return a.no - b.no; }).map(function (t) {
       return '<li class="m-' + t.m + (t.hidden ? ' hid' : '') + '"><b>No. ' + t.no + '</b> ' + esc(t.n) + (t.x ? ' <i>“' + esc(t.x) + '”</i>' : '') +
-        '<span>' + esc(MEDN[t.m]) + ', weight ' + t.w + ', centre ' + (t.b ? 'filled' : 'open') + '. ' + esc((t.d || []).join('; ')) + (t.slot < 0 ? ' Waiting: no free place.' : '') + '</span></li>';
+        '<span>' + esc(MEDN[t.m]) + ', weight ' + t.w + ', center ' + (t.b ? 'filled' : 'open') + '. ' + esc((t.d || []).join('; ')) + (t.slot < 0 ? ' Waiting: no free place.' : '') + '</span></li>';
     }).join('');
   }
-  function paintTogether() {
-    var p = placed(), mix = { t: 0, p: 0, s: 0 }, filled = 0, five = 0, fivePics = 0, heavy = 0;
+  /* Knot 6.6: the room's reading, in the session's three steps. Undo: what each piece is. Redo: how the room put
+     them together. Check: what repeats, what is shared, what it means, and three questions to talk about. */
+  var FOLDN = { 3: 'threefold', 4: 'fourfold', 5: 'fivefold', 6: 'sixfold', 8: 'eightfold', 10: 'tenfold', 12: 'twelvefold' };
+  function sharedParts(p) {
+    var wd = {}, stars = {}, five = 0, rets = 0, out = [];
     p.forEach(function (t) {
-      mix[t.m]++; if (t.b) filled++; if (t.w === 3) heavy++;
-      var f = (t.d || []).join(' ');
-      if (/five directions|tenfold|fivefold/.test(f)) { five++; if (t.m === 'p') fivePics++; }
+      var k = t.k || {};
+      if (t.m === 't' && k.wd) { var seen = {}; k.wd.forEach(function (w) { var x = String(w).toLowerCase(); if (!seen[x]) { seen[x] = 1; wd[x] = (wd[x] || 0) + 1; } }); }
+      if (t.m === 'p') { if (k.n) stars[k.n] = (stars[k.n] || 0) + 1; if (k.five) five++; }
+      if (t.m === 's' && k.rt) rets++;
     });
-    var h = '<p class="tg">' + (p.length ? esc((p.length === 1 ? '1 tile: ' : p.length + ' tiles: ') + mixText(mix) + '. ' + filled + ' with a filled centre; ' + heavy + ' at the heaviest weight.') : 'No tiles yet. The dotted outlines show the empty places.') + '</p>';
-    if (five) h += '<p class="tg">' + esc(five === 1 ? 'One tile shows fivefold or tenfold order' + (fivePics ? ': a picture.' : '.') : five + ' tiles show fivefold or tenfold order' + (fivePics === five ? ', each of them a picture.' : ', ' + fivePics + ' of them pictures.')) + '</p>';
-    h += '<ul class="qs"><li>Which pieces look alike? Compare the steps their makers wrote down.</li><li>Which threads tie pieces together, and what do they share?</li><li>Do the tenfold stars come from pictures, or from texts and sounds too?</li><li>Which pieces show no repeat, and what made them?</li><li>What is missing from the room?</li></ul>';
+    Object.keys(wd).filter(function (w) { return wd[w] > 1; }).sort(function (a, b) { return wd[b] - wd[a]; }).slice(0, 2)
+      .forEach(function (w) { out.push('the word ‘' + w + '’ in ' + wd[w] + ' texts'); });
+    Object.keys(stars).filter(function (n) { return stars[n] > 1; }).forEach(function (n) { out.push('a ' + (FOLDN[n] || n + '-point') + ' star in ' + stars[n] + ' pictures'); });
+    if (five > 1) out.push('lines in five directions in ' + five + ' pictures');
+    if (rets > 1) out.push('a part that comes back in ' + rets + ' sounds');
+    return out;
+  }
+  function paintTogether() {
+    var p = placed(), mix = { t: 0, p: 0, s: 0 }, ws = { t: 0, p: 0, s: 0 }, filled = 0, heavy = 0, thin = 0;
+    p.forEach(function (t) { mix[t.m]++; ws[t.m] += t.w; if (t.b) filled++; if (t.w === 3) heavy++; if (t.w === 1) thin++; });
+    if (!p.length) { $('#together').innerHTML = '<p class="tg">No pieces yet. When phones send, this panel reads the pattern: what repeats, what it means, and what to talk about.</p>'; return; }
+    var kinds = ['t', 'p', 's'].filter(function (m) { return mix[m]; }).sort(function (a, b) { return ws[b] / mix[b] - ws[a] / mix[a]; });
+    var sh = sharedParts(p), li = [];
+    li.push(heavy + ' with thick lines: much repeats.');
+    li.push(filled + ' with a filled center: a strong repeat, such as a refrain, a tile used again or a part that comes back.');
+    li.push(thin + ' with thin lines: little repeats.');
+    if (kinds.length > 1) li.push('Most repetition: the ' + MEDN[kinds[0]] + 's.');
+    li.push(sh.length ? 'Shared: ' + sh.join('; ') + '.' : 'Shared: no word, star or return yet.');
+    var h = '<dl class="urc">' +
+      '<div><dt>Undo</dt><dd>' + esc(p.length + (p.length === 1 ? ' piece: ' : ' pieces: ') + mixText(mix) + '. Knot took each person’s material apart, and each piece is cut from what it found.') + '</dd></div>' +
+      '<div><dt>Redo</dt><dd>' + esc('The room puts the pieces back together. In the collage, a dashed thread joins pieces that share something. In the girih, each piece takes a tile, and the tiles meet edge to edge, as on the wall: press Girih to see it.') + '</dd></div>' +
+      '<div><dt>Check</dt><dd><ul class="cl">' + li.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></dd></div></dl>';
+    h += '<p class="tg"><b>What it means.</b> ' + esc('Thick lines and filled centers mark material built from parts used again, like the tiles of the wall. Thin lines mark material that keeps changing, such as speech or a street photo. A dashed thread shows where two people’s materials share a part.') + '</p>';
+    h += '<p class="tg"><b>Talk about it.</b></p><ol class="qs"><li>Find the thickest lines. What made that material repeat?</li><li>Follow a thread. Would the two makers agree on what they share?</li><li>Find a thin line. What does its maker know that Knot missed?</li></ol>';
     $('#together').innerHTML = h;
   }
   $('#pauseBtn').addEventListener('click', function () {
@@ -13743,7 +13793,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   });
 
   /* ---------------------------------------------------------------- the network: ntfy.sh, a WebSocket, polling as a fallback */
-  var follower = null;
+  var follower = null, lastLink = '';
   var LINK = { live: ['Live', true], again: ['Trying again…', false], slow: ['Slow link', false], 'slow-ok': ['Slow link', true], down: ['No connection: the camera and typed codes still add tiles', false] };
   function setLink(t, ok) { var el = $('#link'); el.textContent = t; el.classList.toggle('ok', !!ok); }
   /* each message, in the order ntfy.sh keeps them: a new-round marker clears the tiles before it. While an earlier
@@ -13767,7 +13817,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     follower = R.follow(st.code, {
       since: function () { return st.lastId || (st.round ? String(st.round) : '12h'); },
       item: onItem,
-      status: function (k) { var L = LINK[k] || ['', false]; setLink(L[0], L[1]); }
+      status: function (k) { lastLink = k; var L = LINK[k] || ['', false]; setLink(L[0], L[1]); }
     });
   }
   /* a tile added by camera or typed code also goes out on the network, so the Room tab on each phone shows it too */
@@ -13826,7 +13876,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   $('#typedForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var t = R.fromTyped($('#typedIn').value);
-    if (!t) { say('A typed code looks like P21-417. The letter is T for text, P for picture or S for sound. Then come the line weight, 1 to 3, and the centre, 0 for open or 1 for filled. The last part is the number in the name.'); return; }
+    if (!t) { say('A typed code looks like P21-417. The letter is T for text, P for picture or S for sound. Then come the line weight, 1 to 3, and the center, 0 for open or 1 for filled. The last part is the number in the name.'); return; }
     addTile(t, 'typed'); share(t); $('#typedIn').value = ''; say('Added ' + t.n + '.');
   });
 
@@ -13836,7 +13886,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     var t = tileAt(slot); if (!t) return;
     shown = t;
     $('#tcH').textContent = 'No. ' + t.no + ': ' + t.n;
-    $('#tcD').innerHTML = '<dt>Kind</dt><dd>' + esc(MEDN[t.m]) + '</dd><dt>Line weight</dt><dd>' + t.w + ' of 3</dd><dt>Centre</dt><dd>' + (t.b ? 'filled' : 'open') + '</dd>' +
+    $('#tcD').innerHTML = '<dt>Kind</dt><dd>' + esc(MEDN[t.m]) + '</dd><dt>Line weight</dt><dd>' + t.w + ' of 3</dd><dt>Center</dt><dd>' + (t.b ? 'filled' : 'open') + '</dd>' +
       (t.x ? '<dt>Word</dt><dd>' + esc(t.x) + '</dd>' : '') + '<dt>Its numbers</dt><dd>' + esc((t.d || []).join('; ')) + '</dd>' +
       '<dt>Angle</dt><dd>' + Math.round(36 + 36 * t.s) + '°</dd><dt>Arrived by</dt><dd>' + esc({ network: 'the network', camera: 'the camera', typed: 'a typed code' }[t.via] || t.via) + '</dd>';
     if (P && t.k) {
@@ -13873,7 +13923,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   }
   function records() {
     return st.tiles.slice().sort(function (a, b) { return a.no - b.no; }).map(function (t) {
-      return { no: t.no, slot: t.slot, shape: t.slot >= 0 ? { d: 'decagon', p: 'pentagon', h: 'hexagon' }[G.SLOTS[t.slot].k] : null, medium: MEDN[t.m], weight: t.w, centre: t.b ? 'filled' : 'open', score: t.s, name: t.n, word: t.x, facts: t.d, piece: t.k || null, arrived_by: t.via, hidden: !!t.hidden };
+      return { no: t.no, slot: t.slot, shape: t.slot >= 0 ? { d: 'decagon', p: 'pentagon', h: 'hexagon' }[G.SLOTS[t.slot].k] : null, medium: MEDN[t.m], weight: t.w, center: t.b ? 'filled' : 'open', score: t.s, name: t.n, word: t.x, facts: t.d, piece: t.k || null, arrived_by: t.via, hidden: !!t.hidden };
     });
   }
   document.querySelectorAll('[data-export]').forEach(function (b) {
@@ -13899,7 +13949,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
         var y = 180;
         records().filter(function (r) { return !r.hidden; }).forEach(function (r) {
           if (y > H - 80) return;
-          var line = 'No. ' + r.no + '  ' + r.name + (r.word ? ', “' + r.word + '”' : '') + ': ' + r.medium + ', weight ' + r.weight + ', centre ' + r.centre;
+          var line = 'No. ' + r.no + '  ' + r.name + (r.word ? ', “' + r.word + '”' : '') + ': ' + r.medium + ', weight ' + r.weight + ', center ' + r.center;
           c.fillText(line.slice(0, 64), 2010, y); y += 38;
         });
         c.fillStyle = '#5a5050'; c.font = '400 24px Archivo, system-ui, sans-serif';
@@ -13948,7 +13998,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       });
     }).catch(function () { box.innerHTML = '<p class="tg">The rounds could not be read. Check the connection and press Refresh.</p>'; });
   }
-  $('#refreshBtn').addEventListener('click', function () { say('Reading the room again.'); reread(); roundsList(); });
+  $('#refreshBtn').addEventListener('click', function () {
+    if (lastLink === 'down' || navigator.onLine === false) { say('No connection. Refresh would empty this screen until the link returns. Wait for Live, then press Refresh.'); return; }
+    say('Reading the room again.'); reread(); roundsList();
+  });
 
   /* ---------------------------------------------------------------- rounds, rooms and the projector */
   function clearRound(t) {
@@ -13961,6 +14014,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     setTimeout(function () { if (btn.dataset.armed) { delete btn.dataset.armed; btn.textContent = label; } }, 4000);
   }
   $('#newRound').addEventListener('click', function () {
+    if (!host) return;
     armed(this, 'New round', function () {
       clearRound(now());
       say('A new round: the pattern is empty and the code stays the same.');
@@ -13972,9 +14026,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     });
   });
   $('#newRoom').addEventListener('click', function () {
+    if (!host) return;
     armed(this, 'New room code', function () {
       var c = R.newCode(); st = fresh(c); queue = []; waiting = [];
-      history.replaceState(null, '', location.pathname + location.search + '#code=' + c);
+      markHost(c);
+      history.replaceState(null, '', location.pathname + location.search + '#code=' + c + '&host');
       save(); paintJoin(); build(); say('A new room: ' + c + '. Phones need the new code.');
       connect();
     });
@@ -13990,7 +14046,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     document.addEventListener(ev, function () { var on = !!(document.fullscreenElement || document.webkitFullscreenElement); document.body.classList.toggle('present', on); $('#presentBtn').textContent = on ? 'Leave' : 'Present'; });
   });
 
-  paintJoin(); build(); connect(); roundsList();
+  paintJoin(); paintHost(); build(); connect(); roundsList();
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) navigator.serviceWorker.register('sw.js').catch(function () {});
   window.__room = { addTile: addTile, state: function () { return st; }, view: function () { return view; } };
 })();
