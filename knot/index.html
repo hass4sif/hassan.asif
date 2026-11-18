@@ -456,7 +456,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
     <div class="row"><button class="pill sm" type="button" data-save="picture">Save image</button><button class="pill sm plain" type="button" data-copy="picture">Copy text</button></div>
     <details class="how">
       <summary>Sources</summary>
-      <p class="small">Liu, Y., R. T. Collins and Y. Tsin. 2004. IEEE Transactions on Pattern Analysis and Machine Intelligence 26 (3): 354 to 371. Lee, S., R. T. Collins and Y. Liu. 2008. Rotation symmetry group detection via frequency analysis of frieze expansions. CVPR. Lu, P. J., and P. J. Steinhardt. 2007. Science 315: 1106 to 1110. Heckbert, P. 1982. Color image quantization for frame buffer display. SIGGRAPH. Samarkand tiles: the Tuman Aqa tomb, Shah-i Zinda, about 1405; photo by Patrickringgenberg, CC BY 3.0, via Wikimedia Commons, cropped.</p>
+      <p class="small">Liu, Y., R. T. Collins and Y. Tsin. 2004. IEEE Transactions on Pattern Analysis and Machine Intelligence 26 (3): 354 to 371. Padfield, D. 2012. Masked object registration in the Fourier domain. IEEE Transactions on Image Processing 21 (5): 2706 to 2718. Lee, S., R. T. Collins and Y. Liu. 2008. Rotation symmetry group detection via frequency analysis of frieze expansions. CVPR. Lu, P. J., and P. J. Steinhardt. 2007. Science 315: 1106 to 1110. Heckbert, P. 1982. Color image quantization for frame buffer display. SIGGRAPH. Samarkand tiles: the Tuman Aqa tomb, Shah-i Zinda, about 1405; photo by Patrickringgenberg, CC BY 3.0, via Wikimedia Commons, cropped.</p>
     </details>
   </div>
 </section>
@@ -582,7 +582,7 @@ details.how p{margin:12px 0 0;max-width:66ch;font-size:15.5px;line-height:1.58}
   <div class="wrap">
     <div class="foot">
       <p>Your files stay on your device. Send shares a few numbers, and a small piece if you tick the box.</p>
-      <p>Knot 6.6, 2026. An experiment. Open source, MIT license.<span class="site-only"> Made by <a href="/">Hassan Asif</a>.</span></p>
+      <p>Knot 6.7, 2026. An experiment. Open source, MIT license.<span class="site-only"> Made by <a href="/">Hassan Asif</a>.</span></p>
     </div>
   </div>
 </footer>
@@ -3944,6 +3944,7 @@ var qrcode = function() {
   function pictureFound() {
     var r = pic.rep, u = pic.unit, s = pic.star, rs = roseText(pic.rose), five = rs.five || r.order === 10, f = [];
     if (u) f.push('one ' + unitShape(u).word + ' that repeats across the picture, at the green arrows');
+    else if (pic.unit1) f.push('one piece that repeats in one direction, at the green arrow');
     if (s && s.n) f.push('a ' + FOLD[s.n].toLowerCase() + ' star at the red circle');
     if (five) f.push('lines in five directions, the sign of girih');
     return f.length ? 'Knot took your picture apart and found what repeats: ' + f.join('; ') + '.' : 'Knot took your picture apart and found no repeat and no star. Photos of people and places seldom repeat.';
@@ -4761,6 +4762,149 @@ var qrcode = function() {
     if (!sums.length && base < 0.6) return null;
     return { a: A, b: B, v: base };
   }
+  /* Knot 6.7: a wider repeat search, for tile panels photographed whole or at a slight angle. The sliding test above
+     reads the middle square, with repeats up to two fifths of its width. When it finds none, Knot reads the whole
+     photo at 128 px on its long side and scores each slide by normalized cross-correlation over the overlap alone
+     (Padfield 2012), so a repeat up to three fifths of the photo can count. If that finds none, Knot tries the photo
+     straightened, as if the camera had faced the wall square on: wider at the top, the bottom, the left or the right. */
+  var WN = 128;
+  function photoGray(img) {
+    var w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = WN / Math.max(w, h);
+    var W = Math.max(16, Math.round(w * k)), H = Math.max(16, Math.round(h * k));
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var c = cv.getContext('2d'); c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+    c.drawImage(img, 0, 0, W, H);
+    var d = c.getImageData(0, 0, W, H).data, g = new Float64Array(W * H), m = new Uint8Array(W * H);
+    for (var i = 0; i < W * H; i++) { g[i] = 0.299 * d[4 * i] + 0.587 * d[4 * i + 1] + 0.114 * d[4 * i + 2]; m[i] = 1; }
+    return { g: g, m: m, W: W, H: H, scale: Math.max(w, h) / WN, w: w, h: h };
+  }
+  /* the photo as if the camera had faced it: a keystone correction, a projective map that scales both coordinates by
+     1 / (1 + c t), where t runs from -1 to 1 down the photo ('v') or across it ('h') */
+  function straighten(P, axis, c) {
+    var W = P.W, H = P.H, g = new Float64Array(W * H), m = new Uint8Array(W * H), cx = (W - 1) / 2, cy = (H - 1) / 2, x, y;
+    for (y = 0; y < H; y++) for (x = 0; x < W; x++) {
+      var t = axis === 'v' ? (y - cy) / cy : (x - cx) / cx, f = 1 / (1 + c * t);
+      var sx = cx + (x - cx) * f, sy = cy + (y - cy) * f;
+      var x0 = Math.floor(sx), y0 = Math.floor(sy), fx = sx - x0, fy = sy - y0;
+      if (x0 < 0 || y0 < 0 || x0 + 1 >= W || y0 + 1 >= H) continue;
+      var q = y0 * W + x0;
+      g[y * W + x] = (P.g[q] * (1 - fx) + P.g[q + 1] * fx) * (1 - fy) + (P.g[q + W] * (1 - fx) + P.g[q + W + 1] * fx) * fy;
+      m[y * W + x] = 1;
+    }
+    return { g: g, m: m, W: W, H: H, scale: P.scale, w: P.w, h: P.h };
+  }
+  /* normalized cross-correlation of the photo with itself, at each slide, over the pixels the two copies share */
+  function nccOf(P) {
+    var W = P.W, H = P.H, M = 2 * WN, sz = M * M, i, x, y, sum = 0, cnt = 0;
+    for (i = 0; i < W * H; i++) if (P.m[i]) { sum += P.g[i]; cnt++; }
+    var mu = cnt ? sum / cnt : 0;
+    var fr = new Float64Array(sz), fi = new Float64Array(sz), mr = new Float64Array(sz), mi = new Float64Array(sz), qr = new Float64Array(sz), qi = new Float64Array(sz);
+    for (y = 0; y < H; y++) for (x = 0; x < W; x++) {
+      i = y * W + x; if (!P.m[i]) continue;
+      var v = P.g[i] - mu, K = y * M + x; fr[K] = v; mr[K] = 1; qr[K] = v * v;
+    }
+    fft2(fr, fi, M, false); fft2(mr, mi, M, false); fft2(qr, qi, M, false);
+    function corr(ar, ai, br, bi) {
+      var r = new Float64Array(sz), j = new Float64Array(sz);
+      for (var q = 0; q < sz; q++) { r[q] = ar[q] * br[q] + ai[q] * bi[q]; j[q] = ar[q] * bi[q] - ai[q] * br[q]; }
+      fft2(r, j, M, true);
+      return r;
+    }
+    var N = corr(mr, mi, mr, mi), S = corr(fr, fi, mr, mi), Q = corr(qr, qi, mr, mi), C = corr(fr, fi, fr, fi);
+    return { n0: cnt, at: function (tx, ty) {
+      var k = ((ty + M) % M) * M + ((tx + M) % M), k2 = ((M - ty) % M) * M + ((M - tx) % M), n = N[k];
+      if (n < 0.5) return [0, 0];
+      var s1 = S[k], s2 = S[k2], num = C[k] - s1 * s2 / n, den = (Q[k] - s1 * s1 / n) * (Q[k2] - s2 * s2 / n);
+      return [den > 1e-6 ? num / Math.sqrt(den) : 0, n];
+    } };
+  }
+  /* the two shortest slides that line up, as in the sliding test; or one, for a repeat in one direction */
+  function latticeOf(nc, W, H) {
+    var LX = Math.floor(0.62 * W), LY = Math.floor(0.62 * H), minN = 0.3 * nc.n0, memo = {}, i, tx, ty;
+    function v(px, py) {
+      var key = (px + 512) * 1024 + py + 512;
+      if (memo[key] === undefined) { var r = nc.at(px, py); memo[key] = r[1] >= minN ? r[0] : NaN; }
+      return memo[key];
+    }
+    function v0(px, py) { var z = v(px, py); return z === z ? z : 0; }
+    function alone(px, py, val) {
+      for (var di = 0; di < 16; di++) {
+        var an = di * Math.PI / 8;
+        if (v0(Math.round(px + 2.6 * Math.cos(an)), Math.round(py + 2.6 * Math.sin(an))) > val - 0.12) return false;
+      }
+      return true;
+    }
+    var peaks = [], top = 0;
+    for (ty = 0; ty <= LY; ty++) for (tx = -LX; tx <= LX; tx++) {
+      if (ty === 0 && tx <= 0) continue;
+      var r2 = tx * tx + ty * ty;
+      if (r2 < 9) continue;
+      var val = v0(tx, ty);
+      if (val < 0.3) continue;
+      var ok = true;
+      for (var j = -1; j <= 1 && ok; j++) for (var ii = -1; ii <= 1; ii++) if ((ii || j) && v0(tx + ii, ty + j) > val) { ok = false; break; }
+      if (ok) ok = alone(tx, ty, val);
+      if (ok) { top = Math.max(top, val); if (val >= 0.5) peaks.push({ x: tx, y: ty, v: val, d: Math.sqrt(r2) }); }
+    }
+    latticeOf.top = top;
+    if (!peaks.length) return null;
+    peaks.sort(function (a, b) { return a.d - b.d; });
+    var v1 = peaks[0], v2 = null;
+    for (i = 1; i < peaks.length; i++) {
+      var p = peaks[i], cr = Math.abs(v1.x * p.y - v1.y * p.x);
+      if (cr >= 0.3 * v1.d * p.d) { v2 = p; break; }
+    }
+    /* the best match near a slide; NaN where the two copies share too little to judge */
+    function nearest(px, py) {
+      var best = NaN;
+      for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) { var z = v(px + dx, py + dy); if (z === z && !(best >= z)) best = z; }
+      return best;
+    }
+    function inside(q) { return Math.abs(q[0]) <= LX - 1 && Math.abs(q[1]) <= LY - 1 && nearest(q[0], q[1]) === nearest(q[0], q[1]); }
+    if (!v2) {
+      var two = [2 * v1.x, 2 * v1.y];
+      if (inside(two) ? nearest(two[0], two[1]) >= 0.6 * v1.v : v1.v >= 0.6) return { a: [v1.x, v1.y], b: null, v: v1.v };
+      return null;
+    }
+    var A = [v1.x, v1.y], B = [v2.x, v2.y];
+    var dot = function (u, z) { return u[0] * z[0] + u[1] * z[1]; };
+    for (var it = 0; it < 8; it++) {
+      if (dot(A, A) > dot(B, B)) { var tmp = A; A = B; B = tmp; }
+      var mu = Math.round(dot(A, B) / dot(A, A));
+      if (!mu) break;
+      B = [B[0] - mu * A[0], B[1] - mu * A[1]];
+    }
+    if (!inside(A) || !inside(B)) return null;
+    var base = Math.min(nearest(A[0], A[1]), nearest(B[0], B[1]));
+    if (!(base >= 0.5)) return null;
+    var sums = [[A[0] + B[0], A[1] + B[1]], [A[0] - B[0], A[1] - B[1]]].filter(inside);
+    for (i = 0; i < sums.length; i++) if (nearest(sums[i][0], sums[i][1]) < 0.6 * base) return null;
+    if (!sums.length && base < 0.6) return null;
+    return { a: A, b: B, v: base };
+  }
+  function wideRepeat(img) {
+    var P = photoGray(img), best = null, one = null;
+    function take(Q, via) {
+      var L = latticeOf(nccOf(Q), Q.W, Q.H);
+      if (!L) return;
+      L.via = via;
+      if (L.b) { if (!best || L.v > best.v) best = L; }
+      else if (!one || L.v > one.v) one = L;
+    }
+    take(P, 'whole');
+    /* straighten when the whole photo shows some order, at least one clear match */
+    if (!best && (one || latticeOf.top >= 0.35)) [['v', 0.06], ['v', -0.06], ['h', 0.06], ['h', -0.06], ['v', 0.12], ['v', -0.12], ['h', 0.12], ['h', -0.12]]
+      .forEach(function (c) { if (!best) take(straighten(P, c[0], c[1]), 'straight'); });
+    var R = best || one;
+    if (!R) return null;
+    /* from the 128 px photo to the 256 px square that the picture shows */
+    var f = P.scale * PN / Math.min(P.w, P.h);
+    return { a: [R.a[0] * f, R.a[1] * f], b: R.b ? [R.b[0] * f, R.b[1] * f] : null, v: R.v, via: R.via };
+  }
+  function unit1Text(u) {
+    var L = Math.hypot(u.a[0], u.a[1]), down = Math.abs(u.a[1]) > Math.abs(u.a[0]);
+    return 'Yes, in one direction: one piece repeats ' + (down ? 'down' : 'across') + ' the picture, about every ' + pct(L / PN) + '% of its width.';
+  }
   /* the line rose: which way the picture's edges run, weighted by contrast (an orientation histogram,
      after Freeman and Roth 1995). Lines have no head or tail, so angles run from 0 to 180 degrees. */
   function lineRose(g, n) {
@@ -4993,6 +5137,7 @@ var qrcode = function() {
     var g512 = greyOf(pc, PS), g256 = half(g512, PS), P = power(g256);
     var g128 = half(g256, PN);
     pic = { label: label || '', g: g512, g256: g256, g128: g128, gvar: varOf(g512), v256: varOf(g256), v128: varOf(g128), P: P, rep: repeatsOf(P), unit: repeatUnit(g256) };
+    if (!pic.unit) { var wu = wideRepeat(img); if (wu && wu.b) pic.unit = wu; else if (wu) pic.unit1 = wu; }
     drawRepeatsMap(P, pic.rep);
     pic.rose = lineRose(g256, PN);
     pic.pal = palette(pv);
@@ -5034,7 +5179,7 @@ var qrcode = function() {
       c.globalAlpha = 1;
       arrow(c, o[0], o[1], A[0], A[1], tok('--c4'), 'a');
       arrow(c, o[0], o[1], B[0], B[1], tok('--c4'), 'b');
-    }
+    } else if (pic.unit1) arrow(c, o[0], o[1], pic.unit1.a[0] * 2, pic.unit1.a[1] * 2, tok('--c4'), 'a');
     if (s && (s.n || s.tapped)) {
       var red = tok('--c5'), halo = 'rgba(255,255,255,0.85)';
       var path = function () {
@@ -5142,6 +5287,7 @@ var qrcode = function() {
     else if (rs.k >= 2) out.push('Draw lines in ' + dirWays(rs.k) + '.');
     else if (r.order) out.push('Draw lines in ' + dirWays(r.order / 2) + '.');
     if (u) out.push('Copy one ' + unitShape(u).word + ' across the surface, sliding it along arrows a and b.');
+    else if (pic.unit1) out.push('Copy one piece in a row, sliding it along arrow a.');
     else if (r.order === 2) out.push('Repeat one stripe in a row, like a frieze.');
     else if (five || (s && s.n)) out.push('Keep growing the pattern outward; its repeat is larger than this photo.');
     if (pic.pal && pic.pal.length) out.push('Fill the shapes in ' + Math.min(pic.pal.length, 3) + ' main colors.');
@@ -5155,7 +5301,8 @@ var qrcode = function() {
     else if (five) t = 'Lines in five directions: the sign of girih.';
     else if (u && star) t = 'A repeating pattern, with ' + st + '.';
     else if (u) t = 'A repeating pattern: one tile, used again and again.';
-    else if (star) t = cap(st) + ' around one point.';
+    else if (star) t = cap(st) + ' around one point' + (pic.unit1 ? ', and a piece that repeats in one direction.' : '.');
+    else if (pic.unit1) t = 'A piece that repeats in one direction, like a frieze or a column of tiles.';
     else if (FAM[r.order] || r.order === 2) t = 'Some order, but no clear repeat or star.';
     else if (rs.k) t = 'Straight edges, but no repeat and no star.';
     else t = 'No repeat and no star. Photos of people and places seldom repeat.';
@@ -5170,7 +5317,7 @@ var qrcode = function() {
         out: esc('Yes. ' + cap(us.name) + ', about ' + pct(us.la) + '% of the width, repeats across the picture.'),
         rep: 'One piece of the pattern, ' + us.name + '. Green arrows a and b show how far to slide it to reach the next copy. Press Slide a copy to watch the picture land on itself.',
         note: 'The maker likely drew this piece once and copied it across the surface: it is the engine of the pattern. The copy matches at ' + u.v.toFixed(2) + ', where 1 means exactly.',
-        how: 'Knot lays a see-through copy of your picture over it, like tracing paper, and slides the copy. Where it lines up again, the picture repeats. The two shortest slides that line up are arrows a and b.',
+        how: 'Knot lays a see-through copy of your picture over it, like tracing paper, and slides the copy. Where it lines up again, the picture repeats. The two shortest slides that line up are arrows a and b.' + (u.via === 'whole' ? ' This repeat is large, so Knot read the whole photo, not only its middle square.' : u.via === 'straight' ? ' The photo was taken at an angle, so Knot first straightened it, as if the camera had faced the wall square on.' : ''),
         undo: 'This piece is the engine: the maker drew it once and copied it.',
         redo: 'Try the step “Draw one ' + us.word + ', then copy it along arrows a and b.”',
         why: 'A pattern that repeats is one unit, used again (Liu, Collins and Tsin 2004). Such a pattern can turn onto itself by a half, a third, a quarter or a sixth, and by no other turn, so girih that repeats keeps its tenfold order in the stars.',
@@ -5178,14 +5325,14 @@ var qrcode = function() {
         check: 'A repeat unit fills the center of your tile, and a close match raises its line weight.',
         set: 'Autocorrelation of the gray square, padded and corrected for the window; peaks above 0.45 within two fifths of the width. Corners of ' + Math.round(us.ang) + '° and ' + (180 - Math.round(us.ang)) + '°.' });
     } else {
-      out += card({ q: 1, t: 'A tile that repeats', c: '--c4', v: 'not found',
-        out: r.order === 2 ? 'In one direction: the picture is a band, like a frieze.' : r.order >= 8 ? 'Not inside this photo, though the picture has clear order.' : 'No repeating tile in this picture.',
-        rep: 'No piece that repeats inside this photo.',
-        note: r.order >= 8 ? 'The repeat may be larger than the photo, or the pattern may have order with no repeat, as a Penrose tiling does.' : 'A larger repeat, or a photo taken at an angle, can hide one.',
-        how: 'Knot lays a see-through copy of your picture over it, like tracing paper, and slides the copy. No short slide made it line up again.',
+      out += card({ q: 1, t: 'A tile that repeats', c: '--c4', v: pic.unit1 ? 'one direction' : 'not found',
+        out: pic.unit1 ? unit1Text(pic.unit1) : r.order === 2 ? 'In one direction: the picture is a band, like a frieze.' : r.order >= 8 ? 'Not inside this photo, though the picture has clear order.' : 'No repeating tile in this picture.',
+        rep: pic.unit1 ? 'One piece of the picture, repeated in a row. Green arrow a shows how far to slide it to reach the next copy.' : 'No piece that repeats inside this photo.',
+        note: pic.unit1 ? 'A row of the same piece, like a frieze or a column of tiles. Its second direction may lie outside the photo.' : r.order >= 8 ? 'The repeat may be larger than the photo, or the pattern may have order with no repeat, as a Penrose tiling does.' : 'A repeat larger than the photo can hide one. If one tile fills the photo, step back so that two or three tiles show each way.',
+        how: 'Knot lays a see-through copy of your picture over it, like tracing paper, and slides the copy. It also reads the whole photo, and tries it straightened, as if the camera had faced the wall square on. ' + (pic.unit1 ? 'The copy lined up again in one direction alone.' : 'No slide made it line up again.'),
         undo: 'With no repeat in view, look to the star and the line directions for clues.',
         why: 'A pattern that repeats is one unit, used again (Liu, Collins and Tsin 2004).',
-        cannot: 'A repeat larger than two fifths of the picture.',
+        cannot: 'A repeat larger than three fifths of the photo, or a single tile that fills it.',
         check: 'With no repeat unit, your tile keeps an open center.',
         set: 'Autocorrelation peaks above 0.45.' });
     }
@@ -5264,6 +5411,7 @@ var qrcode = function() {
     else if (r.order) facts.push('lines in ' + dirWays(r.order / 2));
     if (s && s.n) facts.push(FOLD[s.n].toLowerCase() + ' star' + (s.mirror >= 0.6 ? ' with mirrors' : ''));
     if (u) facts.push('repeat unit, match ' + u.v.toFixed(2));
+    else if (pic.unit1) facts.push('repeat in one direction, match ' + pic.unit1.v.toFixed(2));
     if (!facts.length) facts.push('no repeat found');
     return { m: 'p', w: sc >= 0.7 ? 3 : sc >= 0.4 ? 2 : 1, b: u ? 1 : 0, s: Math.max(0, Math.min(1, sc)), d: facts.slice(0, 3), k: window.KnotPiece ? window.KnotPiece.fromPicture(pic, $('#pv')) : null };
   }
@@ -6066,7 +6214,7 @@ var qrcode = function() {
       });
       lines.push('');
     }
-    lines.push('Knot 6.6, www.hassanasif.net/knot, ' + new Date().toISOString().slice(0, 10));
+    lines.push('Knot 6.7, www.hassanasif.net/knot, ' + new Date().toISOString().slice(0, 10));
     return lines.join('\n');
   }
   function knotCanvas(size) {
