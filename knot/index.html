@@ -5861,12 +5861,13 @@ var qrcode = function() {
         check: 'A repeat unit fills the center of your tile, and a close match raises its line weight.',
         set: 'Autocorrelation of the gray square, padded and corrected for the window; peaks above 0.45 within two fifths of the width. Corners of ' + Math.round(us.ang) + '° and ' + (180 - Math.round(us.ang)) + '°.' });
     } else {
-      out += card({ q: 1, t: 'A tile that repeats', c: '--c4', v: pic.unit1 ? 'one direction' : 'not found',
-        out: pic.unit1 ? unit1Text(pic.unit1) : r.order === 2 ? 'In one direction: the picture is a band, like a frieze.' : r.order >= 8 ? 'Not inside this photo, though the picture has clear order.' : 'No repeating tile in this picture.',
-        rep: pic.unit1 ? 'One piece of the picture, repeated in a row. Green arrow a shows how far to slide it to reach the next copy.' : 'No piece that repeats inside this photo.',
+      var turns = !pic.unit1 && s && s.n;     /* Knot 6.9, 18 November: a turn is a repeat too, so say so here */
+      out += card({ q: 1, t: 'A tile that repeats', c: '--c4', v: pic.unit1 ? 'one direction' : turns ? 'none by sliding' : 'not found',
+        out: pic.unit1 ? unit1Text(pic.unit1) : r.order === 2 ? 'In one direction: the picture is a band, like a frieze.' : turns ? esc('No slide lands this photo on itself. The picture does repeat: ' + partsOf(s) + ' matching parts around the red dot, like slices of a pie. See the next card.') : r.order >= 8 ? 'Not inside this photo, though the picture has clear order.' : 'No repeating tile in this picture.',
+        rep: pic.unit1 ? 'One piece of the picture, repeated in a row. Green arrow a shows how far to slide it to reach the next copy.' : turns ? 'No piece repeats by sliding inside this photo. Here the repeat turns around the red dot.' : 'No piece that repeats inside this photo.',
         note: pic.unit1 ? 'A row of the same piece, like a frieze or a column of tiles. Its second direction may lie outside the photo.' : r.order >= 8 ? 'The repeat may be larger than the photo, or the pattern may have order with no repeat, as a Penrose tiling does.' : 'A repeat larger than the photo can hide one. If one tile fills the photo, step back so that two or three tiles show each way.',
         how: 'Knot lays a see-through copy of your picture over it, like tracing paper, and slides the copy. It also reads the whole photo, and tries it straightened, as if the camera had faced the wall square on. ' + (pic.unit1 ? 'The copy lined up again in one direction alone.' : 'No slide made it line up again.'),
-        undo: 'With no repeat in view, look to the turn and the line directions for clues.',
+        undo: turns ? 'The repeat here turns around a center: see Matching parts around a center.' : 'With no repeat in view, look to the turn and the line directions for clues.',
         why: 'A pattern that repeats is one unit, used again (Liu, Collins and Tsin 2004).',
         cannot: 'A repeat larger than three fifths of the photo, or a single tile that fills it.',
         check: 'With no repeat unit, your tile keeps an open center.',
